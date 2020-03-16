@@ -6,7 +6,7 @@
 <br>
 
 
-![](msdLib/images/Combined%20Time%20Series%20Plot.jpg)
+![](msdlib/images/Combined%20Time%20Series%20Plot.jpg)
 <br>
 
 
@@ -73,7 +73,7 @@ The whole library can be divided into 4 main portions.
     Visualization Tools
 </h2>
 
-![](msdLib/images/All%20Columns%20Grid%20Plot.jpg)
+![](msdlib/images/All%20Columns%20Grid%20Plot.jpg)
 
 <center><h3>
     data_gridplot:
@@ -106,9 +106,9 @@ This function creates colors from a specified matplotlib colormap
     Data Processing Tools
 </h2>
 
-![](msdLib/images/filter_spectrum.png)
-![](msdLib/images/filtered_freq_spectrum.png)
-![](msdLib/images/time_series_filtered.png)
+![](msdlib/images/filter_spectrum.png)
+![](msdlib/images/filtered_freq_spectrum.png)
+![](msdlib/images/time_series_filtered.png)
 
 <center><h3>
     Filters:
@@ -196,7 +196,7 @@ This is one of the most useful classes in this library. It enables us to split d
     Miscellaneous
 </h2>
 
-![](msdLib/images/progressbar_image.PNG)
+![](msdlib/images/progressbar_image.PNG)
 
 <h3>
     ProgressBar
