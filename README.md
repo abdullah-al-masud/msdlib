@@ -40,11 +40,11 @@ Its best to install the most updated versions of these dependencies
   Installation
 </h2>
 
-```pip install git+https://github.com/abdullah-al-masud/msdLib```
+```pip install git+https://github.com/abdullah-al-masud/msdlib```
 
 or if you have --user related issues during installation, please use
 
-```pip install --user git+https://github.com/abdullah-al-masud/msdLib```
+```pip install --user git+https://github.com/abdullah-al-masud/msdlib```
 <br>
 
 
