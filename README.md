@@ -14,7 +14,7 @@
     Introduction
 </h2>
 
-This library was first designed for my personal usage for data visualization, processing and machine learning purposes. But then I thought it might help others to do the same things with easier ways. That thought motivated me to make new functions inside the library. Its not yet rich but I am strongly willing to make it much bigger, richer and helpful for every data science and machine learning enthusiasts.
+This library was first designed for my personal usage for data visualization, processing and machine learning purposes. But then I thought it might help others to do the same things with easier ways. That thought motivated me to make new functions inside the library. Its not yet rich but I am strongly willing to make it much bigger, richer and helpful for all.
 <br>
 
 
