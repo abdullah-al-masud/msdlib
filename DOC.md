@@ -8,13 +8,21 @@
 ## class_result
 <body>
 ############ CLASS_RESULT  ##############
+
 classification result with confusion matrix
+
 ARGUMENTS
+
 y: True labels
+
 pred: Predictions
+
 out_confus: returns confusion matrix if set True
+
 RETURNS
+
 result: DataFrame containing precision, recall and f1 scores for all labels
+
 con_mat: DataFrame containing confusion matrix, depends on out_confus
 </body>
 
