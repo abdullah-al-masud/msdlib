@@ -52,7 +52,7 @@ or if you have --user related issues during installation, please use
     License
 </h2>
 
-MIT License has been issued for this library.
+MIT open source License has been issued for this library.
 <br>
 
 
