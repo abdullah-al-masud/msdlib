@@ -142,7 +142,7 @@ This is a function that allows us to calculate spectrogram of any time series si
     grouped_mode:
 </h3></center>
 
-This function calculates the mode for grouped data. It iterated over different number of groupings and tries to find the most accurate mode value for a grouped data. It also have supports to ignore one or more values when calculating mode.
+This function calculates the mode for grouped data. It iterates over different number of groupings and tries to find the most accurate mode value for a grouped data. It also have supports to ignore one or more values when calculating mode.
 
 <center><h3>
     get_edges_from_ts:
