@@ -61,7 +61,7 @@ MIT open source License has been issued for this library.
 </h2>
 
 You can find easy examples on how to use the functions and classes from this library [here](https://github.com/abdullah-al-masud/msdlib/tree/master/msdlib/examples).
-Please download the used data from [here](https://github.com/abdullah-al-masud/msdlib/tree/master/msdlib/data).
+Please download the used data from [here](https://drive.google.com/open?id=15gKhIKcNncteSxJxr0GEC967UwL51l5n).
 <br>
 
 <h2>
