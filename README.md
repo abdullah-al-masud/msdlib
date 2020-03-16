@@ -57,6 +57,19 @@ MIT License has been issued for this library.
 
 
 <h2>
+  Examples
+</h2>
+
+You can find easy examples on how to use the functions and classes from this library [here](https://github.com/abdullah-al-masud/msdlib/tree/master/msdlib/examples).
+<br>
+
+<h2>
+  Documentation:
+</h2>
+
+Complete documentation of classes and functions can be found [here](https://github.com/abdullah-al-masud/msdlib/blob/master/DOC.md).
+
+<h2>
     Divisions
 </h2>
 
@@ -67,6 +80,8 @@ The whole library can be divided into 4 main portions.
 3. Machine learning tools
 4. Miscellaneous
 <br>
+
+Some of the frequently used programs are shown bellow.
 
 
 <h2>
