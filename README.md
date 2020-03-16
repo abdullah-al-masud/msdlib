@@ -65,7 +65,7 @@ Please download the used data from [here](https://drive.google.com/open?id=15gKh
 <br>
 
 <h2>
-  Documentation:
+  Documentation
 </h2>
 
 Complete documentation of classes and functions can be found [here](https://github.com/abdullah-al-masud/msdlib/blob/master/DOC.md). The list is alphabetically ordered.
