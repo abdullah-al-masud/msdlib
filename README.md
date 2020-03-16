@@ -70,7 +70,7 @@ You can find easy examples on how to use the functions and classes from this lib
 Complete documentation of classes and functions can be found [here](https://github.com/abdullah-al-masud/msdlib/blob/master/DOC.md).
 
 <h2>
-    Divisions
+    Overview
 </h2>
 
 The whole library can be divided into 4 main portions.
