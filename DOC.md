@@ -10,25 +10,19 @@
 ############ CLASS_RESULT  ##############
 
 classification result with confusion matrix
-
 ARGUMENTS
-
 y: True labels
-
 pred: Predictions
-
 out_confus: returns confusion matrix if set True
-
 RETURNS
-
 result: DataFrame containing precision, recall and f1 scores for all labels
-
 con_mat: DataFrame containing confusion matrix, depends on out_confus
 </body>
 
 ## data_gridplot
 <body>
 ########### DATA_GRIDPLOT  #############
+
 this function generates scatter plots between every 2 columns in the data set and distribuition or kde or time series plot along diagonal
 data : pandas dataframe, list or numpy ndarray of rank-2, columns are considered as features
 idf : pandas series with length equal to total number of samples in the data, works as clussifier of each sample data, specially useful in clustering, default is []
