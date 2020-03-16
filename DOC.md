@@ -276,7 +276,7 @@ same_ratio : bool, should be only true if the labels are classification labels a
 make_onehot : bool, if True, the labels will be converted into one hot encoded format<br>
 </body>
 
-### random_split
+#### random_split
 <body>
 ############ RANDOM_SPLIT  ################<br>
 this function is for simple random split<br>
@@ -284,7 +284,7 @@ val_ratio : float, validation data set ratio, default is .15<br>
 returns data, label and indices for train, validation and test data sets as pydict<br>
 </body>
 
-### cross_validation_split
+#### cross_validation_split
 <body>
 ###############  CROSS_VALIDATION_SPLIT  ####################<br>
 this function is prepared to run cross validation using proper data and labels<br>
@@ -292,7 +292,7 @@ fold : int, number of folds being applied to the data, default is 5<br>
 returns data, label and indices for train, validation and test data sets as pydict<br>
 </body>
 
-### sequence_split
+#### sequence_split
 <body>
 ######### SEQUENCE_SPLIT  ################<br>
 seq_len : int, length of each sequence<br>
