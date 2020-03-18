@@ -559,12 +559,13 @@ def name_separation(string, maxlen):
 # name_thres : maximum allowed characters in one line for plot labels
 # fig_x: float, horizontal length of the figure, default is 30
 # fig_y: float, vertical length of each row of plot, default is 3
+# marker: str, marker for time series plots, default is None
 
 def input_variable_error(msg):
     raise msdExceptions.InputVariableError(msg)
 def plot_time_series(same_srs, srs = [], segs = None, same_srs_width = [], spans = [], lines = [], linestyle = [], linewidth = [],
                      fig_title = '', show = True, save = False, savepath = '', fname = '', spine_dist = .035, spalpha = [],
-                     ylims = [], name_thres = 50, fig_x = 30, fig_y = 3):
+                     ylims = [], name_thres = 50, fig_x = 30, fig_y = 3, marker = None):
    
     totsame = len(same_srs)
     totdif = len(srs)
@@ -622,7 +623,7 @@ def plot_time_series(same_srs, srs = [], segs = None, same_srs_width = [], spans
         # time series plots
         for j in range(totdif):
             tx = ax[i].twinx()
-            l, = tx.plot(srs[j].loc[st : ed], color = colors[totsame + j], zorder = 30 + j * 4)
+            l, = tx.plot(srs[j].loc[st : ed], color = colors[totsame + j], zorder = 30 + j * 4, marker = marker)
             lg[0].append(l)
             lg[1].append(srs[j].name)
             tx.spines['right'].set_position(('axes', 1 + j * spine_dist))
@@ -633,7 +634,7 @@ def plot_time_series(same_srs, srs = [], segs = None, same_srs_width = [], spans
             if len(ylims) > 1:
                 if len(ylims[1 + j]) == 2: tx.set_ylim(ylims[1 + j][0], ylims[1 + j][1])
         for j in range(totsame):
-            l, = ax[i].plot(same_srs[j].loc[st : ed], color = colors[j], zorder = j * 4, lw = same_srs_width[j])
+            l, = ax[i].plot(same_srs[j].loc[st : ed], color = colors[j], zorder = j * 4, lw = same_srs_width[j], marker = marker)
             lg[0].append(l)
             lg[1].append(same_srs[j].name)
         
