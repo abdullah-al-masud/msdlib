@@ -233,6 +233,8 @@ spine_dist : constant indicating distance of the right side spines from one anot
 spalpha : list of constants indicating alpha values for each of the span in spans<br>
 ylims : list of lists, indicating y axis limits in case we want to keep the limit same for all subplots<br>
 name_thres : maximum allowed characters in one line for plot labels<br>
+fig_x: float, horizontal length of the figure, default is 30<br>
+fig_y: float, vertical length of each row of plot, default is 3<br>
 </body>
 
 
