@@ -557,10 +557,14 @@ def name_separation(string, maxlen):
 # spalpha : list of constants indicating alpha values for each of the span in spans
 # ylims : list of lists, indicating y axis limits in case we want to keep the limit same for all subplots
 # name_thres : maximum allowed characters in one line for plot labels
+# fig_x: float, horizontal length of the figure, default is 30
+# fig_y: float, vertical length of each row of plot, default is 3
 
 def input_variable_error(msg):
     raise msdExceptions.InputVariableError(msg)
-def plot_time_series(same_srs, srs = [], segs = None, same_srs_width = [], spans = [], lines = [], linestyle = [], linewidth = [], fig_title = '', show = True, save = False, savepath = '', fname = '', spine_dist = .035, spalpha = [], ylims = [], name_thres = 50):
+def plot_time_series(same_srs, srs = [], segs = None, same_srs_width = [], spans = [], lines = [], linestyle = [], linewidth = [],
+                     fig_title = '', show = True, save = False, savepath = '', fname = '', spine_dist = .035, spalpha = [],
+                     ylims = [], name_thres = 50, fig_x = 30, fig_y = 3):
    
     totsame = len(same_srs)
     totdif = len(srs)
@@ -597,7 +601,7 @@ def plot_time_series(same_srs, srs = [], segs = None, same_srs_width = [], spans
     spcolors = ['darkcyan', 'coral', 'purple', 'red', 'khaki', 'gray']
     lcolors = ['crimson', 'magenta', 'darkolivegreen', 'palevioletred', 'indigo']
     if spalpha == []: spalpha = [.3 for _ in range(totsp)]
-    fig, ax = plt.subplots(figsize = (30, 3 * nrows), nrows = nrows)
+    fig, ax = plt.subplots(figsize = (fig_x, fig_y * nrows), nrows = nrows)
     if fig_title == '': fig_title = 'Time Series Visualization'
     fig.suptitle(fig_title, y = 1.03, fontsize = 20, fontweight = 'bold')
     if nrows == 1: ax = [ax]
