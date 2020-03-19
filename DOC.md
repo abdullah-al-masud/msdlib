@@ -197,8 +197,8 @@ out_type : {'ndarray', 'series', 'list'}, data type of the output<br>
 <body>
 data : pandas DataFrame, data to be plotted as heatmap<br>
 stdz : bool, whether to standardize the data or not, default is False<br>
-keep_only : {'both', 'up', 'down'}, which side of the heatmap matrix to plot, necessary for correlation heatmap plot, default is 'both'<br>
-rem_diag : bool, whether to remove diagoanl if keep_only is not 'both', default is False<br>
+keep : {'both', 'up', 'down'}, which side of the heatmap matrix to plot, necessary for correlation heatmap plot, default is 'both'<br>
+rem_diag : bool, whether to remove diagoanl if keep is not 'both', default is False<br>
 cmap : str, matplotlib colormap, default is 'gist_heat'<br>
 cbar : bool, show the colorbar with the heatmap or not<br>
 show : bool, show the heatmap or not<br>
