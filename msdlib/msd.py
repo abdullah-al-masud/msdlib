@@ -602,6 +602,7 @@ def plot_time_series(same_srs, srs = [], segs = None, same_srs_width = [], spans
     spcolors = ['darkcyan', 'coral', 'purple', 'red', 'khaki', 'gray']
     lcolors = ['crimson', 'magenta', 'darkolivegreen', 'palevioletred', 'indigo']
     if spalpha == []: spalpha = [.3 for _ in range(totsp)]
+    stamp_fl = True if isinstance(same_srs[0].index[0], pd.Timestamp) or isinstance(same_srs[0].index[0], datetime.Timestamp) else False
     fig, ax = plt.subplots(figsize = (fig_x, fig_y * nrows), nrows = nrows)
     if fig_title == '': fig_title = 'Time Series Visualization'
     fig.suptitle(fig_title, y = 1.03, fontsize = 20, fontweight = 'bold')
@@ -667,7 +668,7 @@ def plot_time_series(same_srs, srs = [], segs = None, same_srs_width = [], spans
         # finishing axis arrangements
         ax[i].set_xlabel('Time')
         ax[i].set_ylabel('Data Value' if totsame > 1 else name_separation(same_srs[0].name, name_thres))
-        ax[i].set_title('from %s to %s'%(st.strftime('%Y-%m-%d %H-%M-%S'), ed.strftime('%Y-%m-%d %H-%M-%S')), loc = 'right')
+        if stamp_fl: ax[i].set_title('from %s to %s'%(st.strftime('%Y-%m-%d %H-%M-%S'), ed.strftime('%Y-%m-%d %H-%M-%S')), loc = 'right')
         ax[i].legend(lg[0], lg[1], loc = 3, bbox_to_anchor = (0, .98), ncol = len(lg[0]), fontsize = 10)
         ax[i].set_xlim(st, ed)
         ax[i].grid(True)
