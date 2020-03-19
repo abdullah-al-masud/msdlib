@@ -602,7 +602,7 @@ def plot_time_series(same_srs, srs = [], segs = None, same_srs_width = [], spans
     spcolors = ['darkcyan', 'coral', 'purple', 'red', 'khaki', 'gray']
     lcolors = ['crimson', 'magenta', 'darkolivegreen', 'palevioletred', 'indigo']
     if spalpha == []: spalpha = [.3 for _ in range(totsp)]
-    stamp_fl = True if isinstance(same_srs[0].index[0], pd.Timestamp) or isinstance(same_srs[0].index[0], datetime.Timestamp) else False
+    stamp_fl = True if isinstance(same_srs[0].index[0], pd.Timestamp) else False
     fig, ax = plt.subplots(figsize = (fig_x, fig_y * nrows), nrows = nrows)
     if fig_title == '': fig_title = 'Time Series Visualization'
     fig.suptitle(fig_title, y = 1.03, fontsize = 20, fontweight = 'bold')
