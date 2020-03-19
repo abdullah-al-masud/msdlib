@@ -235,6 +235,9 @@ ylims : list of lists, indicating y axis limits in case we want to keep the limi
 name_thres : maximum allowed characters in one line for plot labels<br>
 fig_x: float, horizontal length of the figure, default is 30<br>
 fig_y: float, vertical length of each row of plot, default is 3<br>
+marker: str, marker for time series plots, default is None
+xlabel : str, label name for x axis for each row, default is 'Time'
+ylabel : str, label name for y axis for each row, default is 'Data value'
 </body>
 
 
