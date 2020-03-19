@@ -560,12 +560,14 @@ def name_separation(string, maxlen):
 # fig_x: float, horizontal length of the figure, default is 30
 # fig_y: float, vertical length of each row of plot, default is 3
 # marker: str, marker for time series plots, default is None
+# xlabel : str, label name for x axis for each row, default is 'Time'
+# ylabel : str, label name for y axis for each row, default is 'Data value'
 
 def input_variable_error(msg):
     raise msdExceptions.InputVariableError(msg)
 def plot_time_series(same_srs, srs = [], segs = None, same_srs_width = [], spans = [], lines = [], linestyle = [], linewidth = [],
                      fig_title = '', show = True, save = False, savepath = '', fname = '', spine_dist = .035, spalpha = [],
-                     ylims = [], name_thres = 50, fig_x = 30, fig_y = 3, marker = None):
+                     ylims = [], name_thres = 50, fig_x = 30, fig_y = 3, marker = None, xlabel = 'Time', ylabel = 'Data value'):
    
     totsame = len(same_srs)
     totdif = len(srs)
@@ -666,8 +668,8 @@ def plot_time_series(same_srs, srs = [], segs = None, same_srs_width = [], spans
                 lg[1].append(spans[j].columns.name)
        
         # finishing axis arrangements
-        ax[i].set_xlabel('Time')
-        ax[i].set_ylabel('Data Value' if totsame > 1 else name_separation(same_srs[0].name, name_thres))
+        ax[i].set_xlabel(xlabel)
+        ax[i].set_ylabel(ylabael if totsame > 1 else name_separation(same_srs[0].name, name_thres))
         if stamp_fl: ax[i].set_title('from %s to %s'%(st.strftime('%Y-%m-%d %H-%M-%S'), ed.strftime('%Y-%m-%d %H-%M-%S')), loc = 'right')
         ax[i].legend(lg[0], lg[1], loc = 3, bbox_to_anchor = (0, .98), ncol = len(lg[0]), fontsize = 10)
         ax[i].set_xlim(st, ed)
