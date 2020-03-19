@@ -669,7 +669,7 @@ def plot_time_series(same_srs, srs = [], segs = None, same_srs_width = [], spans
        
         # finishing axis arrangements
         ax[i].set_xlabel(xlabel)
-        ax[i].set_ylabel(ylabael if totsame > 1 else name_separation(same_srs[0].name, name_thres))
+        ax[i].set_ylabel(ylabel if totsame > 1 else name_separation(same_srs[0].name, name_thres))
         if stamp_fl: ax[i].set_title('from %s to %s'%(st.strftime('%Y-%m-%d %H-%M-%S'), ed.strftime('%Y-%m-%d %H-%M-%S')), loc = 'right')
         ax[i].legend(lg[0], lg[1], loc = 3, bbox_to_anchor = (0, .98), ncol = len(lg[0]), fontsize = 10)
         ax[i].set_xlim(st, ed)
