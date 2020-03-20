@@ -600,9 +600,12 @@ def plot_time_series(same_srs, srs = [], segs = None, same_srs_width = [], spans
     else: input_variable_error('Invalid line width! linewidth should be int/float or list of int/float with equal length of lines')
    
     nrows = segs.shape[0]
-    colors = ['darkcyan', 'coral', 'darkslateblue', 'limegreen', 'crimson', 'purple', 'blue', 'khaki', 'chocolate']
-    spcolors = ['darkcyan', 'coral', 'purple', 'red', 'khaki', 'gray']
-    lcolors = ['crimson', 'magenta', 'darkolivegreen', 'palevioletred', 'indigo']
+    colors = ['darkcyan', 'coral', 'darkslateblue', 'limegreen', 'crimson', 'purple', 'blue', 'khaki', 'chocolate', 'forestgreen']
+    spcolors = ['darkcyan', 'coral', 'purple', 'red', 'khaki', 'gray', 'darkslateblue', 'limegreen', 'red', 'blue']
+    lcolors = ['crimson', 'magenta', 'darkolivegreen', 'palevioletred', 'indigo', 'chokolate', 'blue', 'forestgreen', 'grey', 'magenta']
+    if totsame + totdif > len(colors): colors = get_color_from_cmap(totsame + totdif, 'rainbow')
+    if totsp > len(spcolors): colors = get_color_from_cmap(totsp, 'rainbow')
+    if totline > len(lcolors): colors = get_color_from_cmap(totline, 'rainbow')
     if spalpha == []: spalpha = [.3 for _ in range(totsp)]
     stamp_fl = True if isinstance(same_srs[0].index[0], pd.Timestamp) else False
     fig, ax = plt.subplots(figsize = (fig_x, fig_y * nrows), nrows = nrows)
