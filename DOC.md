@@ -46,6 +46,13 @@ cnam : str, matplotlib color map<br>
 </body>
 
 
+## each_row_max
+############## EACH_ROW_MAX ###############<br>
+this function gets the maximum values and corresponding columns for each row of a matrix<br>
+data : list of lists/numpy ndarray or pandas dataframe, matrix data from where max values will be calculated<br>
+returns same data with two new columns with max values and corresponding column names<br>
+
+
 ## feature_evaluator
 <body>
 ########  FEATURE_EVALUATOR  ######################<br>
