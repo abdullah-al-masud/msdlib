@@ -485,7 +485,8 @@ def standardize(data, zero_std = 1):
 # #####  NORMALIZE  #############
 # data : pandas series, dataframe, list or numpy ndarray, input data to be standardized
 # zero_range : float, value used to replace range values in case range is 0 for any column
-def normalize(data, zero_range = 1):
+# method : {'zero_mean', 'min_max_0_1', 'min_max_-1_1'}
+def normalize(data, zero_range = 1, method = 'min_max_0_1'):
     dtype = 0
     if isinstance(data, pd.Series):
         data = data.to_Frame()
@@ -497,7 +498,9 @@ def normalize(data, zero_range = 1):
     else: data_type_error('Provided data is inappropriate! ')
     data_range = data.max() - data.min()
     data_range[data_range == 0] = zero_range
-    data = (data - data.mean()) / data_range
+    if method == 'min_max_0_1': data = (data - data.min()) / data_range
+    elif method == 'min_max_-1_1': data = (data - data.min()) / data_range * 2 - 1
+    elif method == 'zero_mean': data = (data - data.mean()) / data_range
     if dtype == 0: return data
     elif dtype == 1: return data[data.columns[0]]
     else : return data.values
