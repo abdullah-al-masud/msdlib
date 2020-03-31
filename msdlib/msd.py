@@ -405,6 +405,27 @@ def get_edges_from_ts(sr, th_method = 'median', th_factor = .5, th = None,  del_
 
 
 
+# ############## each_row_max ###############
+# this function gets the maximum values and corresponding columns for each row of a matrix
+# data : list of lists/numpy ndarray or pandas dataframe, matrix data from where max values will be calculated
+# returns same data with two new columns with max values and corresponding column names
+def each_row_max(data):
+    if isinstance(data, np.ndarray) or isinstance(data, list): data = pd.DataFrame(data)
+    elif isinstance(data, pd.DataFrame): pass
+    else: data_type_error('input data type must be list of lists or pandas dataframe or numpy ndarray!')
+    col = data.columns
+    row = data.index
+    data = data.values
+    max_idx = np.argmax(data, axis = 1)
+    max_val = [data[i, max_idx[i]] for i in range(data.shape[0])]
+    max_col = col[max_idx]
+    data = pd.DataFrame(data, index = row, columns = col)
+    data['max_val'] = max_val
+    data['max_col'] = max_col
+    return data
+
+
+
 
 # moving slope is a function which calculates the slope inside a window for a variable
 # df : pandas DataFrame or Series, contains time series columns
