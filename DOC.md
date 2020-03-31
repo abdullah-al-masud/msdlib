@@ -147,7 +147,7 @@ fname : str, name of the figure to save in the savepath, default is fig_title<br
 
 ## grouped_mode
 <body>
-###########  GROUPED_MODE  ############
+###########  GROUPED_MODE  ############<br>
 data : pandas Series, list, numpy ndarray - must be 1-D<br>
 bins : int, list or ndarray, indicates bins to be tried to calculate mode value<br>
 neglect_values : list, ndarray, the values inside the list will be removed from data<br>
@@ -181,6 +181,7 @@ maxlen : int, maximum allowable length for each line<br>
 ###########  NORMALIZE  #############<br>
 data : pandas series, dataframe, list or numpy ndarray, input data to be standardized<br>
 zero_range : float, value used to replace range values in case range is 0 for any column<br>
+method : {'zero_mean', 'min_max_0_1', 'min_max_-1_1'}<br>
 </body>
 
 
