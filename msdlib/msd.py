@@ -412,7 +412,7 @@ def get_edges_from_ts(sr, th_method = 'median', th_factor = .5, th = None,  del_
 def each_row_max(data):
     if isinstance(data, np.ndarray) or isinstance(data, list): data = pd.DataFrame(data)
     elif isinstance(data, pd.DataFrame): pass
-    else: data_type_error('input data type must be list of lists or pandas dataframe or numpy ndarray!')
+    else: msd.InputVariableError('input data type must be list of lists or pandas dataframe or numpy ndarray!')
     col = data.columns
     row = data.index
     data = data.values
