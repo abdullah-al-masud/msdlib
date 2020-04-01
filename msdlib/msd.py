@@ -413,17 +413,20 @@ def each_row_max(data):
     if isinstance(data, np.ndarray) or isinstance(data, list): data = pd.DataFrame(data)
     elif isinstance(data, pd.DataFrame): pass
     else: msd.InputVariableError('input data type must be list of lists or pandas dataframe or numpy ndarray!')
-    col = data.columns
-    row = data.index
-    data = data.values
-    max_idx = np.nanargmax(data, axis = 1)
-    max_val = [data[i, max_idx[i]] for i in range(data.shape[0])]
-    max_col = col[max_idx]
-    data = pd.DataFrame(data, index = row, columns = col)
-    data['max_val'] = max_val
-    data['max_col'] = max_col
+    if data.isnull().all().all():
+        data['max_val'] = np.nan
+        data['max_col'] = np.nan
+    else:
+        col = data.columns
+        row = data.index
+        data = data.values
+        max_idx = np.nanargmax(data, axis = 1)
+        max_val = [data[i, max_idx[i]] for i in range(data.shape[0])]
+        max_col = col[max_idx]
+        data = pd.DataFrame(data, index = row, columns = col)
+        data['max_val'] = max_val
+        data['max_col'] = max_col
     return data
-
 
 
 
