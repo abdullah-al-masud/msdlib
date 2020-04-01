@@ -405,7 +405,7 @@ def get_edges_from_ts(sr, th_method = 'median', th_factor = .5, th = None,  del_
 
 
 
-# ############## each_row_max ###############
+# ############## EACH_ROW_MAX ###############
 # this function gets the maximum values and corresponding columns for each row of a matrix
 # data : list of lists/numpy ndarray or pandas dataframe, matrix data from where max values will be calculated
 # returns same data with two new columns with max values and corresponding column names
@@ -416,7 +416,7 @@ def each_row_max(data):
     col = data.columns
     row = data.index
     data = data.values
-    max_idx = np.argmax(data, axis = 1)
+    max_idx = np.nanargmax(data, axis = 1)
     max_val = [data[i, max_idx[i]] for i in range(data.shape[0])]
     max_col = col[max_idx]
     data = pd.DataFrame(data, index = row, columns = col)
