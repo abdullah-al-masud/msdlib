@@ -45,7 +45,7 @@ class ProgressBar():
         if tblink_max >= 1:
             tblink_max = .9
             print("'tblink_max' was set to .9 seconds beacuse of exceeding maximum limit!")
-        self.desc = desc[:front_space] + ' ' + '-' * (front_space - len(desc) - 2) + ' '
+        self.desc = desc[:front_space] + ' ' + '-' * (front_space - len(desc)) * int(front_space > len(desc))+ ' '
         self.barend = ' '*15
         self.tblmax = tblink_max
         self.tblmin = tblink_min
@@ -92,6 +92,8 @@ class ProgressBar():
         if self.tcntst:
             d = self.leftime.days
             s = int(self.leftime.seconds - self.tstack)
+            if d < 0:
+                d, s = 0, 0
             self.prleftime = '%s'%datetime.timedelta(days = d, seconds = s)
     
     def set_barelap(self):
