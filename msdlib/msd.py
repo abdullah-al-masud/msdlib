@@ -754,7 +754,7 @@ def plot_heatmap(data, keep = 'both', rem_diag = False, cmap = 'gist_heat', cbar
         k = -1 if rem_diag else 0
         data = data.where(np.tril(np.ones(data.shape), k = k).astype(bool))
     fig, ax = plt.subplots(figsize = figsize)
-    sns.heatmap(data, ax = ax, linewidths = 0, cbar = cbar, cmap = cmap, annotate = annotate, fmt = fmt)
+    sns.heatmap(data, ax = ax, linewidths = 0, cbar = cbar, cmap = cmap, annot = annotate, fmt = fmt)
     ax.set_xlabel(xlb)
     ax.set_ylabel(ylb)
     ax.tick_params(axis = 'y', rotation = 0)
