@@ -722,7 +722,7 @@ def plot_time_series(same_srs, srs = [], segs = None, same_srs_width = [], spans
 
 # data : pandas DataFrame, data to be plotted as heatmap
 # stdz : bool, whether to standardize the data or not, default is False
-# keep_only : {'both', 'up', 'down'}, which side of the heatmap matrix to plot, necessary for correlation heatmap plot, default is 'both'
+# keep : {'both', 'up', 'down'}, which side of the heatmap matrix to plot, necessary for correlation heatmap plot, default is 'both'
 # rem_diag : bool, whether to remove diagoanl if keep_only is not 'both', default is False
 # cmap : str, matplotlib colormap, default is 'gist_heat'
 # cbar : bool, show the colorbar with the heatmap or not
