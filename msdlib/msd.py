@@ -726,6 +726,8 @@ def plot_time_series(same_srs, srs = [], segs = None, same_srs_width = [], spans
 # rem_diag : bool, whether to remove diagoanl if keep_only is not 'both', default is False
 # cmap : str, matplotlib colormap, default is 'gist_heat'
 # cbar : bool, show the colorbar with the heatmap or not
+# annotate : bool, whether to show the values or not
+# fmt : str, value format for printing if annotate is True
 # show : bool, show the heatmap or not
 # save : bool, save the figure or not
 # savepath : str, path for saving the figure
@@ -733,7 +735,7 @@ def plot_time_series(same_srs, srs = [], segs = None, same_srs_width = [], spans
 # fig_title : str, title of the heatmap, default is 'Heatmap of {data.columns.name}'
 # file_name : str, name of the image as will be saved in savepath, default is fig_title
 # lbfactor : float/int, factor used for scaling the plot labels
-def plot_heatmap(data, keep = 'both', rem_diag = False, cmap = 'gist_heat', cbar = True, stdz = False, 
+def plot_heatmap(data, keep = 'both', rem_diag = False, cmap = 'gist_heat', cbar = True, stdz = False, annotate = False, fmt = None,
                  show = True, save = False, savepath = '', figsize = (30, 10), fig_title = '', file_name = '',
                  lbfactor = 1.5):
     xlb = data.index.name
@@ -752,7 +754,7 @@ def plot_heatmap(data, keep = 'both', rem_diag = False, cmap = 'gist_heat', cbar
         k = -1 if rem_diag else 0
         data = data.where(np.tril(np.ones(data.shape), k = k).astype(bool))
     fig, ax = plt.subplots(figsize = figsize)
-    sns.heatmap(data, ax = ax, linewidths = 0, cbar = cbar, cmap = cmap)
+    sns.heatmap(data, ax = ax, linewidths = 0, cbar = cbar, cmap = cmap, annotate = annotate, fmt = fmt)
     ax.set_xlabel(xlb)
     ax.set_ylabel(ylb)
     ax.tick_params(axis = 'y', rotation = 0)
