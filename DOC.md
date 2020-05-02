@@ -209,6 +209,8 @@ keep : {'both', 'up', 'down'}, which side of the heatmap matrix to plot, necessa
 rem_diag : bool, whether to remove diagoanl if keep is not 'both', default is False<br>
 cmap : str, matplotlib colormap, default is 'gist_heat'<br>
 cbar : bool, show the colorbar with the heatmap or not<br>
+annotate : bool, whether to show the values or not<br>
+fmt : str, value format for printing if annotate is True<br>
 show : bool, show the heatmap or not<br>
 save : bool, save the figure or not<br>
 savepath : str, path for saving the figure<br>
