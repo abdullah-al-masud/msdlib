@@ -946,11 +946,11 @@ def feature_evaluator(data, label_name, label_type_num, n_bin = 40, is_all_num =
         nrows = labels.columns.shape[0]
         if not is_all_cat:
             fig_num, ax_num = plt.subplots(figsize = (fig_width, fig_height * nrows), nrows = nrows)
-            fig_tnum = fig_title + 'for Numerical Features'
+            fig_tnum = fig_title + ' for Numerical Features'
             fig_num.suptitle(fig_tnum, y = 1.06, fontsize = 20, fontweight = 'bold')
         if not is_all_num:
             fig_cat, ax_cat = plt.subplots(figsize = (fig_width, fig_height * nrows), nrows = nrows)
-            fig_tcat = fig_title + 'for Categorical Features'
+            fig_tcat = fig_title + ' for Categorical Features'
             fig_cat.suptitle(fig_tcat, y = 1.06, fontsize = 20, fontweight = 'bold')
         # special case for nrows = 1
         if nrows == 1:
