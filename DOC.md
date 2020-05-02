@@ -56,6 +56,7 @@ returns same data with two new columns with max values and corresponding column 
 ## feature_evaluator
 <body>
 ########  FEATURE_EVALUATOR  ######################<br>
+This function tries to calculate the importance of features by some statistical approaches<br>
 data: should be a pandas dataframe containing label data inside it (it must contain only features and labels, no unnecessary columns are allowed)<br>
 label_name: list of str, containing name of the columns used as labels<br>
 label_type_num: list of bool, containing flag info if the labels are numerical or not (must be corresponding to label_name)<br>
@@ -69,7 +70,11 @@ cmap: str, is the matplotlib colormap name, default is 'gist_rainbow'<br>
 fig_width: float, is the width of figure, default is 30<br>
 fig_height: float, is the height of figure, default is 5<br>
 rotation: float, rotational angle of x axis labels of the figure, default is 40<br>
-This function tries to calculate the importance of features by some statistical approaches<br>
+show : bool, whether to show the graph or not, default is True<br>
+save : bool, whether to save the figure or not, default is False<br>
+savepath : str, path where the data will be saved, default is None<br>
+fname : str, filename which will be used for saving the figure, default is None<br>
+fig_title : str, title of the figure, default is 'Feature Confidence Evaluation for categorical Features'<br>
 </body>
 
 
