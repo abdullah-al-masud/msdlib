@@ -1,11 +1,12 @@
-
+<center>
 <h1>
   msdlib
 </h1>
+</center>
 <br>
 
 
-![](https://drive.google.com/file/d/1O2FTP6ayVugOBDFKSWxma83I-SnGL95i/view?usp=sharing)
+![](msdlib/images/Combined%20Time%20Series%20Plot.jpg)
 <br>
 
 
@@ -13,7 +14,7 @@
     Introduction
 </h2>
 
-This library was first designed for my personal usage for data visualization, processing and machine learning purposes. But then I thought it might help others to do the same things with easier ways. That thought motivated me to make new functions inside the library. Its not yet rich but I am strongly willing to make it much bigger, richer and helpful for every data science and machine learning enthusiasts.
+This library was first designed for my personal usage for data visualization, processing and machine learning purposes. But then I thought it might help others to do the same things with easier ways. That thought motivated me to make new functions inside the library. Its not yet rich but I am strongly willing to make it much bigger, richer and helpful for all.
 <br>
 
 
@@ -39,11 +40,11 @@ Its best to install the most updated versions of these dependencies
   Installation
 </h2>
 
-```pip install git+https://github.com/abdullah-al-masud/msdLib```
+```pip install git+https://github.com/abdullah-al-masud/msdlib```
 
 or if you have --user related issues during installation, please use
 
-```pip install --user git+https://github.com/abdullah-al-masud/msdLib```
+```pip install --user git+https://github.com/abdullah-al-masud/msdlib```
 <br>
 
 
@@ -51,12 +52,26 @@ or if you have --user related issues during installation, please use
     License
 </h2>
 
-MIT License has been issued for this library.
+MIT open source License has been issued for this library.
 <br>
 
 
 <h2>
-    Divisions
+  Examples
+</h2>
+
+You can find easy examples on how to use the functions and classes from this library [here](https://github.com/abdullah-al-masud/msdlib/tree/master/msdlib/examples).
+Please download the used data from [here](https://drive.google.com/open?id=15gKhIKcNncteSxJxr0GEC967UwL51l5n).
+<br>
+
+<h2>
+  Documentation
+</h2>
+
+Complete documentation of classes and functions can be found [here](https://github.com/abdullah-al-masud/msdlib/blob/master/DOC.md). The list is alphabetically ordered.
+
+<h2>
+    Overview
 </h2>
 
 The whole library can be divided into 4 main portions.
@@ -67,34 +82,36 @@ The whole library can be divided into 4 main portions.
 4. Miscellaneous
 <br>
 
+Some of the frequently used programs are shown bellow.
+
 
 <h2>
     Visualization Tools
 </h2>
 
-![](https://drive.google.com/open?id=11NO0GlhwqAp8uyZsqrjdwFMiekWIRz6r)
+![](msdlib/images/All%20Columns%20Grid%20Plot.jpg)
 
-<h3>
+<center><h3>
     data_gridplot:
-</h3>
+</h3></center>
 
 Its a function for scatter plots between every pair of features along with distributions (similar to matrix_plot in pandas). But it enables you to save the image, change figure_size, titles etc and also has one special feature for clusters in the data if any.
 
-<h3>
+<center><h3>
     plot_time_series:
-</h3>
+</h3></center>
 
 This is a function and the most useful function for me from all my library functions and classes. It helps to plot time series data with a lot of flexibility. Please check out the example scripts for illustrations and guidance to use it.
 
-<h3>
+<center><h3>
     plot_heatmap:
-</h3>
+</h3></center>
 
 Flexible heatmap plotter function with options to remove symmetrical triangular side and many other options.
 
-<h3>
+<center><h3>
     get_color_from_cmap:
-</h3>
+</h3></center>
 
 This function creates colors from a specified matplotlib colormap
 <br>
@@ -105,47 +122,47 @@ This function creates colors from a specified matplotlib colormap
     Data Processing Tools
 </h2>
 
-![](https://drive.google.com/open?id=1cap1vp_wOnp-TlDidiCbziGWH2so4-Mv)
-![](https://drive.google.com/open?id=18sVVFdhOx3TjnUZ-xVis2Ql6C8Iwvbd8)
-![](https://drive.google.com/open?id=1F2zc7rhQwo6ZvX34zupHACy0AcDU0hcG)
+![](msdlib/images/filter_spectrum.png)
+![](msdlib/images/filtered_freq_spectrum.png)
+![](msdlib/images/time_series_filtered.png)
 
-<h3>
+<center><h3>
     Filters:
-</h3>
+</h3></center>
 
 This is a class defined for applying low pass, high pass, band pass and band stop filters. It also enables us to visualize frequency domain of the signal, designed filter and also let us visualize the filtered signal if we apply a filter on the signal.
 
-<h3>
+<center><h3>
     get_spectrogram:
-</h3>
+</h3></center>
 
 This is a function that allows us to calculate spectrogram of any time series signal and also plots heatmap for that spectrogram with proper frequency bins and time axis.
 
-<h3>
+<center><h3>
     grouped_mode:
-</h3>
+</h3></center>
 
-This function calculates the mode for grouped data. It iterated over different number of groupings and tries to find the most accurate mode value for a grouped data. It also have supports to ignore one or more values when calculating mode.
+This function calculates the mode for grouped data. It iterates over different number of groupings and tries to find the most accurate mode value for a grouped data. It also have supports to ignore one or more values when calculating mode.
 
-<h3>
+<center><h3>
     get_edges_from_ts:
-</h3>
+</h3></center>
 
 This function finds edges of a time series signal if we apply threshold to remove parts of the signal. It also provides the duration and interval of the edges.
 
-<h3>
+<center><h3>
     moving_slope:
-</h3>
+</h3></center>
 
 This is a function intended to calculate moving/rolling slope using linear regression on chunks of the signal. Quite capable to handle nan data and data missing problem so no need to worry about that.
 
-<h3>
+<center><h3>
     standardize: <h4>standardization function</h4>
-</h3>
+</h3></center>
 
-<h3>
+<center><h3>
     normalize: <h4>normalization function</h4>
-</h3>
+</h3></center>
 <br>
 <br>
 
@@ -155,33 +172,33 @@ This is a function intended to calculate moving/rolling slope using linear regre
     Machine Learning Tools
 </h2>
 
-<h3>
+<center><h3>
     feature_evaluator:
-</h3>
+</h3></center>
 
 This function is one of the most useful tools. It can calculate feature importance from statistical point of view with applying any tree based approach. It can show the results using bar plot and can handle classification and regression both kind of labels.
 
-<h3>
+<center><h3>
     class_result: 
-</h3>
+</h3></center>
 
 This function calculates classification evaluation parameters like precision, recall, accuracy, f1 score etc and also able to show confusion matrix as a pandas dataframe.
 
-<h3>
+<center><h3>
     rsquare_rmse: 
-</h3>
+</h3></center>
 
 This function calculates r square value and root mean square error.
 
-<h3>
+<center><h3>
     one_hot_encoding: 
-</h3>
+</h3></center>
 
 This function converts classification labels in one hot encoded format
 
-<h3>
+<center><h3>
     SplitDataset:
-</h3>
+</h3></center>
 
 This is one of the most useful classes in this library. It enables us to split data set into train, validation and test sets. We have three options here to split data set.
     <li>random_split</li>
@@ -195,7 +212,7 @@ This is one of the most useful classes in this library. It enables us to split d
     Miscellaneous
 </h2>
 
-![](https://drive.google.com/open?id=1JN-8VbeQGZMRzCwT_n5udefgEFgNynoJ)
+![](msdlib/images/progressbar_image.PNG)
 
 <h3>
     ProgressBar
