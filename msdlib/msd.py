@@ -294,7 +294,7 @@ class Filters():
 # savepath : str, path to save the figure, default is ''
 # fname : str, name of the figure to save in the savepath, default is fig_title
 
-def get_spectrogram(ts_sr, fs = None, win = ('tukey', 0.25), nperseg = None, noverlap = None, mode = 'psd', figsize = None, vis_frac = 1, ret_sxx = False, show = True, save = False, saveapth = '', fname = ''):
+def get_spectrogram(ts_sr, fs = None, win = ('tukey', 0.25), nperseg = None, noverlap = None, mode = 'psd', figsize = None, vis_frac = 1, ret_sxx = False, show = True, save = False, savepath = '', fname = ''):
    
     # default values
     if fs == None: fs = 1
