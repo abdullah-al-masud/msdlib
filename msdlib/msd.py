@@ -889,8 +889,15 @@ def get_color_from_cmap(n, cmap = 'jet', rng = [.05, .95]):
 # fig_width: float, is the width of figure, default is 30
 # fig_height: float, is the height of figure, default is 5
 # rotation: float, rotational angle of x axis labels of the figure, default is 40
+# show : bool, whether to show the graph or not, default is True
+# save : bool, whether to save the figure or not, default is False
+# savepath : str, path where the data will be saved, default is None
+# fname : str, filename which will be used for saving the figure, default is None
+# fig_title : str, title of the figure, default is 'Feature Confidence Evaluation for categorical Features'
 # This function tries to calculate the importance of features by some statistical approaches
-def feature_evaluator(data, label_name, label_type_num, n_bin = 40, is_all_num = False, is_all_cat = False, num_cols = [], cat_cols = [], cmap = 'gist_rainbow', fig_width = 30, fig_height = 5, rotation = 40):
+def feature_evaluator(data, label_name, label_type_num, n_bin = 40, is_all_num = False, is_all_cat = False, num_cols = [], 
+                      cat_cols = [], cmap = 'gist_rainbow', fig_width = 30, fig_height = 5, rotation = 40, show = True, save = False, 
+                      savepath = None, fname = None, fig_title = ''):
     
     # separating numerical and categorical feature data 
     if is_all_num:
@@ -929,6 +936,7 @@ def feature_evaluator(data, label_name, label_type_num, n_bin = 40, is_all_num =
     # loop definitions
     labels_list = [i for i in [num_labels, cat_labels] if i.shape[1] > 0]
     labels_tag = ['Numerical label', 'Categorical label']
+    fig_title = 'Feature Confidence Evaluation' if fig_title == '' else fig_title
     # to collect all values of evaluation
     num_lab_confids = {}
     # loop for numerical and categorical labels
@@ -938,10 +946,12 @@ def feature_evaluator(data, label_name, label_type_num, n_bin = 40, is_all_num =
         nrows = labels.columns.shape[0]
         if not is_all_cat:
             fig_num, ax_num = plt.subplots(figsize = (fig_width, fig_height * nrows), nrows = nrows)
-            fig_num.suptitle('Feature Confidence Evaluation for Numerical Features', y = 1.06, fontsize = 20, fontweight = 'bold')
+            fig_tnum = fig_title + 'for Numerical Features'
+            fig_num.suptitle(fig_tnum, y = 1.06, fontsize = 20, fontweight = 'bold')
         if not is_all_num:
             fig_cat, ax_cat = plt.subplots(figsize = (fig_width, fig_height * nrows), nrows = nrows)
-            fig_cat.suptitle('Feature Confidence Evaluation for categorical Features', y = 1.06, fontsize = 20, fontweight = 'bold')
+            fig_tcat = fig_title + 'for Categorical Features'
+            fig_cat.suptitle(fig_tcat, y = 1.06, fontsize = 20, fontweight = 'bold')
         # special case for nrows = 1
         if nrows == 1:
             if not is_all_cat:
@@ -1001,9 +1011,18 @@ def feature_evaluator(data, label_name, label_type_num, n_bin = 40, is_all_num =
         
         if not is_all_cat:
             fig_num.tight_layout()
+            if save and savepath != None:
+                if fname == None: fname = fig_tnum
+                if savepath[-1] != '/': savepath += '/'
+                fig_num.savefig('%s%s.jpg'%(savepath, fname), bbox_inches = 'tight')
         if not is_all_num:
             fig_cat.tight_layout()
-        plt.show()
+            if save and savepath != None:
+                if fname == None: fname = fig_tcat
+                if savepath[-1] != '/': savepath += '/'
+                fig_cat.savefig('%s%s.jpg'%(savepath, fname), bbox_inches = 'tight')
+        if show: plt.show()
+        plt.close()
     return num_lab_confids
 
 
