@@ -57,7 +57,7 @@ returns same data with two new columns with max values and corresponding column 
 <body>
 ########  FEATURE_EVALUATOR  ######################<br>
 data: should be a pandas dataframe containing label data inside it (it must contain only features and labels, no unnecessary columns are allowed)<br>
-label_name: list or str, containing name of the columns used as labels<br>
+label_name: list of str, containing name of the columns used as labels<br>
 label_type_num: list of bool, containing flag info if the labels are numerical or not (must be corresponding to label_name)<br>
 n_bin: int, expressing number of divisions of the label values. If any label is categorical, n_bin for that label will be equal to the number of categories, default is 40 for numerical labels<br>
 (here its okay to use labels before converting into one hot encoding, its even better not to convert into one hot)<br>
