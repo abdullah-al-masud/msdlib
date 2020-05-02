@@ -74,7 +74,7 @@ show : bool, whether to show the graph or not, default is True<br>
 save : bool, whether to save the figure or not, default is False<br>
 savepath : str, path where the data will be saved, default is None<br>
 fname : str, filename which will be used for saving the figure, default is None<br>
-fig_title : str, title of the figure, default is 'Feature Confidence Evaluation for categorical Features'<br>
+fig_title : str, title of the figure, default is 'Feature Confidence Evaluation for categorical/Numerical Features'<br>
 </body>
 
 
