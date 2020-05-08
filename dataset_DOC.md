@@ -1,4 +1,5 @@
 ## dataset.py contains some custom data for general usage
+#### Call these functions with proper arguments to load the data
 
 ########################### solinoid_data  ###########################<br>
 generates solinoid shaped 3D data <br>
