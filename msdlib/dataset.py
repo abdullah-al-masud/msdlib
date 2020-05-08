@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 
 
 def solinoid_data(data_len = 10000, ys = 3, delay = .3, z_spread = [0, 50]):
