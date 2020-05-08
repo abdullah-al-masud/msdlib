@@ -1,7 +1,9 @@
 # Documentation of all functions and classes
-#### <center>(ordered alphabetically)</center>
 
-NB: documentation for dataset.py is [here](https://github.com/abdullah-al-masud/msdlib/blob/master/dataset_DOC.md)
+### NB: documentation for dataset.py is [here](https://github.com/abdullah-al-masud/msdlib/blob/master/dataset_DOC.md)
+
+
+#### <center>(ordered alphabetically)</center>
 
 
 
