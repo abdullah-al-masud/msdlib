@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 
 
-def solinoid_data(data_len = 10000, ys = 3, delay = .3, z_spread = [0, 50]):
+def solenoid_data(data_len = 10000, ys = 3, delay = .3, z_spread = [0, 50]):
     data_source = []
     x = np.linspace(z_spread[0], z_spread[1], data_len)
     z = np.sin(x)
