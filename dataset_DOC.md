@@ -1,7 +1,7 @@
 ## dataset.py contains some custom data for general usage
 #### Call these functions with proper arguments to load the data
 
-########################### solinoid_data  ###########################<br>
+########################### solenoid_data  ###########################<br>
 generates solinoid shaped 3D data <br>
 data_len : total number of points, default is 10000 <br>
 ys : total number of parallel wires for solinoid, default is 3 <br>
