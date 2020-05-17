@@ -133,6 +133,7 @@ class ProgressBar():
     def __exit__(self, exception_type, exception_value, traceback):
         self.flblink = False
         time.sleep(self.tblmax)
+        self.thread.join()
         self.barend = ' Complete!' + ' '*15
         self.barprint('\n')
 
