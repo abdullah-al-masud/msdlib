@@ -1,8 +1,6 @@
-<center>
 <h1>
   msdlib
 </h1>
-</center>
 <br>
 
 
@@ -89,27 +87,27 @@ Some of the frequently used programs are shown bellow.
 
 ![](msdlib/images/All%20Columns%20Grid%20Plot.jpg)
 
-<center><h3>
+<h3>
     data_gridplot:
-</h3></center>
+</h3>
 
 Its a function for scatter plots between every pair of features along with distributions (similar to matrix_plot in pandas). But it enables you to save the image, change figure_size, titles etc and also has one special feature for clusters in the data if any.
 
-<center><h3>
+<h3>
     plot_time_series:
-</h3></center>
+</h3>
 
 This is a function and the most useful function for me from all my library functions and classes. It helps to plot time series data with a lot of flexibility. Please check out the example scripts for illustrations and guidance to use it.
 
-<center><h3>
+<h3>
     plot_heatmap:
-</h3></center>
+</h3>
 
 Flexible heatmap plotter function with options to remove symmetrical triangular side and many other options.
 
-<center><h3>
+<h3>
     get_color_from_cmap:
-</h3></center>
+</h3>
 
 This function creates colors from a specified matplotlib colormap
 <br>
@@ -124,43 +122,43 @@ This function creates colors from a specified matplotlib colormap
 ![](msdlib/images/filtered_freq_spectrum.png)
 ![](msdlib/images/time_series_filtered.png)
 
-<center><h3>
+<h3>
     Filters:
-</h3></center>
+</h3>
 
 This is a class defined for applying low pass, high pass, band pass and band stop filters. It also enables us to visualize frequency domain of the signal, designed filter and also let us visualize the filtered signal if we apply a filter on the signal.
 
-<center><h3>
+<h3>
     get_spectrogram:
-</h3></center>
+</h3>
 
 This is a function that allows us to calculate spectrogram of any time series signal and also plots heatmap for that spectrogram with proper frequency bins and time axis.
 
-<center><h3>
+<h3>
     grouped_mode:
-</h3></center>
+</h3>
 
 This function calculates the mode for grouped data. It iterates over different number of groupings and tries to find the most accurate mode value for a grouped data. It also have supports to ignore one or more values when calculating mode.
 
-<center><h3>
+<h3>
     get_edges_from_ts:
-</h3></center>
+</h3>
 
 This function finds edges of a time series signal if we apply threshold to remove parts of the signal. It also provides the duration and interval of the edges.
 
-<center><h3>
+<h3>
     moving_slope:
-</h3></center>
+</h3>
 
 This is a function intended to calculate moving/rolling slope using linear regression on chunks of the signal. Quite capable to handle nan data and data missing problem so no need to worry about that.
 
-<center><h3>
+<h3>
     standardize: <h4>standardization function</h4>
-</h3></center>
+</h3>
 
-<center><h3>
+<h3>
     normalize: <h4>normalization function</h4>
-</h3></center>
+</h3>
 <br>
 <br>
 
@@ -170,33 +168,33 @@ This is a function intended to calculate moving/rolling slope using linear regre
     Machine Learning Tools
 </h2>
 
-<center><h3>
+<h3>
     feature_evaluator:
-</h3></center>
+</h3>
 
 This function is one of the most useful tools. It can calculate feature importance from statistical point of view with applying any tree based approach. It can show the results using bar plot and can handle classification and regression both kind of labels.
 
-<center><h3>
+<h3>
     class_result: 
-</h3></center>
+</h3>
 
 This function calculates classification evaluation parameters like precision, recall, accuracy, f1 score etc and also able to show confusion matrix as a pandas dataframe.
 
-<center><h3>
+<h3>
     rsquare_rmse: 
-</h3></center>
+</h3>
 
 This function calculates r square value and root mean square error.
 
-<center><h3>
+<h3>
     one_hot_encoding: 
-</h3></center>
+</h3>
 
 This function converts classification labels in one hot encoded format
 
-<center><h3>
+<h3>
     SplitDataset:
-</h3></center>
+</h3>
 
 This is one of the most useful classes in this library. It enables us to split data set into train, validation and test sets. We have three options here to split data set.
     <li>random_split</li>
