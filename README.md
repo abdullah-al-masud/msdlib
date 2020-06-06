@@ -4,7 +4,6 @@
 <br>
 
 ![](https://github.com/abdullah-al-masud/msdlib/blob/master/msdlib/images/data_gridplot_irish.jpeg)
-![](msdlib/images/Combined%20Time%20Series%20Plot.jpg)
 <br>
 
 
@@ -96,6 +95,7 @@ Its a function for scatter plots between every pair of features along with distr
 <h3>
     plot_time_series:
 </h3>
+![](msdlib/images/Combined%20Time%20Series%20Plot.jpg)
 
 This is a function and the most useful function for me from all my library functions and classes. It helps to plot time series data with a lot of flexibility. Please check out the example scripts for illustrations and guidance to use it.
 
