@@ -64,6 +64,7 @@ Please download the used data from [here](https://drive.google.com/open?id=15gKh
 </h2>
 
 Complete documentation of classes and functions can be found [here](https://github.com/abdullah-al-masud/msdlib/blob/master/DOC.md). The list is alphabetically ordered.
+<br>
 
 <h2>
     Overview
@@ -91,11 +92,14 @@ Some of the frequently used programs are shown bellow.
 </h3>
 
 Its a function for scatter plots between every pair of features along with distributions (similar to matrix_plot in pandas). But it enables you to save the image, change figure_size, titles etc and also has one special feature for clusters in the data if any.
+<br>
 
+
+![](msdlib/images/Combined%20Time%20Series%20Plot.jpg)
+<br>
 <h3>
     plot_time_series:
 </h3>
-![](msdlib/images/Combined%20Time%20Series%20Plot.jpg)
 
 This is a function and the most useful function for me from all my library functions and classes. It helps to plot time series data with a lot of flexibility. Please check out the example scripts for illustrations and guidance to use it.
 
