@@ -3,4 +3,7 @@ python:
   - "3.7"
   - "3.8"
 
-install: pip install .
+before_install:
+  - pip install pytest pytest-cov
+install: ""
+script: -pytest
