@@ -1270,8 +1270,9 @@ class SplitDataset():
     def sequence_split(self, seq_len, val_ratio = .15, data_stride = 1, label_shift = 1,
                        split_method = 'multiple_train_val', sec = 1, dist = 0):
         # split_method
-        if split_method == 'train_val' and sec == 1: sec = 1
-        else: self.split_method_error("'train_val' type split method can not have sec = %s"%sec)
+        if split_method == 'train_val':
+            if sec == 1: sec = 1
+            else: self.split_method_error("'train_val' type split method can not have sec = %s"%sec)
         test_fl = bool(self.test_ratio)    # test data flag
         skipsecs = sec * 2 - 1 + int(test_fl)    # number of segments to be considered for deleting data
         skiplen = seq_len + dist      # number of data indices to be removed
