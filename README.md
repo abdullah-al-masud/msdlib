@@ -4,7 +4,7 @@
 <br>
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![PyPI version fury.io](https://badge.fury.io/py/ansicolortags.svg)](https://pypi.org/project/msdlib/)
+[![PyPI version](https://badge.fury.io/py/msdlib.svg)](https://badge.fury.io/py/msdlib)
 
 <br>
 <br>
