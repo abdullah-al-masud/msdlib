@@ -738,9 +738,9 @@ def plot_time_series(same_srs, srs = [], segs = None, same_srs_width = [], spans
 # lbfactor : float/int, factor used for scaling the plot labels
 def plot_heatmap(data, keep = 'both', rem_diag = False, cmap = 'gist_heat', cbar = True, stdz = False, annotate = False, fmt = None,
                  show = True, save = False, savepath = '', figsize = (30, 10), fig_title = '', file_name = '',
-                 lbfactor = 1.5):
-    xlb = data.index.name
-    ylb = data.columns.name
+                 lbfactor = 1.5, xrot = 90):
+    ylb = data.index.name
+    xlb = data.columns.name
     if stdz:
         data_std = data.std()
         data_std[data_std == 0] = 1
@@ -759,7 +759,7 @@ def plot_heatmap(data, keep = 'both', rem_diag = False, cmap = 'gist_heat', cbar
     ax.set_xlabel(xlb)
     ax.set_ylabel(ylb)
     ax.tick_params(axis = 'y', rotation = 0)
-    ax.tick_params(axis = 'x', rotation = 90)
+    ax.tick_params(axis = 'x', rotation = xrot)
     if fig_title == '': fig_title = 'Heatmap of %s'%data.columns.name if data.columns.name not in ['', None] else 'Heatmap'
     ax.set_title(fig_title)
     fig.tight_layout()
