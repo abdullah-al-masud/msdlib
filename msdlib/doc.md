@@ -208,6 +208,7 @@ figsize : tuple, figure size<br>
 fig_title : str, title of the heatmap, default is 'Heatmap of {data.columns.name}'<br>
 file_name : str, name of the image as will be saved in savepath, default is fig_title<br>
 lbfactor : float/int, factor used for scaling the plot labels<br>
+xrot : float, label rotation angle for x axis, defualt is 90.
 </body>
 
 
