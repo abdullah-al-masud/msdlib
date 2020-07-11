@@ -872,6 +872,14 @@ def plot_diag(arr, bins, ax, diag, color, label):
 def get_color_from_cmap(n, cmap = 'jet', rng = [.05, .95]):
     return [get_cmap(cmap)(i) for i in np.linspace(rng[0], rng[1], n)]
 
+# returns many CSS4 named colors available in matplotlib
+def get_named_colors():
+    colors = ['darkcyan', 'crimson', 'coral', 'forestgreen', 'purple', 'magenta', 'khaki', 'maroon',
+              'darkslategray', 'brown', 'gray', 'darkorange', 'mediumseagreen', 'royalblue', 'midnightblue',
+              'turquoise', 'rosybrown', 'darkgoldenrod', 'olive', 'saddlebrown', 'darkseagreen', 'deeppink',
+              'aqua', 'lawngreen', 'tab:red', 'gold', 'tan', 'peru', 'violet', 'thistle', 'steelblue',
+              'darkkhaki', 'chocolate', 'mediumspringgreen', 'rebeccapurple', 'tomato']
+    return colors
 
 
 
