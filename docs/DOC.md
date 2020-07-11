@@ -139,6 +139,12 @@ del_side : {'up', 'down'}, indicating which side to be removed to get edges<br>
 Note: the algorithm starts recording when it exceeds the threshold value, so open interval system.<br>
 </body>
 
+
+## get_named_colors
+<body>
+###############  GET_NAMED_COLORS  #################33333 <br>
+this function returns namy css4 named colors available in matplotlib
+
 ## get_spectrogram
 <body>
 ######### find the spectrogram of a time series signal ############<br>
