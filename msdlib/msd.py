@@ -847,7 +847,7 @@ def data_gridplot(data, idf = [], idf_pref = '', idf_suff = '', diag = 'hist', b
             if j == 0: ax[i, j].set_ylabel(col[i])
             ax[i, j].grid(True)
     fig.tight_layout()
-    plt.show()
+    if show: plt.show()
     if save and savepath != '':
         if fname == '': fname = fig_title
         fig.savefig('%s/%s.jpg'%(savepath, fname), bbox_inches = 'tight')
