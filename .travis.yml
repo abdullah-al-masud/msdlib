@@ -5,4 +5,4 @@ python:
 
 install: ""
 script: 
-  - "msdlib/travis-test.py"
+  - msdlib/travis-test
