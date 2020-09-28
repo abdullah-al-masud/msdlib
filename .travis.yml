@@ -4,4 +4,5 @@ python:
   - "3.8"
 
 install: ""
-script: -pytest
+script: 
+  -msdlib/travis-test.py
