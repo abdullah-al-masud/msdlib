@@ -3,9 +3,7 @@ python:
   - "3.7"
   - "3.8"
 
-before_install:
-  - pip install pytest-cov
-  - cd python
+install: ""
 
 script: 
-  - py.test -v --cov=maths
+  - pytest test.py
