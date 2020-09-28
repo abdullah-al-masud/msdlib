@@ -3,6 +3,8 @@ python:
   - "3.7"
   - "3.8"
 
-install: ""
+install: 
+  - pip install .
+
 script: 
-  - coverage run msdlib/travis-test.py
+  - pytest
