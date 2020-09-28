@@ -5,4 +5,4 @@ python:
 
 install: ""
 script: 
-  - msdlib/travis-test
+  - coverage run msdlib/travis-test.py
