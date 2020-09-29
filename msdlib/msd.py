@@ -1084,7 +1084,7 @@ def class_result(y, pred, out_confus = False):
         else:
             f = 0
         f_msr.append(f)
-        acc.append('-')
+        acc.append(np.nan)
     result = pd.DataFrame([prec, recall, f_msr], columns = labels, index = ['precision', 'recall', 'f1_score'])
     avg = result.T.mean()
     avg.name = 'average'
