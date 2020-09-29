@@ -736,9 +736,9 @@ def plot_time_series(same_srs, srs = [], segs = None, same_srs_width = [], spans
 # fig_title : str, title of the heatmap, default is 'Heatmap of {data.columns.name}'
 # file_name : str, name of the image as will be saved in savepath, default is fig_title
 # lbfactor : float/int, factor used for scaling the plot labels
-def plot_heatmap(data, keep = 'both', rem_diag = False, cmap = 'gist_heat', cbar = True, stdz = False, annotate = False, fmt = None, center = None,
+def plot_heatmap(data, keep = 'both', rem_diag = False, cmap = 'gist_heat', cbar = True, stdz = False, annotate = False, fmt = None, vmin = None, vmax = None, center = None,
                  show = True, save = False, savepath = '', figsize = (30, 10), fig_title = '', file_name = '',
-                 lbfactor = 1.5, xrot = 90):
+                 lbfactor = 1.5, xrot = 90, ax = None):
     ylb = data.index.name
     xlb = data.columns.name
     if stdz:
@@ -754,21 +754,23 @@ def plot_heatmap(data, keep = 'both', rem_diag = False, cmap = 'gist_heat', cbar
     elif keep == 'down':
         k = -1 if rem_diag else 0
         data = data.where(np.tril(np.ones(data.shape), k = k).astype(bool))
-    fig, ax = plt.subplots(figsize = figsize)
-    sns.heatmap(data, ax = ax, linewidths = 0, cbar = cbar, cmap = cmap, annot = annotate, fmt = fmt, center = center)
+    if ax is None: fig, ax = plt.subplots(figsize = figsize)
+    sns.heatmap(data, ax = ax, linewidths = 0, cbar = cbar, cmap = cmap, annot = annotate, fmt = fmt, center = center, vmin = vmin, vmax = vmax)
     ax.set_xlabel(xlb)
     ax.set_ylabel(ylb)
     ax.tick_params(axis = 'y', rotation = 0)
     ax.tick_params(axis = 'x', rotation = xrot)
     if fig_title == '': fig_title = 'Heatmap of %s'%data.columns.name if data.columns.name not in ['', None] else 'Heatmap'
     ax.set_title(fig_title)
-    fig.tight_layout()
-    if show: plt.show()
-    if save and savepath != '':
-        if file_name == '': file_name = fig_title
-        fig.savefig('%s/%s.jpg'%(savepath, file_name), bbox_inches = 'tight')
-    plt.close()
-
+    if ax is None:
+        fig.tight_layout()
+        if show: plt.show()
+        if save and savepath != '':
+            if file_name == '': file_name = fig_title
+            fig.savefig('%s/%s.jpg'%(savepath, file_name), bbox_inches = 'tight')
+        plt.close()
+    else:
+        return ax
 
 
 
