@@ -1041,8 +1041,8 @@ def feature_evaluator(data, label_name, label_type_num, n_bin = 40, is_all_num =
 # ############ CLASS_RESULT  ##############
 # classification result with confusion matrix
 # ARGUMENTS
-# y --> True labels
-# pred --> Predictions
+# y --> True labels, a vector holding class indices like 0, 1, 2 .. etc.
+# pred --> Predictions, a vector containing prediction opt for class indices similar to True labels 
 # out_confus --> returns confusion matrix if set True
 # RETURNS
 # result --> DataFrame containing precision, recall and f1 scores for all labels
