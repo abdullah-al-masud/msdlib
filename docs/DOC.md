@@ -13,8 +13,8 @@
 
 classification result with confusion matrix<br>
 ARGUMENTS<br>
-y: True labels<br>
-pred: Predictions<br>
+y: True labels, a vector holding class indices like 0, 1, 2 .. etc.<br>
+pred: Predictions, a vector containing prediction opt for class indices similar to True labels<br>
 out_confus: returns confusion matrix if set True<br>
 RETURNS<br>
 result: DataFrame containing precision, recall and f1 scores for all labels<br>
