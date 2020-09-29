@@ -738,7 +738,7 @@ def plot_time_series(same_srs, srs = [], segs = None, same_srs_width = [], spans
 # lbfactor : float/int, factor used for scaling the plot labels
 def plot_heatmap(data, keep = 'both', rem_diag = False, cmap = 'gist_heat', cbar = True, stdz = False, annotate = False, fmt = None, vmin = None, vmax = None, center = None,
                  show = True, save = False, savepath = '', figsize = (30, 10), fig_title = '', file_name = '',
-                 lbfactor = 1.5, xrot = 90, ax = None):
+                 lbfactor = 1.5, xrot = 90, axobj = None):
     ylb = data.index.name
     xlb = data.columns.name
     if stdz:
@@ -754,7 +754,8 @@ def plot_heatmap(data, keep = 'both', rem_diag = False, cmap = 'gist_heat', cbar
     elif keep == 'down':
         k = -1 if rem_diag else 0
         data = data.where(np.tril(np.ones(data.shape), k = k).astype(bool))
-    if ax is None: fig, ax = plt.subplots(figsize = figsize)
+    if axobj is None: fig, ax = plt.subplots(figsize = figsize)
+    else: ax = axobj
     sns.heatmap(data, ax = ax, linewidths = 0, cbar = cbar, cmap = cmap, annot = annotate, fmt = fmt, center = center, vmin = vmin, vmax = vmax)
     ax.set_xlabel(xlb)
     ax.set_ylabel(ylb)
@@ -762,7 +763,7 @@ def plot_heatmap(data, keep = 'both', rem_diag = False, cmap = 'gist_heat', cbar
     ax.tick_params(axis = 'x', rotation = xrot)
     if fig_title == '': fig_title = 'Heatmap of %s'%data.columns.name if data.columns.name not in ['', None] else 'Heatmap'
     ax.set_title(fig_title)
-    if ax is None:
+    if axobj is None:
         fig.tight_layout()
         if show: plt.show()
         if save and savepath != '':
