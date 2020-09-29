@@ -736,7 +736,7 @@ def plot_time_series(same_srs, srs = [], segs = None, same_srs_width = [], spans
 # fig_title : str, title of the heatmap, default is 'Heatmap of {data.columns.name}'
 # file_name : str, name of the image as will be saved in savepath, default is fig_title
 # lbfactor : float/int, factor used for scaling the plot labels
-def plot_heatmap(data, keep = 'both', rem_diag = False, cmap = 'gist_heat', cbar = True, stdz = False, annotate = False, fmt = None,
+def plot_heatmap(data, keep = 'both', rem_diag = False, cmap = 'gist_heat', cbar = True, stdz = False, annotate = False, fmt = None, center = None,
                  show = True, save = False, savepath = '', figsize = (30, 10), fig_title = '', file_name = '',
                  lbfactor = 1.5, xrot = 90):
     ylb = data.index.name
@@ -755,7 +755,7 @@ def plot_heatmap(data, keep = 'both', rem_diag = False, cmap = 'gist_heat', cbar
         k = -1 if rem_diag else 0
         data = data.where(np.tril(np.ones(data.shape), k = k).astype(bool))
     fig, ax = plt.subplots(figsize = figsize)
-    sns.heatmap(data, ax = ax, linewidths = 0, cbar = cbar, cmap = cmap, annot = annotate, fmt = fmt)
+    sns.heatmap(data, ax = ax, linewidths = 0, cbar = cbar, cmap = cmap, annot = annotate, fmt = fmt, center = center)
     ax.set_xlabel(xlb)
     ax.set_ylabel(ylb)
     ax.tick_params(axis = 'y', rotation = 0)
@@ -1086,6 +1086,7 @@ def class_result(y, pred, out_confus = False):
         f_msr.append(f)
         acc.append(np.nan)
     result = pd.DataFrame([prec, recall, f_msr], columns = labels, index = ['precision', 'recall', 'f1_score'])
+    result.columns = [str(c) for c in result.columns]
     avg = result.T.mean()
     avg.name = 'average'
     result = pd.concat((result, avg), axis = 1, sort = False)
