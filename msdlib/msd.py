@@ -632,7 +632,7 @@ def plot_time_series(same_srs, srs = [], segs = None, same_srs_width = [], spans
     nrows = segs.shape[0]
     colors = ['darkcyan', 'coral', 'darkslateblue', 'limegreen', 'crimson', 'purple', 'blue', 'khaki', 'chocolate', 'forestgreen']
     spcolors = ['darkcyan', 'coral', 'purple', 'red', 'khaki', 'gray', 'darkslateblue', 'limegreen', 'red', 'blue']
-    lcolors = ['crimson', 'magenta', 'darkolivegreen', 'palevioletred', 'indigo', 'chokolate', 'blue', 'forestgreen', 'grey', 'magenta']
+    lcolors = ['crimson', 'darkcyan' , 'darkolivegreen', 'palevioletred', 'indigo', 'chokolate', 'blue', 'forestgreen', 'grey', 'magenta']
     if totsame + totdif > len(colors): colors = get_color_from_cmap(totsame + totdif, 'rainbow')
     if totsp > len(spcolors): colors = get_color_from_cmap(totsp, 'rainbow')
     if totline > len(lcolors): colors = get_color_from_cmap(totline, 'rainbow')
