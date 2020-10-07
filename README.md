@@ -5,7 +5,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![PyPI version](https://badge.fury.io/py/msdlib.svg)](https://badge.fury.io/py/msdlib)
-[![Build : passing](https://travis-ci.org/abdullah-al-masud/msdlib.svg?branch=master)]
+![Build : passing](https://travis-ci.org/abdullah-al-masud/msdlib.svg?branch=master)
 <br>
 <br>
 <br>
