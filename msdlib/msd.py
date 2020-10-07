@@ -1325,3 +1325,76 @@ class SplitDataset():
                 if sec == 1 or nm == 'test':
                     outdata[nm][k] = outdata[nm][k]['section_1']
         return outdata
+
+   
+
+# params : dict of lists containing choices for each of the param keys
+# mode : str, search mode; avaialble modes {'random', 'grid'}, default is 'random'
+# find : str, minimizing or maximizing the score ? ; available {'min', 'max'}, default 'min'
+# iteration : int, number of iterations to be done, default is None
+# top : int, number of top scores to be stored; default is 3
+# rand_it_perc : float (0 ~ 1), indirectly sets the total number of iteration in 'random' model if iteration is not given, default is .5
+# shuffle_queue : bool, whether to shuffle the parameter queue or not, default is True
+
+class paramOptimizer():
+    
+    def __init__(self, params, mode = 'random', find = 'min', iteration = None, top = 3, rand_it_perc = .5, shuffle_queue = True):
+        self.params = params
+        self.paramlen = {p : len(params[p]) for p in params}
+        self.queue = self.get_queue()
+        self.total_it = len(self.queue)
+        self.mode = mode
+        if self.mode == 'random':
+            if iteration is None: self.iteration = int(self.total_it * rand_it_perc)
+            else: self.iteration = iteration
+            shuffle_queue = True
+        elif self.mode == 'grid': self.iteration = self.total_it
+        if shuffle_queue: random.shuffle(self.queue)
+        self.queue = pd.DataFrame(self.queue)
+        self.queue['score'] = np.nan
+        self.queue_cnt = 0
+        self.top = top
+        self.ascending = True if find == 'min' else False
+        self.tops = pd.DataFrame(index = [i for i in range(self.top + 1)], columns = ['queue_idx', 'score'])
+        self.storage = []
+    
+    def get_queue(self,):
+        counts = [[p for p in self.params], [0 for _ in self.params], [len(params[p]) for p in self.params]]
+        total_param = len(self.params)
+        records = []
+        while True:
+            record = {p : self.params[p][i] for p, i in zip(counts[0], counts[1])}
+            records.append(record)
+            counts[1][0] += 1
+            for pnum in range(1, total_param):
+                if counts[1][pnum - 1] == counts[2][pnum - 1]: 
+                    counts[1][pnum] += 1
+                    counts[1][pnum - 1] = 0
+            if counts[1][-1] == counts[2][-1] : break
+        return records
+    
+    # gives the selected parameter
+    def get_param(self,):
+        return dict(self.queue.drop('score', axis = 1).iloc[self.queue_cnt])
+    
+    # this function takes in score value on what optimization is done
+    # score : the score value
+    # element : any additional storage element like model or any other variable etc.
+    def set_score(self, score, element = ''):
+        self.queue['score'].iloc[self.queue_cnt] = score
+        if self.queue_cnt < self.top + 1:
+            self.tops.iloc[self.queue_cnt] = [self.queue_cnt, score]
+            self.storage.append(element)
+        else:
+            self.tops.iloc[self.top] = [self.queue_cnt, score]
+            self.storage[-1] = element
+            self.tops.sort_values('score', ascending = self.ascending, inplace = True)
+            self.storage = [self.storage[i] for i in self.tops.index]
+            self.tops.reset_index(drop = True, inplace = True)
+        self.queue_cnt += 1
+        if self.queue_cnt == self.iteration: return True
+        else: return False
+    
+    # this function provides the best parameter set in the end (can also be used at any time instance in stead of end)
+    def best(self,):
+        return self.queue.iloc[self.tops['queue_idx'].values[:-1]].reset_index(drop = True), self.storage[:-1]
