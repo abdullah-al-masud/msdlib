@@ -3,7 +3,7 @@
 </h1>
 <br>
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![PyPI license](https://img.shields.io/pypi/l/msdlib.svg)](https://pypi.python.org/pypi/msdlib/)
 [![PyPI version](https://badge.fury.io/py/msdlib.svg)](https://badge.fury.io/py/msdlib)
 ![Build : passing](https://travis-ci.org/abdullah-al-masud/msdlib.svg?branch=master)
 <br>
