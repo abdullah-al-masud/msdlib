@@ -1359,7 +1359,7 @@ class paramOptimizer():
         self.storage = []
     
     def get_queue(self,):
-        counts = [[p for p in self.params], [0 for _ in self.params], [len(params[p]) for p in self.params]]
+        counts = [[p for p in self.params], [0 for _ in self.params], [len(self.params[p]) for p in self.params]]
         total_param = len(self.params)
         records = []
         while True:
