@@ -1280,7 +1280,7 @@ class SplitDataset():
     # dist : int, number of data to be leftover between two adjacent sec, default is 0
     # returns data, label and indices for train, validation and test data sets as pydict
     def sequence_split(self, seq_len, val_ratio = .15, data_stride = 1, label_shift = 1,
-                       split_method = 'multiple_train_val', sec = 1, dist = 0):
+                       split_method = 'multiple_train_val', sec = 1, dist = 0, inference = False):
         # split_method
         if split_method == 'train_val':
             if sec == 1: sec = 1
@@ -1294,6 +1294,14 @@ class SplitDataset():
         val_len_ps = int(val_ratio / (1 - self.test_ratio) * data_per_sec)      # number of validation indices per section
         tr_len_ps = int(data_per_sec - val_len_ps)       # number of train indices per section
         outdata = {x : {y : {'section_%d'%(i + 1) : [] for i in range(sec)} for y in self.dataset} for x in ['train', 'validation', 'test']}
+        if inference:
+            outdata = {'inference' : {m : [] for m in ['data', 'label', 'index']}}
+            for st in range(self.data_shape[0] - seq_len + 1):
+                outdata['inference']['data'].append(self.dataset['data'][st : st + seq_len])
+                outdata['inference']['label'].append(self.dataset['label'][st + seq_len - 1 + label_shift])
+                outdata['inference']['index'].append(self.dataset['index'][st + seq_len - 1])
+            for k in outdata['inference']: outdata['inference'][k] = np.array(outdata['inference'][k])
+            return outdata
         if test_fl:
             # test data starting indices
             sts = np.array([self.data_shape[0] - seq_len - label_shift - i * data_stride for i in range(test_len)])
