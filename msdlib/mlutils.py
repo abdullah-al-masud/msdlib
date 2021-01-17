@@ -2,7 +2,7 @@ import torch
 from torch import nn
 import pandas as pd
 import matplotlib.pyplot as plt
-from msdlib import msd
+import msd
 import numpy as np
 plt.rcParams['figure.facecolor'] = 'white'
 
