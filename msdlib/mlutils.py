@@ -240,7 +240,7 @@ class torchModel():
         """
         # plotting loss curve
         if self.plot_loss and self.epoch > 1 and losses is not None:
-            ylim_upper = losses.quantile(params.get('quant_perc', .98)).max()
+            ylim_upper = losses.quantile(self.quant_perc).max()
             ylim_lower = losses.min().min()
             fig, ax = plt.subplots(figsize = (25, 4))
             losses.plot(ax = ax, color = ['darkcyan', 'crimson'])
