@@ -7,16 +7,6 @@ import numpy as np
 plt.rcParams['figure.facecolor'] = 'white'
 
 
-# number of hidden layers = n
-# number of layer functions inside layer_funcs = n
-# number of unit values inside units = n + 1
-# number of activation functions inside activations = n
-# in case of DROPOUT, BATCHNORM layers, corresponding unit will be None
-# Layer function needs to take in two parameters ; in and out units (example- Dense)
-# ----------example---------
-# layer_funcs = [nn.Linear, nn.Dropout(.5), nn.Linear]
-# units = [train_data.shape[1], 200, None, train_label.shape[1]]
-# activations = [F.relu, None, F.softmax]
 class NNmodel(nn.Module):
     def __init__(self, layer_funcs):
         
@@ -41,29 +31,29 @@ class NNmodel(nn.Module):
 # number of unit values inside units = [input_data_shape] + [encoder units] + [decoder units]
 # layer_func by default is Dense
 class AutoEncoderModel(nn.Module):
-    def __init__(self, units, encode_acts, decode_acts, layer_func = nn.Linear):
-        super(NNmodel, self).__init__()
-        self.layers = len(units) // 2 - 1
-        self.encode_layers = []
-        self.decode_layers = []
-        for i in range(self.layers):
-            self.encode_layers.append(layer_func(units[i], units[i + 1]))
-            self.decode_layers.append(layer_func(units[self.layers + i], units[self.layers + i + 1]))
-        self.encode_layers = nn.ModuleList(self.encode_layers)
-        self.decode_layers = nn.ModuleList(self.decode_layers)
-        self.encode_acts = encode_acts
-        self.decode_acts = decode_acts
+    def __init__(self, enc_layers, dec_layers, params={}):
+        
+        super(AutoEncoderModel, self).__init__()
+        # reproducibility parameters
+        seed_value = 1216
+        np.random.seed(seed_value)
+        torch.manual_seed(seed_value)
+        torch.backends.cudnn.deterministic = True
+        torch.backends.cudnn.benchmark = False
+        
+        self.encode_layers = nn.ModuleList(enc_layers)
+        self.decode_layers = nn.ModuleList(dec_layers)
+        self.enc_len = len(self.encode_layers)
+        self.dec_len = len(self.decode_layers)
     
     def encode(self, x):
-        for i in range(self.layers):
+        for i in range(self.enc_len):
             x = self.encode_layers[i](x)
-            if self.encode_acts[i] is not None : x = self.encode_acts[i](x)
         return x
     
     def decode(self, x):
-        for i in range(self.layers):
+        for i in range(self.dec_len):
             x = self.decode_layers[i](x)
-            if self.decode_acts[i] is not None : x = self.decode_acts[i](x)
         return x
         
     def forward(self, x):
@@ -78,10 +68,10 @@ class torchModel():
     
     def __init__(self, layers, loss_func=None, optimizer=None, learning_rate=.0001, epoch=2, batch_size=32, lr_reduce=1, 
                  loss_reduction='mean', model_type='regressor', use_gpu=True, model_name='pytorch', dtype=torch.float32,
-                 plot_loss=True, quant_perc=.98, plot_true_pred=True, loss_roll_period=1):
+                 plot_loss=True, quant_perc=.98, plot_true_pred=True, loss_roll_period=1, model=None):
         
         # defining model architecture
-        self.model = NNmodel(layers)
+        self.model = NNmodel(layers) if model is None else model
         self.loss_func = loss_func if loss_func is not None else nn.MSELoss
         self.optimizer = optimizer if optimizer is not None else torch.optim.Adam
         
@@ -107,14 +97,13 @@ class torchModel():
         self.model = self.model.to(device=self.device, dtype=self.dtype)
         self.loss_func = loss_func(reduction=self.loss_reduction).to(device=self.device, dtype=self.dtype)
         self.optimizer = self.optimizer(self.model.parameters(), lr = self.learning_rate)
-        self.losses = None
         
         # learning rate scheduler
         lr_lambda = lambda ep : self.lr_reduce ** ep
         self.scheduler = torch.optim.lr_scheduler.LambdaLR(self.optimizer, lr_lambda)
         
     
-    def fit(self, data, label, validation_ratio=.15, evaluate=True, figsize=(15, 6)):
+    def fit(self, data, label, validation_ratio=.15, evaluate=True, figsize=(18, 4)):
         """
         scikit like wrapper for training DNN model
         data: input train data, must be torch tensor or numpy ndarray
@@ -123,10 +112,10 @@ class torchModel():
         """
         
         # allowing pandas dataframe or series input
-        if isinstance(data, pd.DataFrame): data = data.values.copy()
-        elif isinstance(data, pd.Series): data = data.to_frame().values.copy()
-        if isinstance(label, pd.DataFrame): label = label.values.copy()
-        elif isinstance(label, pd.Series): label = label.values.copy()
+        if isinstance(data, pd.DataFrame): data = data.values
+        elif isinstance(data, pd.Series): data = data.to_frame().values
+        if isinstance(label, pd.DataFrame): label = label.values
+        elif isinstance(label, pd.Series): label = label.values
         
         # splitting data set
         train_ratio = 1 - validation_ratio
@@ -198,8 +187,19 @@ class torchModel():
             loss_curves[1].append(val_loss.item())
         
         print('...training complete !!')
-        self.losses = pd.DataFrame(loss_curves, index = ['train_loss', 'validation_loss'], columns = np.arange(1, self.epoch + 1)).T.rolling(self.loss_roll_period).mean()
+        losses = pd.DataFrame(loss_curves, index = ['train_loss', 'validation_loss'], columns = np.arange(1, self.epoch + 1)).T.rolling(self.loss_roll_period).mean()
         
+        # plotting loss curve
+        if self.plot_loss and self.epoch > 1:
+            ylim_upper = losses.quantile(self.quant_perc).max()
+            ylim_lower = losses.min().min()
+            fig, ax = plt.subplots(figsize = (25, 4))
+            losses.plot(ax = ax, color = ['darkcyan', 'crimson'])
+            ax.set_ylim(ylim_lower, ylim_upper)
+            fig.suptitle('Learning curves', y = 1, fontsize = 15, fontweight = 'bold')
+            fig.tight_layout()
+            plt.show()
+
         # model training evaluation
         if evaluate: self.evaluate([train_data, val_data], [train_label, val_label], set_names=['Train_set', 'Validation_set'], figsize=figsize)
 
@@ -209,11 +209,13 @@ class torchModel():
         """
         a wrapper function that generates prediction from pytorch model
         data: input data to predict on, must be a torch tensor or numpy ndarray
+        returns predictions
         """
         
         # checking data type
         if isinstance(data, pd.DataFrame) or isinstance(data, pd.Series): data = data.values
-        if isinstance(data, np.ndarray): data = torch.from_numpy(data).to(device=self.device, dtype=self.dtype)
+        if isinstance(data, np.ndarray): data = torch.from_numpy(data)
+        data = data.to(device=self.device, dtype=self.dtype)
         
         # estimating number of mini-batch
         n_batch = data.shape[0] // self.batch_size + int(bool(data.shape[0] % self.batch_size))
@@ -235,20 +237,10 @@ class torchModel():
         data_sets: list of data, data must be nunmpy ndarray or torch tensor
         label_sets: list of labels corresponding to each data, label must be nunmpy ndarray or torch tensor
         set_names: names of the data sets
-        losses: pandas dataFrame containing training and validation loss
         figsize: figure size for the evaluation plots
         """
-        # plotting loss curve
-        if self.plot_loss and self.epoch > 1 and self.losses is not None:
-            ylim_upper = self.losses.quantile(self.quant_perc).max()
-            ylim_lower = self.losses.min().min()
-            fig, ax = plt.subplots(figsize = (25, 4))
-            self.losses.plot(ax = ax, color = ['darkcyan', 'crimson'])
-            ax.set_ylim(ylim_lower, ylim_upper)
-            fig.suptitle('Learning curves', y = 1, fontsize = 15, fontweight = 'bold')
-            fig.tight_layout()
-            plt.show()
 
+        results, all_results = None, None
         # plotting true vs prediction curve (regression) or confusion matrix (classification)
         if self.plot_true_pred and self.model_type.lower() in ['regressor', 'classifier'] and len(data_sets) > 0:
             set_names = set_names if len(set_names) > 0 else ['data-%d'%(i+1) for i in range(len(data_sets))]
