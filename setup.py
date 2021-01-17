@@ -5,7 +5,7 @@ with open("README.md", "r") as f:
 
 setuptools.setup(
     name="msdlib",
-    version="0.1.2.1",
+    version="0.1.2.3",
     author="Abdullah Al Masud",
     author_email="abdullahalmasud.buet@gmail.com",
     description="My utility functions are stored here which I often use for my purposes.",

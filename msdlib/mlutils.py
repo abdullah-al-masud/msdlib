@@ -107,6 +107,7 @@ class torchModel():
         self.model = self.model.to(device=self.device, dtype=self.dtype)
         self.loss_func = loss_func(reduction=self.loss_reduction).to(device=self.device, dtype=self.dtype)
         self.optimizer = self.optimizer(self.model.parameters(), lr = self.learning_rate)
+        self.losses = None
         
         # learning rate scheduler
         lr_lambda = lambda ep : self.lr_reduce ** ep
@@ -197,14 +198,13 @@ class torchModel():
             loss_curves[1].append(val_loss.item())
         
         print('...training complete !!')
-        losses = pd.DataFrame(loss_curves, index = ['train_loss', 'validation_loss'], columns = np.arange(1, self.epoch + 1)).T.rolling(self.loss_roll_period).mean()
+        self.losses = pd.DataFrame(loss_curves, index = ['train_loss', 'validation_loss'], columns = np.arange(1, self.epoch + 1)).T.rolling(self.loss_roll_period).mean()
         
         # model training evaluation
-        if evaluate: self.evaluate([train_data, val_data], [train_label, val_label], set_names=['Train_set', 'Validation_set'], losses=losses, figsize=figsize)
-        
-        return losses
-    
-    
+        if evaluate: self.evaluate([train_data, val_data], [train_label, val_label], set_names=['Train_set', 'Validation_set'], figsize=figsize)
+
+
+
     def predict(self, data):
         """
         a wrapper function that generates prediction from pytorch model
@@ -229,7 +229,7 @@ class torchModel():
         return preds
     
     
-    def evaluate(self, data_sets, label_sets, set_names=[], losses=None, figsize=(18, 4)):
+    def evaluate(self, data_sets, label_sets, set_names=[], figsize=(18, 4)):
         """
         a customized function to evaluate model performance in regression and classification type tasks
         data_sets: list of data, data must be nunmpy ndarray or torch tensor
@@ -239,11 +239,11 @@ class torchModel():
         figsize: figure size for the evaluation plots
         """
         # plotting loss curve
-        if self.plot_loss and self.epoch > 1 and losses is not None:
-            ylim_upper = losses.quantile(self.quant_perc).max()
-            ylim_lower = losses.min().min()
+        if self.plot_loss and self.epoch > 1 and self.losses is not None:
+            ylim_upper = self.losses.quantile(self.quant_perc).max()
+            ylim_lower = self.losses.min().min()
             fig, ax = plt.subplots(figsize = (25, 4))
-            losses.plot(ax = ax, color = ['darkcyan', 'crimson'])
+            self.losses.plot(ax = ax, color = ['darkcyan', 'crimson'])
             ax.set_ylim(ylim_lower, ylim_upper)
             fig.suptitle('Learning curves', y = 1, fontsize = 15, fontweight = 'bold')
             fig.tight_layout()
