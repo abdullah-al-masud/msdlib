@@ -171,7 +171,7 @@ class Filters():
     # figsize : tuple, size of the figure plotted to show the fft version of the signal
     def vis_spectrum(self, sr, f_lim = [], see_neg = False, show = True, save = False, savepath = '', figsize = (30, 3)):
         if isinstance(sr, np.ndarray) or isinstance(sr, list): sr = pd.Series(sr)
-        if sr.name == None: sr.name = 'signal'
+        if sr.name is None: sr.name = 'signal'
         if see_neg:
             y = np.fft.fft(sr.dropna().values, n = self.N).real
             y = np.fft.fftshift(y)
@@ -208,7 +208,7 @@ class Filters():
     # f_lim : pylist of length 2, frequency limit for the plot
     def apply(self, sr, filt_type = '', f_cut = [], order = 10, response = False, plot = False, f_lim = []):
         if isinstance(sr, np.ndarray) or isinstance(sr, list): sr = pd.Series(sr)
-        if sr.name == None: sr.name = 'signal'
+        if sr.name is None: sr.name = 'signal'
         msg = 'Cut offs should be paired up (for bp or bs) or in integer format (for hp or lp)'
         if isinstance(f_cut, list) or isinstance(f_cut, np.ndarray):
             if len(f_cut) % 2 != 0:
@@ -300,10 +300,10 @@ class Filters():
 def get_spectrogram(ts_sr, fs = None, win = ('tukey', 0.25), nperseg = None, noverlap = None, mode = 'psd', figsize = None, vis_frac = 1, ret_sxx = False, show = True, save = False, savepath = '', fname = ''):
    
     # default values
-    if fs == None: fs = 1
-    if nperseg == None: nperseg = 256
-    if noverlap == None: noverlap = nperseg // 8
-    if figsize == None: figsize = (30, 6)
+    if fs is None: fs = 1
+    if nperseg is None: nperseg = 256
+    if noverlap is None: noverlap = nperseg // 8
+    if figsize is None: figsize = (30, 6)
     if isinstance(vis_frac, int) or isinstance(vis_frac, float): vis_frac = [0, vis_frac]
    
     # applying spectrogram from scipy.signal.spectrogram
@@ -347,8 +347,8 @@ def invalid_bins(msg):
     raise msdExceptions.InvalidBins(msg)
 def grouped_mode(data, bins = None, neglect_values = [], neglect_above = None, neglect_bellow = None, neglect_quan = 0):
     if not isinstance(data, pd.Series): data = pd.Series(data)
-    if neglect_above != None: data = data[data <= neglect_above]
-    if neglect_bellow != None: data = data[data >= neglect_bellow]
+    if neglect_above is not None: data = data[data <= neglect_above]
+    if neglect_bellow is not None: data = data[data >= neglect_bellow]
     if len(neglect_values) > 0: data.replace(to_replace = neglect_values, value = np.nan, inplace = True)
     data.dropna(inplace = True)
     if neglect_quan != 0: data = data[(data >= data.quantile(q = neglect_quan)) & (data <= data.quantile(q = 1 - neglect_quan))]
@@ -378,7 +378,7 @@ def grouped_mode(data, bins = None, neglect_values = [], neglect_above = None, n
 # del_side : {'up', 'down'}, indicating which side to be removed to get edges
 # Note: the algorithm starts recording when it exceeds the threshold value, so open interval system.
 def get_edges_from_ts(sr, th_method = 'median', th_factor = .5, th = None,  del_side = 'up', name = ''):
-    if th == None:
+    if th is None:
         if th_method == 'median': th = sr.median() * th_factor
         elif th_method == 'mean': th = sr.mean() * th_factor
     state = False    # keeps the present state, True if its within desired edges
@@ -933,7 +933,7 @@ def feature_evaluator(data, label_name, label_type_num, n_bin = 40, is_all_num =
     cat_labels = data[label_name[~np.array(label_type_num)]]
     # n_bin arrangements
     default_n_bin = 25
-    if n_bin == None:
+    if n_bin is None:
         n_bin = [ deafault_n_bin for i in label_type_num]
     else:
         n_bin = [ n_bin for i in label_type_num]
@@ -1025,14 +1025,14 @@ def feature_evaluator(data, label_name, label_type_num, n_bin = 40, is_all_num =
         
         if not is_all_cat:
             fig_num.tight_layout()
-            if save and savepath != None:
-                if fname == None: fname = fig_tnum
+            if save and savepath is not None:
+                if fname is None: fname = fig_tnum
                 if savepath[-1] != '/': savepath += '/'
                 fig_num.savefig('%s%s.jpg'%(savepath, fname), bbox_inches = 'tight')
         if not is_all_num:
             fig_cat.tight_layout()
-            if save and savepath != None:
-                if fname == None: fname = fig_tcat
+            if save and savepath is not None:
+                if fname is None: fname = fig_tcat
                 if savepath[-1] != '/': savepath += '/'
                 fig_cat.savefig('%s%s.jpg'%(savepath, fname), bbox_inches = 'tight')
         if show: plt.show()
