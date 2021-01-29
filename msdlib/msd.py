@@ -1126,7 +1126,7 @@ def rsquare_rmse(y, pred):
 def one_hot_encoding(arr, class_label = None, ret_label = False, out_type = 'ndarray'):
     if isinstance(arr, pd.Series): pass
     else: arr = pd.Series(arr)
-    if class_label == None: class_label = np.sort(arr.unique())
+    if class_label is None: class_label = np.sort(arr.unique())
     elif isinstance(class_label, list): class_label = np.array(class_label)
     label = pd.DataFrame(np.zeros((arr.shape[0], class_label.shape[0])), index = arr.index, columns = class_label)
     for lb in class_label:
