@@ -891,7 +891,7 @@ def get_named_colors():
 
 # ########  FEATURE_EVALUATOR  ######################
 # data: should be a pandas dataframe containing label data inside it (it must contain only features and labels, no unnecessary columns are allowed)
-# label_name: list or str, containing name of the columns used as labels
+# label_name: list; containing name of the columns used as labels
 # label_type_num: list of bool, containing flag info if the labels are numerical or not (must be corresponding to label_name)
 # n_bin: int, expressing number of divisions of the label values. If any label is categorical, n_bin for that label will be equal to the number of categories, default is 40 for numerical labels
 # (here its okay to use labels before converting into one hot encoding, its even better not to convert into one hot)
@@ -915,9 +915,9 @@ def feature_evaluator(data, label_name, label_type_num, n_bin = 40, is_all_num =
     
     # separating numerical and categorical feature data 
     if is_all_num:
-        num_cols = list(data.drop(label_name, axis = 1).columns)
+        num_cols = data.drop(label_name, axis = 1).columns.to_list()
     elif is_all_cat:
-        cat_cols = list(data.drop(label_name, axis = 1).columns)
+        cat_cols = data.drop(label_name, axis = 1).columns.to_list()
     else:
         if len(cat_cols) > 0:
             num_cols = list(data.drop(list(cat_cols) + label_name, axis = 1).columns)
@@ -931,6 +931,7 @@ def feature_evaluator(data, label_name, label_type_num, n_bin = 40, is_all_num =
     label_name = np.array(label_name)
     num_labels = data[label_name[label_type_num]].copy()
     cat_labels = data[label_name[~np.array(label_type_num)]]
+    
     # n_bin arrangements
     default_n_bin = 25
     if n_bin is None:
@@ -948,21 +949,22 @@ def feature_evaluator(data, label_name, label_type_num, n_bin = 40, is_all_num =
     # mean of std of percentage of categories inside a feature
     # mean of std of percentage of groups for each category
     # loop definitions
-    labels_list = [i for i in [num_labels, cat_labels] if i.shape[1] > 0]
+    labels_list = [num_labels, cat_labels]
     labels_tag = ['Numerical label', 'Categorical label']
+    nbins = [num_bin, cat_bin]
     fig_title = 'Feature Confidence Evaluation' if fig_title == '' else fig_title
     # to collect all values of evaluation
     num_lab_confids = {}
     # loop for numerical and categorical labels
-    for l, labels in enumerate(labels_list):
+    for l, (labels, nbin) in enumerate(zip(labels_list, nbins)):
         num_lab_confids[labels_tag[l]] = {}
         # plot definitions
         nrows = labels.columns.shape[0]
-        if not is_all_cat:
+        if not is_all_cat and nrows > 0:
             fig_num, ax_num = plt.subplots(figsize = (fig_width, fig_height * nrows), nrows = nrows)
             fig_tnum = fig_title + ' for Numerical Features'
             fig_num.suptitle(fig_tnum, y = 1.06, fontsize = 20, fontweight = 'bold')
-        if not is_all_num:
+        if not is_all_num  and nrows > 0:
             fig_cat, ax_cat = plt.subplots(figsize = (fig_width, fig_height * nrows), nrows = nrows)
             fig_tcat = fig_title + ' for Categorical Features'
             fig_cat.suptitle(fig_tcat, y = 1.06, fontsize = 20, fontweight = 'bold')
@@ -976,7 +978,7 @@ def feature_evaluator(data, label_name, label_type_num, n_bin = 40, is_all_num =
         for i, label in enumerate(labels.columns):
             print('Evaluation for label : %s (%s) ....'%(label, labels_tag[l]), end = '')
             # dividing the data set into classes depending on the label/target values
-            divs = pd.cut(labels[label], bins = n_bin[i])
+            divs = pd.cut(labels[label], bins = nbin[i])
             divs = divs.replace(to_replace = divs.unique().categories, value = np.arange(divs.unique().categories.shape[0]))
             
             if not is_all_cat:
@@ -1001,10 +1003,10 @@ def feature_evaluator(data, label_name, label_type_num, n_bin = 40, is_all_num =
             if not is_all_num:
                 # ------------- calculation for categorical data ----------------------
                 # adding label and category of label columns in the categorical data set
-                cat_data[label] = labels[label]
+                cat_data[label] = labels[label].copy()
                 cat_data['%s_segments'%label] = divs
                 # calculation of mean of std of percentage 
-                cat_confid = pd.Series(index = cat_data.columns[:-2])
+                cat_confid = pd.Series(index = cat_data.columns[:-2], dtype=np.float64)
                 for j, col in enumerate(cat_data.columns[:-2]):
                     temp = cat_data.groupby(['%s_segments'%label, col])[label].count().unstack(level = 0).fillna(0)
                     temp = temp / temp.sum()
@@ -1023,20 +1025,20 @@ def feature_evaluator(data, label_name, label_type_num, n_bin = 40, is_all_num =
                 ax_cat[i].set_title('Feature Confidence for label: %s'%label, fontsize = 15)
             print('  done')
         
-        if not is_all_cat:
+        if not is_all_cat and nrows > 0:
             fig_num.tight_layout()
             if save and savepath is not None:
                 if fname is None: fname = fig_tnum
                 if savepath[-1] != '/': savepath += '/'
                 fig_num.savefig('%s%s.jpg'%(savepath, fname), bbox_inches = 'tight')
-        if not is_all_num:
+        if not is_all_num and nrows > 0:
             fig_cat.tight_layout()
             if save and savepath is not None:
                 if fname is None: fname = fig_tcat
                 if savepath[-1] != '/': savepath += '/'
                 fig_cat.savefig('%s%s.jpg'%(savepath, fname), bbox_inches = 'tight')
         if show: plt.show()
-        plt.close()
+        if nrows > 0: plt.close()
     return num_lab_confids
 
 

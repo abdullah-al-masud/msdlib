@@ -33,7 +33,7 @@ This library mostly works on top of pandas, numpy, matplotlib and some other sev
 <li>Matplotlib</li>
 <li>Scipy</li>
 <li>Seaborn</li>
-<li>Pytorch (for mlutils package)</li>
+<li>Pytorch (for mlutils sub-module)</li>
 
 
 Its best to install the most updated versions of these dependencies
