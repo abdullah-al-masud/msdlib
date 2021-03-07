@@ -887,6 +887,49 @@ def get_named_colors():
     return colors
 
 
+"""
+plot_table creates figure with a pandas dataframe table
+_data: pandas dataframe, which will be used to make table and save as a matplotlib figure
+cell_width: float, each cell width
+cell_height: float, each cell height
+font_size: float, font size for table values
+header_color: str or rgb color code, column and index color
+row_colors: str or rgb color code, alternating colors to separate consecutive rows
+edge_color: str or rgb color code, cell border color
+bbox: list of four floats, edges of the table to cover figure
+header_cols: int, number of initial rows to coder column names
+index_cols: int, number of columns to cover index of dataframe
+fig_name: str, figure name to save the figure when save is True
+save: bool, whether to save the figure
+show: bool, whether to show the plot
+savepath: path to store the figure
+ax: matplotlib axis to include table in another figure
+"""
+def plot_table(_data, cell_width=2.5, cell_height=0.625, font_size=14, header_color='#003333', row_colors=['whitesmoke', 'w'], 
+    edge_color='w', bbox=[0, 0, 1, 1], header_cols=0, index_cols=0, fig_name='Table', save=False, show=True, savepath='.', ax=None, 
+    **kwargs):
+
+    data = _data.reset_index(drop=False)
+    if ax is None:
+        size = (np.array(data.shape[::-1]) + np.array([0, 1])) * np.array([cell_width, cell_height])
+        fig, ax = plt.subplots(figsize=size)
+        ax.axis('off')
+    mpl_table = ax.table(cellText=data.values, bbox=bbox, colLabels=data.columns, **kwargs)
+    mpl_table.auto_set_font_size(False)
+    mpl_table.set_fontsize(font_size)
+
+    for rc, cell in mpl_table._cells.items():
+        cell.set_edgecolor(edge_color)
+        if rc[0] == 0 or rc[1] < header_cols or rc[1] == 0 or rc[0] < index_cols:
+            cell.set_text_props(weight='bold', color='w')
+            cell.set_facecolor(header_color)
+        else:
+            cell.set_facecolor(row_colors[rc[0]%len(row_colors) ])
+    fig.tight_layout()
+    if save: fig.savefig('%s/%s.png'%(savepath, fig_name), bbox_inches='tight')
+    if show: plt.show()
+    else: plt.close()
+    if ax is None: return ax
 
 
 # ########  FEATURE_EVALUATOR  ######################
