@@ -811,7 +811,7 @@ def data_gridplot(data, idf = [], idf_pref = '', idf_suff = '', diag = 'hist', b
     if data.shape[1] <= 1: print('Data should include at least 2 columns!')
     if idf.shape[0] == 0: idf = pd.Series(np.zeros(data.shape[0]), index = data.index)
     colors = ['darkcyan', 'coral', 'limegreen', 'saddlebrown', 'grey', 'darkgoldenrod', 'forestgreen', 'purple',
-              'crimson', 'cornflowerblue', 'darkslateblue', 'lightseagreen', 'darkkhaki', 'maroon']
+              'crimson', 'cornflowerblue', 'darkslateblue', 'lightseagreen', 'darkkhaki', 'maroon', 'magenta', 'k']
     if data.shape[1] > len(colors) and cmap == '': cmap = 'jet'
     if cmap != '': colors = get_color_from_cmap(data.shape[1], cmap = cmap)
    
