@@ -8,34 +8,33 @@ plt.rcParams['figure.facecolor'] = 'white'
 
 
 class NNmodel(nn.Module):
-    def __init__(self, layer_funcs):
+    def __init__(self, layer_funcs, seed_value=1216):
         
         super(NNmodel, self).__init__()
         # reproducibility parameters
-        seed_value = 1216
         np.random.seed(seed_value)
         torch.manual_seed(seed_value)
         torch.backends.cudnn.deterministic = True
         torch.backends.cudnn.benchmark = False
         
-        self.total_layers = len(layer_funcs)
         self.layers = nn.ModuleList(layer_funcs)
         
     def forward(self, x):
-        for i in range(self.total_layers):
-            x = self.layers[i](x)
+        for layer in self.layers:
+            x = layer(x)
         return x
     
 
-# auto-encoder model
-# number of unit values inside units = [input_data_shape] + [encoder units] + [decoder units]
-# layer_func by default is Dense
+# The class can be used for auto-encoder architecture
 class AutoEncoderModel(nn.Module):
-    def __init__(self, enc_layers, dec_layers, params={}):
+    """
+    enc_layers: python list, containing the encoder layers (torch.nn.Module class objects) sequentially
+    dec_layers: python list, containing the decoder layers (torch.nn.Module class objects) sequentially
+    """
+    def __init__(self, enc_layers, dec_layers, seed_value=1216):
         
         super(AutoEncoderModel, self).__init__()
         # reproducibility parameters
-        seed_value = 1216
         np.random.seed(seed_value)
         torch.manual_seed(seed_value)
         torch.backends.cudnn.deterministic = True
@@ -65,8 +64,26 @@ class AutoEncoderModel(nn.Module):
 # torchModel is a scikit like wrapper for pytorch which enables us to use the model for 
 # training, predicting and evaluating performance using simple fit, predict and evaluate methods
 class torchModel():
-    
-    def __init__(self, layers, loss_func=None, optimizer=None, learning_rate=.0001, epoch=2, batch_size=32, lr_reduce=1, 
+    """
+    layers: a list of torch.nn.Module objects indicating layers/activation functions. The list should contain all elements sequentially
+    loss_func: loss function for the ML model. default is torch.nn.MSELoss. It can also be a custom loss function, but should be equivalent to the default
+    optimizer: optimizer for the ML model. default is torch.optim.Adam
+    learning_rate: learning rate of the training steps, default is .0001
+    epoch: number of epoch for training, default is 2
+    batch_size: mini-batch size for trianing, default is 32
+    lr_reduce: learning rate reduction base for lambda reduction scheduler from pytorch. (follows torch.optim.lr_scheduler.LambdaLR)
+    loss_reduction: loss reduction parameter for loss calculation, default is 'mean'
+    model_type: type of the model depending on the objective, available is any of {'regressor', 'classifier'}, default is 'regressor'
+    use_gpu: bool, whether to use gpu or not, default is True
+    model_name: str, name of the model, default is 'pytorch'
+    dtype: dtype of processing inside the model, default is torch.float32
+    plot_loss: bool, whether to plot loss curves after training or not, default is True
+    quant_perc: float, quantile value to limit the loss values for loss curves, default is .98
+    plot_true_pred: bool, whether to plot true-vs-prediction curve or not. For model_type=classifier, it will be score matrix plot and for model_type=regressor, it will be a true vs prediction scatter plot, default is True
+    loss_roll_preiod: rolling/moving average period for loss curve
+    model: torch.nn.Module class (ML model class), so that you are able to write the model yourself and use fit, predict etc from here.  
+    """
+    def __init__(self, layers=[], loss_func=None, optimizer=None, learning_rate=.0001, epoch=2, batch_size=32, lr_reduce=1, 
                  loss_reduction='mean', model_type='regressor', use_gpu=True, model_name='pytorch', dtype=torch.float32,
                  plot_loss=True, quant_perc=.98, plot_true_pred=True, loss_roll_period=1, model=None):
         
@@ -105,7 +122,7 @@ class torchModel():
     
     def fit(self, data, label, validation_ratio=.15, evaluate=True, figsize=(18, 4)):
         """
-        scikit like wrapper for training DNN model
+        scikit like wrapper for training DNN pytorch model
         data: input train data, must be torch tensor or numpy ndarray
         label: supervised labels for data, must be torch tensor or numpy ndarray
         validation_ratio: ratio of 'data' that will be used for validation during training
@@ -140,9 +157,9 @@ class torchModel():
         
         # data type conversion
         train_data = train_data.to(device=self.device, dtype=self.dtype)
-        train_label = train_label.to(device=self.device, dtype=self.dtype) if self.model_type == 'regressor' else train_label.to(device=self.device, dtype=torch.long)
+        train_label = train_label.to(device=self.device, dtype=self.dtype) if self.model_type.lower() == 'regressor' else train_label.to(device=self.device, dtype=torch.long)
         val_data = val_data.to(device=self.device, dtype=self.dtype)
-        val_label = val_label.to(device=self.device, dtype=self.dtype) if self.model_type == 'regressor' else val_label.to(device=self.device, dtype=torch.long)
+        val_label = val_label.to(device=self.device, dtype=self.dtype) if self.model_type.lower() == 'regressor' else val_label.to(device=self.device, dtype=torch.long)
         
         # running through epoch
         loss_curves = [[], []]
@@ -250,7 +267,7 @@ class torchModel():
             for i, (preddata, predlabel) in enumerate(zip(data_sets, label_sets)):
                 test_pred = self.predict(preddata).detach().cpu().squeeze().numpy()
                 label = predlabel.detach().cpu().squeeze().numpy()
-                if self.model_type == 'regressor':
+                if self.model_type.lower() == 'regressor':
                     true_pred = pd.DataFrame([label, test_pred], index = ['true_label', 'prediction']).T
                     corr_val = true_pred.corr().iloc[0, 1]
                     rsquare, rmse = msd.rsquare_rmse(true_pred['true_label'].values, true_pred['prediction'].values)
@@ -266,7 +283,7 @@ class torchModel():
                                  %(set_names[i], self.model_name, rsquare, rmse, corr_val))
                     all_results[set_names[i]] = [rsquare, rmse]
                     results.append(pd.Series([rsquare, rmse], index = ['r_square', 'rmse'], name = '%s_%s'%(self.model_name, set_names[i])))
-                elif self.model_type == 'classifier':
+                elif self.model_type.lower() == 'classifier':
                     test_pred = np.argmax(test_pred, axis=1)
                     result, confus = msd.class_result(label, test_pred, out_confus = True)
                     fig, ax = plt.subplots(figsize=figsize, ncols = 2)
