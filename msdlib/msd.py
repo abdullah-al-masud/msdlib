@@ -1106,7 +1106,7 @@ def class_result(y, pred, out_confus = False):
     con_mat = pd.DataFrame(np.zeros((len(labels), len(labels))).astype(int),
                            columns = labels, index = labels)    #row--> true, col--> pred
     con_mat.index.name = 'true'
-    con_mat.columns.name = 'pred'
+    con_mat.columns.name = 'prediction'
     for lab_true in labels:
         vy = set(np.where(y == lab_true)[0])
         for lab_pred in labels:
