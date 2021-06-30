@@ -1097,7 +1097,12 @@ def feature_evaluator(data, label_name, label_type_num, n_bin = 40, is_all_num =
 # RETURNS
 # result --> DataFrame containing precision, recall and f1 scores for all labels
 # con_mat --> DataFrame containing confusion matrix, depends on out_confus
-def class_result(y, pred, out_confus = False):
+def class_result(y, pred, out_confus = False, *args, **kwargs):
+    if not any([isinstance(y, np.ndarray), isinstance(y, pd.Series)]):
+        y = np.array(y)
+    if not any([isinstance(pred, np.ndarray), isinstance(pred, pd.Series)]):
+        pred = np.array(pred)
+        
     y = y.ravel()
     pred = pred.ravel()
     y_labels = set(np.unique(y))
@@ -1116,9 +1121,18 @@ def class_result(y, pred, out_confus = False):
     recall = []
     f_msr = []
     acc = []
+    spec = []
     sum_pred = con_mat.sum()
     sum_true = con_mat.T.sum()
+    total = y.shape[0]
     for label in labels:
+        tn = total - (sum_true.loc[label] + sum_pred.loc[label] - con_mat[label].loc[label])
+        fp = sum_pred.loc[label] - con_mat[label].loc[label]
+        if (tn+fp) != 0:
+            sp = tn / (tn + fp)
+        else:
+            sp = 0
+        spec.append(sp)
         if sum_pred.loc[label] != 0:
             pr = con_mat[label].loc[label] / sum_pred.loc[label]
         else:
@@ -1135,7 +1149,7 @@ def class_result(y, pred, out_confus = False):
             f = 0
         f_msr.append(f)
         acc.append(np.nan)
-    result = pd.DataFrame([prec, recall, f_msr], columns = labels, index = ['precision', 'recall', 'f1_score'])
+    result = pd.DataFrame([spec, prec, recall, f_msr], columns = labels, index = ['specificity', 'precision', 'recall', 'f1_score'])
     result.columns = [str(c) for c in result.columns]
     avg = result.T.mean()
     avg.name = 'average'
