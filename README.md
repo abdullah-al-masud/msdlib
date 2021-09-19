@@ -190,6 +190,7 @@ This function calculates r square value and root mean square error.
 <h4>
 data_gridplot:
 </h4>
+
 ![](examples/data_grid_plot_example/Grid_plot_for_Iris_dataset.jpg)
 
 Its a function for scatter plots between every pair of features along with distributions (similar to matrix_plot in pandas). But it enables you to save the image, change figure_size, titles etc and also has one special feature for clusters in the data if any.
@@ -199,6 +200,7 @@ Its a function for scatter plots between every pair of features along with distr
 <h4>
 plot_time_series:
 </h4>
+
 ![](examples/plot_time_series_example/Combined_Time_Series_Plot.jpg)
 
 This is a function and the most useful function for me from all my library functions and classes. It helps to plot time series data with a lot of flexibility. Please check out the example scripts for illustrations and guidance to use it.
@@ -221,8 +223,9 @@ Flexible heatmap plotter function with options to remove symmetrical triangular 
 <h4>
 Filters:
 </h4>
+
 ![](examples/filters_and_spectrogram_example/recorded_signal.jpg)
-![](.. image:: examples/filters_and_spectrogram_example/filter_spectrum.jpg)
+![](examples/filters_and_spectrogram_example/filter_spectrum.jpg)
 ![](examples/filters_and_spectrogram_example/Frequency_Spectrum_of_filtered_stereo_1.jpg)
 ![](examples/filters_and_spectrogram_example/filtered_stereo_1_with_bp_filter_with_cut_offs_[1800._2500.].jpg)
 ![](examples/filters_and_spectrogram_example/Spectrogram_of_stereo_1.jpg)
@@ -235,7 +238,9 @@ This is a class defined for applying low pass, high pass, band pass and band sto
 <h4>
 get_spectrogram:
 </h4>
+
 ![](examples/filters_and_spectrogram_example/Spectrogram_of_stereo_1.jpg)
+
 This is a function that allows us to calculate spectrogram of any time series signal and also plots heatmap for that spectrogram with proper frequency bins and time axis.
 <br><br>
 
