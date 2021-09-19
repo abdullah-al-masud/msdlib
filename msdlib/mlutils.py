@@ -137,15 +137,13 @@ class torchModel():
         :epoch: number of epoch for training, default is 2
         :batch_size: mini-batch size for trianing, default is 32
         :lr_reduce: learning rate reduction base for lambda reduction scheduler from pytorch (follows torch.optim.lr_scheduler.LambdaLR). 
-        Must be 0 ~ 1. Default is 1 (No reduction of learning rate during training)
+                    Must be 0 ~ 1. Default is 1 (No reduction of learning rate during training)
         :loss_reduction: loss reduction parameter for loss calculation, default is 'mean'
         :model_type: type of the model depending on the objective, should be any of {'regressor', 'binary-classifier', 'multi-classifier'}, default is 'regressor'. 
-                    - 'binary-classifier' indicates binary classifier with 1 output unit.
-                     The output values must be 0 ~ 1 (sigmoid like activations should be used at model output). 
+                    - 'binary-classifier' indicates binary classifier with 1 output unit. The output values must be 0 ~ 1 (sigmoid like activations should be used at model output). 
                     - 'multi-classifier' indicates classifier with more than one output unit
         :use_gpu: bool, whether to use gpu or not, default is True.
-        :gpu_devices: list, a list of cuda ids starting from 0. Default is None which will try to use all available gpus.
-                    If you have 4 gpus in your machine, and want to use first 3 of them, the list should be [0, 1, 2]
+        :gpu_devices: list, a list of cuda ids starting from 0. Default is None which will try to use all available gpus. If you have 4 gpus in your machine, and want to use first 3 of them, the list should be [0, 1, 2]
         :model_name: str, name of the model, default is 'pytorch'
         :dtype: dtype of processing inside the model, default is torch.float32
         :plot_loss: bool, whether to plot loss curves after training or not, default is True
@@ -252,8 +250,7 @@ class torchModel():
             :label: supervised labels for data, must be torch tensor, numpy ndarray or pandas DataFrame/Series
             :val_data: validation data, must be torch tensor, numpy ndarray or pandas DataFrame/Series, default is None
             :val_label: supervised labels for val_data, must be torch tensor, numpy ndarray or pandas DataFrame/Series, default is None
-            :validation_ratio: ratio of 'data' that will be used for validation during training. It will be used only when val_data or val_label or both are None.
-            Default is 0.15
+            :validation_ratio: ratio of 'data' that will be used for validation during training. It will be used only when val_data or val_label or both are None. Default is 0.15
             :evaluate: bool, whether to evaluate model performance after training ends or not. evaluate performance if set True. Default is True.
             :figsize: tuple of (width, height) of the figure, size of the figure for loss curve plot and evaluation plots. Default is (18, 4)
 
@@ -531,8 +528,7 @@ def get_factors(n_layers, base_factor=5, max_factor=10, offset_factor=2):
         :n_layers: number of hidden layers
         :max_factor: multiplier for mid layer (largest layer)
         :base_factor: multiplier for first layer
-        :offset_factor: makes assymetric structure in output with factor (base - offset). 
-        For symmetric model (size in first and last hidden layer is same), offset will be 0.
+        :offset_factor: makes assymetric structure in output with factor (base - offset). For symmetric model (size in first and last hidden layer is same), offset will be 0.
 
     Outputs:
         :factors: multipliers to calculate number of units in each layers based on input shape
@@ -565,15 +561,13 @@ def define_layers(input_units, output_units, unit_factors, dropout_rate=None, mo
         :unit_factors: array of ints or floats, multipliers to calculate number of units in each hidden layer from input_units, or actual number of units for each hidden layer
         :dropout_rate: dropout ratio, must be 0 ~ 1. Default is None (no dropout layer)
         :model_type: {'binary-classifier', 'multi-classifier, 'regressor'}, controls use of softmax/sigmoid at the output layer. Use 'regressor' if you dont intend to use any activation at output. Default is 'regressor'
-        :actual_units: bool, whether actual units are placed in unit_factors or not, 
-        default is False (not actual units, instead unit_factos is containing ratios)
+        :actual_units: bool, whether actual units are placed in unit_factors or not, default is False (not actual units, instead unit_factos is containing ratios)
         :apply_bn: bool, whether to use batch normalization or not, default is False (does not use batch normalization)
-        :activation: nn.Module object or None. Pytorch activation layer that will be used as activation function after each hidden layer.
-        Default is None (No activation)
-        :final_activation: torch.sigmoid / torch.Softmax(dim=1) / torch.tanh etc. for output layer, default is None. 
+        :activation: nn.Module object or None. Pytorch activation layer that will be used as activation function after each hidden layer. Default is None (No activation)
+        :final_activation: torch.sigmoid / torch.Softmax(dim=1) / torch.tanh etc. for output layer, default is None.
         If None, the final activation will be below:
-            - modey_type == 'regressor' --> No activation\n
-            - model_type == 'binary-classifier' --> torch.sigmoid\n
+            - modey_type == 'regressor' --> No activation
+            - model_type == 'binary-classifier' --> torch.sigmoid
             - model_type == 'multi-clussifier' --> torch.Softmax(dim=1)
 
     Outputs:
@@ -642,7 +636,7 @@ def load_models(models, folder_path):
         :models: dict, containing model classes or None (for torch model, torch.nn.Module object is necessary as trained model 
                 to load the state variables. For other types of models like xgboost etc. None is fine.);
                 For pytorch models, the key must contain 'pytorch' phrase (Case insensitive)
-                key name must be like this :
+                key name must be like this :\n
                     stored model file name: xgboost_model.pickle\n
                     corresponding key for the dict: 'xgboost'\n
                     stored model file name: pytorch-1_model.pickle\n
