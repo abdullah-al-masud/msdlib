@@ -134,8 +134,21 @@ We can train the model using simple ‘fit’ method, can generate predictions u
 <dl class="py method">
 <dt class="sig sig-object py" id="msdlib.mlutils.AutoEncoderModel.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msdlib.mlutils.AutoEncoderModel.forward" title="Permalink to this definition"></a></dt>
-<dd><p>pytorch forward function for forward propagation, applies encoder and then decoder sequentially on the input data
-x: input tensor for autoencoder model</p>
+<dd><p>pytorch forward function for forward propagation, applies encoder and then decoder sequentially on the input data</p>
+<dl class="simple">
+<dt>Inputs:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">x</dt>
+<dd class="field-odd"><p>input tensor for autoencoder model</p>
+</dd>
+</dl>
+</dd>
+<dt>Outputs:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">x</dt>
+<dd class="field-odd"><p>final output of the whole auto-encoder model</p>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py attribute">
@@ -154,8 +167,8 @@ x: input tensor for autoencoder model</p>
 <dt>Inputs:</dt><dd><dl class="field-list">
 <dt class="field-odd">layer_funcs</dt>
 <dd class="field-odd"><p>list, contains sequential layer classes (nn.Module).</p>
-<p>For example-
-[nn.Linear(50), nn.ReLU(), nn.Linear(3), nn.Softmax(dim=-1)]</p>
+<p>For example-</p>
+<p>[nn.Linear(50), nn.ReLU(), nn.Linear(3), nn.Softmax(dim=-1)]</p>
 </dd>
 <dt class="field-even">seed_value</dt>
 <dd class="field-even"><p>float/int, random seed for reproducibility, default is 1216</p>
@@ -465,7 +478,7 @@ Must be 0 ~ 1. Default is 1 (No reduction of learning rate during training)</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="msdlib.mlutils.torchModel.predict">
 <span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msdlib.mlutils.torchModel.predict" title="Permalink to this definition"></a></dt>
-<dd><p>a wrapper function that generates prediction from pytorch model</p>
+<dd><p>A wrapper function that generates prediction from pytorch model</p>
 <dl class="simple">
 <dt>Inputs:</dt><dd><dl class="field-list simple">
 <dt class="field-odd">data</dt>

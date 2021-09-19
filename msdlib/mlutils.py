@@ -24,7 +24,7 @@ class NNmodel(nn.Module):
     Inputs:
         :layer_funcs: list, contains sequential layer classes (nn.Module). 
 
-            For example-
+            For example-\n
             [nn.Linear(50), nn.ReLU(), nn.Linear(3), nn.Softmax(dim=-1)]
 
         :seed_value: float/int, random seed for reproducibility, default is 1216
@@ -58,9 +58,7 @@ class AutoEncoderModel(nn.Module):
 
     Inputs:
         :enc_layers: python list, containing the encoder layers (torch.nn.Module class objects) sequentially
-
         :dec_layers: python list, containing the decoder layers (torch.nn.Module class objects) sequentially
-
         :seed_value: float/int, random seed for reproducibility
     """
 
@@ -111,7 +109,12 @@ class AutoEncoderModel(nn.Module):
     def forward(self, x):
         """
         pytorch forward function for forward propagation, applies encoder and then decoder sequentially on the input data
-        x: input tensor for autoencoder model 
+
+        Inputs:
+            :x: input tensor for autoencoder model 
+
+        Outputs:
+            :x: final output of the whole auto-encoder model
         """
 
         x = self.encode(x)
@@ -399,7 +402,7 @@ class torchModel():
 
     def predict(self, data):
         """
-        a wrapper function that generates prediction from pytorch model
+        A wrapper function that generates prediction from pytorch model
 
         Inputs:
             :data: input data to predict on, must be a torch tensor or numpy ndarray
