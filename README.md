@@ -3,7 +3,7 @@
 </h1>
 <br>
 
-![](msdlib_logo_fit.png =150)
+![](msdlib_logo_fit.png =150x)
 
 ![](https://img.shields.io/pypi/l/msdlib.svg)
 ![](https://badge.fury.io/py/msdlib.svg)
@@ -35,7 +35,7 @@ Dependencies
 * joblib
 * Pytorch
 
-All of these packages except Pytorch will be installed automatically during msdlib installation.
+All of these packages except Pytorch will be installed automatically during msdlib installation. Python >= 3.8 is necessary.
 
 Pytorch should be installed by following installation procedure suggested https://pytorch.org/.<br><br>
 
