@@ -1,0 +1,7 @@
+pytest
+sphinx
+sphinx-rtd-theme
+skorch
+scikit-learn
+sounddevice
+opencv-python

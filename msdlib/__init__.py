@@ -1,2 +1,7 @@
+# Author : Abdullah Al Masud\n
+# email : abdullahalmasud.buet@gmail.com\n
+# LICENSE : MIT License
+
+
 # version definition
-__version__ = '0.1.2.12'
+__version__ = '0.1.2.13'
