@@ -191,7 +191,7 @@ The common formation of one hidden layer is this-</p>
 <p>Dropout ratio is same in all layers</p>
 <p>Finally the output layer is constructed depending on ‘output_units’ and ‘model_type’ parameter including final activation function.
 Output activation function is provided</p>
-<dl>
+<dl class="simple">
 <dt>Inputs:</dt><dd><dl class="field-list simple">
 <dt class="field-odd">input_units</dt>
 <dd class="field-odd"><p>int, number of units in input layer / number of features (not first hidden layer)</p>
@@ -218,15 +218,10 @@ Output activation function is provided</p>
 <dd class="field-even"><p>nn.Module object or None. Pytorch activation layer that will be used as activation function after each hidden layer. Default is None (No activation)</p>
 </dd>
 <dt class="field-odd">final_activation</dt>
-<dd class="field-odd"><p>torch.sigmoid / torch.Softmax(dim=1) / torch.tanh etc. for output layer, default is None.</p>
-</dd>
-</dl>
-<dl class="simple">
-<dt>If None, the final activation will be below:</dt><dd><ul class="simple">
-<li><p>modey_type == ‘regressor’ –&gt; No activation</p></li>
-<li><p>model_type == ‘binary-classifier’ –&gt; torch.sigmoid</p></li>
-<li><p>model_type == ‘multi-clussifier’ –&gt; torch.Softmax(dim=1)</p></li>
-</ul>
+<dd class="field-odd"><p>torch.sigmoid / torch.Softmax(dim=1) / torch.tanh etc. for output layer, default is None. If None, the final activation will be below:
+- modey_type == ‘regressor’ –&gt; No activation
+- model_type == ‘binary-classifier’ –&gt; torch.sigmoid
+- model_type == ‘multi-clussifier’ –&gt; torch.Softmax(dim=1)</p>
 </dd>
 </dl>
 </dd>

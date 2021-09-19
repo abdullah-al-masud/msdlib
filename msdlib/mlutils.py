@@ -564,8 +564,7 @@ def define_layers(input_units, output_units, unit_factors, dropout_rate=None, mo
         :actual_units: bool, whether actual units are placed in unit_factors or not, default is False (not actual units, instead unit_factos is containing ratios)
         :apply_bn: bool, whether to use batch normalization or not, default is False (does not use batch normalization)
         :activation: nn.Module object or None. Pytorch activation layer that will be used as activation function after each hidden layer. Default is None (No activation)
-        :final_activation: torch.sigmoid / torch.Softmax(dim=1) / torch.tanh etc. for output layer, default is None.
-        If None, the final activation will be below:
+        :final_activation: torch.sigmoid / torch.Softmax(dim=1) / torch.tanh etc. for output layer, default is None. If None, the final activation will be below:
             - modey_type == 'regressor' --> No activation
             - model_type == 'binary-classifier' --> torch.sigmoid
             - model_type == 'multi-clussifier' --> torch.Softmax(dim=1)
