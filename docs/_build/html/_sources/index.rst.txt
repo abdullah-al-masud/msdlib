@@ -35,7 +35,7 @@ msdlib documentation
 Get started from this `page <README.html>`_
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
    :caption: Contents:
 
    README
