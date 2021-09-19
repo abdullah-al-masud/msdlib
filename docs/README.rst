@@ -14,9 +14,6 @@ msdlib
 .. image:: https://travis-ci.org/abdullah-al-masud/msdlib.svg?branch=master
 .. image:: https://readthedocs.org/projects/pip/badge/?version=latest
 
-=============================================================================
-
-
 .. image:: ../examples/plot_time_series_example/Combined_Time_Series_Plot.jpg
 
 ==============================================================================
