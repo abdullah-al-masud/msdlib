@@ -3,7 +3,7 @@
 </h1>
 <br>
 
-<img src="msdlib_logo_fit.png" alt="msdlib_logo" width="150"/>
+![](msdlib_logo_fit.png =150)
 
 ![](https://img.shields.io/pypi/l/msdlib.svg)
 ![](https://badge.fury.io/py/msdlib.svg)
