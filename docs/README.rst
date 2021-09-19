@@ -7,8 +7,7 @@ msdlib
 ==================================
 
 
-.. image:: https://img.shields.io/pypi/l/msdlib.svg
-.. image:: https://badge.fury.io/py/msdlib.svg
+.. image:: https://img.shields.io/pypi/l/msdlib.svg https://badge.fury.io/py/msdlib.svg
 .. image:: https://travis-ci.org/abdullah-al-masud/msdlib.svg?branch=master
 .. image:: https://readthedocs.org/projects/pip/badge/?version=latest
 ============================================================================
