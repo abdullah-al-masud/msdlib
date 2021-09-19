@@ -3,7 +3,7 @@
 </h1>
 <br>
 
-<img src="msdlib_logo_fit.png" alt="msdlib_logo" width="200"/>
+<img src="msdlib_logo_fit.png" alt="msdlib_logo" width="150"/>
 
 ![](https://img.shields.io/pypi/l/msdlib.svg)
 ![](https://badge.fury.io/py/msdlib.svg)
@@ -33,7 +33,7 @@ Dependencies
 
 All of these packages except Pytorch will be installed automatically during msdlib installation.
 
-Pytorch should be installed by following installation procedure suggested `here <https://pytorch.org/>`_.
+Pytorch should be installed by following installation procedure suggested https://pytorch.org/.
 
 
 
@@ -71,15 +71,14 @@ Complete documentation of classes and functions can be found here https://msdlib
 Reference/citation
 </h2><br>
 
-``
-   @manual{msdlib,
-   title        = "{msdlib}: A package for easier data science practices",
-   author       = "{Abdullah Al Masud and {msdlib Developers}}",
-   month        = Jan,
-   year         = 2020,
-   url          = "{https://github.com/abdullah-al-masud/msdlib}"
-   }
-``
+@manual{msdlib,
+title        = "{msdlib}: A package for easier data science practices",
+author       = "{Abdullah Al Masud and {msdlib Developers}}",
+month        = Jan,
+year         = 2020,
+url          = "{https://github.com/abdullah-al-masud/msdlib}"
+}
+
 
 <h2>
 Call for contributions
