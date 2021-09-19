@@ -1,30 +1,27 @@
-"msd General Purpose Library Functions"
-"These functions are created from the need of my personal usage for time series data processing, visualization and machine learning related stuffs. This library is accompanied by another library containing the error classes named as 'MyExceptions'. "
+"""
+Author : Abdullah Al Masud\n
+email : abdullahalmasud.buet@gmail.com\n
+LICENSE : MIT License
+"""
 
 
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.cm import get_cmap
-import os
-import sys
 import seaborn as sns
 import time
-import warnings
 from scipy.signal import butter, sosfiltfilt, sosfreqz
 from scipy.signal import spectrogram as spect
 from scipy.stats import gaussian_kde
 import datetime
 from threading import Thread
-from importlib import reload
 from msdlib import msdExceptions
-import random
+import os
+
 
 sns.set()
 pd.plotting.register_matplotlib_converters()
-
-
-
 
 
 # this is a custom designed progress bar for checking the loop timing. The user should follow this approach to make it work 
@@ -33,15 +30,22 @@ pd.plotting.register_matplotlib_converters()
 #        'your code/task inside the loop'
 #        pbar.inc()
 
-# arr : iterable, it is the array you will use to run the loop, it can be range(10) or any numpy array or python list or any other iterator
-# desc(optional) : str, description of the loop, default - 'progress'
-# barlen : int, length of the progress bar, default is 40
-# front space : int, allowed space for description, default is 20
-# tblink_max : float/int indicates maximum interval in seconds between two adjacent blinks, default is .4
-# tblink_min : float/int indicates minimum interval in seconds between two adjacent blinks, default is .18
+
 class ProgressBar():
+    """
+    Inputs:
+        :arr: iterable, it is the array you will use to run the loop, it can be range(10) or any numpy array or python list or any other iterator
+        :desc: str, description of the loop, default - 'progress'
+        :barlen: int, length of the progress bar, default is 40
+        :front space: int, allowed space for description, default is 20
+        :tblink_max: float/int indicates maximum interval in seconds between two adjacent blinks, default is .4
+        :tblink_min: float/int indicates minimum interval in seconds between two adjacent blinks, default is .18
+
+    Outputs:
+        there is no output. It creates a progress bar which shows the loop progress.
+    """
     
-    def __init__(self, arr, desc = 'progress', barlen = 40, front_space = 20, tblink_max = .3, tblink_min = .18):
+    def __init__(self, arr, desc='progress', barlen=40, front_space = 20, tblink_max = .3, tblink_min = .18):
         self.xlen = len(arr)
         self.barlen = barlen
         if tblink_max >= 1:
@@ -135,25 +139,90 @@ class ProgressBar():
     def __exit__(self, exception_type, exception_value, traceback):
         self.flblink = False
         time.sleep(self.tblmax)
-        self.thread.join()
         self.barend = ' Complete!' + ' '*15
         self.barprint('\n')
 
 
+def get_time_estimation(time_st, count_ratio=None, current_ep=None, current_batch=None, total_ep=None, total_batch=None, string_out=True):
+    """
+        This function estimates remaining time inside any loop. he function is prepared for estimating 
+        remaining time in machine learning training with mini-batch.
+        But it can be used for other purposes also by providing count_ratio input value.
+        
+        Inputs:
+            :time_st: time.time() instance indicating the starting time count
+            :count_ratio: float, ratio of elapsed time at any moment.\n
+                          Must be 0 ~ 1, where 1 will indicate that this is the last iteration of the loop
+            :current_ep: current epoch count
+            :current_batch: current batch count in mini-batch training
+            :total_ep: total epoch in the training model
+            :total_batch: total batch in the mini-batch training
+            :string_out: bool, whether to output the elapsed and estimated time in string format or not. 
+                        True will output time string
+        
+        Outputs:
+            :output time: the ouput can be a single string in format\n
+                        'elapsed hour : elapsed minute : elapsed second < remaining hour : remaining minute : remaining second '\n
+                        if string_out flag is True\n
+                        or it can output 6 integer values in the above order for those 6 elements in the string format\n
+    """
+    if count_ratio is None:
+        # getting count ratio
+        total_count = total_ep * total_batch
+        current_count = current_ep * total_batch + current_batch + 1
+        count_ratio = current_count / total_count
+
+    # calculating time
+    t = time.time()
+    elapsed_t = t - time_st
+
+    # converting time into H:M:S
+    # elapsed time calculation
+    el_h = elapsed_t // 3600
+    el_m = (elapsed_t - el_h * 3600) // 60
+    el_s = int(elapsed_t - el_h * 3600 - el_m * 60)
+
+    if count_ratio == 0:
+        if string_out:
+            return '%d:%02d:%02d < %d:%02d:%02d' % (el_h, el_m, el_s, 0, 0, 0)
+        else:
+            return el_h, el_m, el_s, 0, 0, 0
+
+    # remaining time calculation
+    total_t = elapsed_t / count_ratio
+    rem_t = total_t - elapsed_t
+    rem_h = rem_t // 3600
+    rem_m = (rem_t - rem_h * 3600) // 60
+    rem_s = int(rem_t - rem_h * 3600 - rem_m * 60)
+
+    if string_out:
+        out = '%d:%02d:%02d < %d:%02d:%02d' % (el_h, el_m, el_s, rem_h, rem_m, rem_s)
+        return out
+    else:
+        return el_h, el_m, el_s, rem_h, rem_m, rem_s
 
 
-
-# #####  FILTERS  ####################
-# fft analysis
 class Filters():
-   
-    ########### init arguments ################
-    # T : int/float, indicating the sampling period of the signal, must be in seconds (doesnt have any default values)
-    # n : int, indicating number of fft frequency bins, default is 1000
-    def __init__(self, T, N = 1000):
+    """ 
+    This class is used to apply FIR filters as high-pass, low-pass, band-pass and band-stop filters.
+    It also shows the proper graphical representation of the filter response, signal before filtering and after filtering and filter spectram.
+    The core purpose of this class is to make the filtering process super easy and check filter response comfortably.
+    
+    Inputs:
+        :T: float, indicating the sampling period of the signal, must be in seconds (doesnt have any default values)
+        :n: int, indicating number of fft frequency bins, default is 1000
+        :savepath: str, path to the directory to store the plot, default is None (doesnt save plots)
+        :show: bool, whether to show the plot or not, default is True (Shows figures)
+        :save: bool, whether to store the plot or not, default is False (doesnt save figures)
+    """
+    
+    def __init__(self, T, N = 1000, savepath=None, save=False, show=True):
         # T must be in seconds
         self.fs = 1 / T
         self.N = N
+        self.savepath = savepath
+        self.show = show
+        self.save = save
    
     def raise_cutoff_error(self, msg):
         raise msdExceptions.CutoffError(msg)
@@ -161,15 +230,28 @@ class Filters():
     def raise_filter_error(self, msg):
         raise msdExceptions.FilterTypeError(msg)
    
-    ########## vis_spectrum arguments ##############
-    # sr : pandas series, indicating the time series signal you want to check the spectrum for
-    # f_lim : python list of len 2, indicating the limits of visualizing frequency spectrum
-    # see_neg : bool, flag indicating whether to check negative side of the spectrum or not
-    # show : bool, whether to see the figure or not
-    # save : bool, whether to save the figure or not
-    # savepath : str, path for saving the figure
-    # figsize : tuple, size of the figure plotted to show the fft version of the signal
-    def vis_spectrum(self, sr, f_lim = [], see_neg = False, show = True, save = False, savepath = '', figsize = (30, 3)):
+   
+    def vis_spectrum(self, sr, f_lim=[], see_neg=False, show=None, save=None, savepath=None, figsize=(30, 3)):
+        """
+        The purpose of this function is to produce spectrum of time series signal 'sr'. 
+        
+        Inputs:
+            :sr: numpy ndarray or pandas Series, indicating the time series signal you want to check the spectrum for
+            :f_lim: python list of len 2, indicating the limits of visualizing frequency spectrum. Default is []
+            :see_neg: bool, flag indicating whether to check negative side of the spectrum or not. Default is False
+            :show: bool, whether to show the plot or not, default is None (follows Filters.show attribute)
+            :save: bool, whether to store the plot or not, default is None (follows Filters.save attribute)
+            :savepath: str, path to the directory to store the plot, default is None (follows Filters.savepath attribute)
+            :figsize: tuple, size of the figure plotted to show the fft version of the signal. Default is (30, 3)
+        
+        Outputs:
+            doesnt return anything as the purpose is to generate plots
+        """
+
+        if savepath is None: savepath = self.savepath
+        if save is None: save = self.save
+        if show is None: show = self.show
+
         if isinstance(sr, np.ndarray) or isinstance(sr, list): sr = pd.Series(sr)
         if sr.name is None: sr.name = 'signal'
         if see_neg:
@@ -184,7 +266,7 @@ class Filters():
             y = y.iloc[:self.N]
         fig, ax = plt.subplots(figsize = figsize)
         ax.plot(y.index, y.values, alpha = 1)
-        fig_title = 'Frequency Sprectrum of %s'%sr.name
+        fig_title = 'Frequency Spectrum of %s'%sr.name
         ax.set_title(fig_title)
         ax.set_ylabel('Power')
         ax.set_xlabel('Frequency (Hz)')
@@ -192,21 +274,38 @@ class Filters():
         fig.tight_layout()
         if show:
             plt.show()
-        if save and savepath != '': fig.savefig('%s/%s.jpg'%(savepath, fig_title))
-        plt.close()
+        if save and savepath is not None:
+            os.makedirs(savepath, exist_ok=True)
+            fig.savefig('%s/%s.jpg'%(savepath, fig_title.replace(' ', '_')), bbox_inches='tight')
+            plt.close()
    
-    ################### apply arguments ######################
-    # sr : pandas series, indicating the time series signal you want to apply the filter on
-    # filt_type : str, indicating the type of filter you want to apply on sr. {'lp', 'low_pass', 'low pass', 'lowpass'} for applying    
-    # low pass filter and similar for 'high pass', 'band pass' and 'band stop' filters
-    # f_cut : int/float/pylist/numpy array-n indicating cut off frequencies. Please follow the explanations bellow
-    # for lowpass/highpass filters, it must be int/float
-    # for bandpass/bandstop filters, it must be a list or numpy array of length divisible by 2
-    # order : int, filter order, the more the values, the sharp edges at the expense of complexer computation
-    # response : bool, whether to check the frequency response of the filter or not
-    # plot : bool, whether to see the spectrum and time series plot of the filtered signal or not
-    # f_lim : pylist of length 2, frequency limit for the plot
-    def apply(self, sr, filt_type = '', f_cut = [], order = 10, response = False, plot = False, f_lim = []):
+    def apply(self, sr, filt_type, f_cut, order=10, response=False, plot=False, f_lim=[], savepath=None, show=None, save=None):
+        """
+        The purpose of this function is to apply an FIR filter on a time series signal 'sr' and get the output filtered signal y
+
+        Inputs:
+            :sr: numpy ndarray/pandas Series/list, indicating the time series signal you want to apply the filter on
+            :filt_type: str, indicating the type of filter you want to apply on sr.\n
+                        {'lp', 'low_pass', 'low pass', 'lowpass'} for applying low pass filter\n
+                        and similar for 'high pass', 'band pass' and 'band stop' filters
+            :f_cut: float/list/numpy 1d array, n indicating cut off frequencies. Please follow the explanations bellow\n
+                    for lowpass/highpass filters, it must be int/float\n
+                    for bandpass/bandstop filters, it must be a list or numpy array of length divisible by 2
+            :order: int, filter order, the more the values, the sharp edges at the expense of complexer computation. Default is 10.
+            :response: bool, whether to check the frequency response of the filter or not, Default is False
+            :plot: bool, whether to see the spectrum and time series plot of the filtered signal or not, Default is False
+            :f_lim: list of length 2, frequency limit for the plot. Default is []
+            :savepath: str, path to the directory to store the plot, default is None (follows Filters.savepath attribute)
+            :show: bool, whether to show the plot or not, default is None (follows Filters.show attribute)
+            :save: bool, whether to store the plot or not, default is None (follows Filters.save attribute)
+        
+        Outputs:
+            :y: pandas Series, filtered output signal
+        """
+        
+        if savepath is None: savepath = self.savepath
+        if save is None: save = self.save
+        if show is None: show = self.show
         if isinstance(sr, np.ndarray) or isinstance(sr, list): sr = pd.Series(sr)
         if sr.name is None: sr.name = 'signal'
         msg = 'Cut offs should be paired up (for bp or bs) or in integer format (for hp or lp)'
@@ -248,17 +347,35 @@ class Filters():
             self.raise_filter_error(msg)
         y = pd.Series(sosfiltfilt(_filter, sr.dropna().values), index = sr.dropna().index, name = 'filtered_%s'%sr.name)
         if response:
-            self.filter_response(_filter, f_lim = f_lim)
+            self.filter_response(_filter, f_lim = f_lim, savepath=savepath, save=save, show=show)
         if plot:
-            self.plot_filter(y, filt_type, f_cut, f_lim = f_lim)
+            self.plot_filter(y, filt_type, f_cut, f_lim = f_lim, savepath=savepath, save=save, show=show)
         return y
    
    
-    def filter_response(self, sos, f_lim = []):
+    def filter_response(self, sos, f_lim=[], savepath=None, show=None, save=None):
+        """
+        This function plots the filter spectram in frequency domain.
+
+        Inputs:
+            :sos: sos object found from butter function
+            :flim: list/tuple as [lower_cutoff, higher_cutoff], default is []
+            :savepath: str, path to the directory to store the plot, default is None (follows Filters.savepath attribute)
+            :show: bool, whether to show the plot or not, default is None (follows Filters.show attribute)
+            :save: bool, whether to store the plot or not, default is None (follows Filters.save attribute)
+        
+        Outputs:
+            It doesnt return anything.
+
+        """
+        if savepath is None: savepath = self.savepath
+        if save is None: save = self.save
+        if show is None: show = self.show
+
         w, h = sosfreqz(sos, worN = 2000)
         w = (self.fs / 2) * (w / np.pi)
         h = np.abs(h)
-       
+        
         fig, ax = plt.subplots(figsize = (30, 3))
         ax.plot(w, h)
         ax.set_title('Filter spectrum')
@@ -266,39 +383,77 @@ class Filters():
         ax.set_ylabel('Gain')
         if f_lim != []: ax.set_xlim(f_lim)
         fig.tight_layout()
-        plt.show()
+        if show: plt.show()
+        if savepath is not None and save:
+            os.makedirs(savepath, exist_ok=True)
+            fig.savefig(os.path.join(savepath, 'Filter_spectrum.jpg'), bbox_inches='tight')
         plt.close()
        
-    def plot_filter(self, y, filt_type, f_cut, f_lim = []):
-        self.vis_spectrum(sr = y, f_lim = f_lim)
-        fig, ax = plt.subplots(figsize = (30, 3))
-        ax.set_title('Filtered %s with %s filter with cut offs %s'%(y.name, filt_type, str(f_cut * (self.fs / 2))))
+    def plot_filter(self, y, filt_type, f_cut, f_lim=[], savepath=None,  show=None, save=None):
+        """
+        This function plots filter frequency response, time domain signal etc.
+
+        Inputs:
+            :y: pandas Series, time series data to filter
+            :filt_type: str, indicating the type of filter you want to apply on y.\n
+                       {'lp', 'low_pass', 'low pass', 'lowpass'} for applying low pass filter\n 
+                       and similar for 'high pass', 'band pass' and 'band stop' filters
+            :f_cut: float/list/numpy 1d array, n indicating cut off frequencies. Please follow the explanations bellow\n
+                    for lowpass/highpass filters, it must be int/float\n
+                    for bandpass/bandstop filters, it must be a list or numpy array of length divisible by 2
+            :f_lim: list of length 2, frequency limit for the plot. Default is []
+            :savepath: str, path to the directory to store the plot, default is None (follows Filters.savepath attribute)
+            :show: bool, whether to show the plot or not, default is None (follows Filters.show attribute)
+            :save: bool, whether to store the plot or not, default is None (follows Filters.save attribute)
+            
+        Outputs:
+            No output is returned. The function generates plot.
+        """
+
+        if savepath is None: savepath = self.savepath
+        if save is None: save = self.save
+        if show is None: show = self.show
+
+        title = '%s with %s filter with cut offs %s'%(y.name, filt_type, str(f_cut * (self.fs / 2)))
+        self.vis_spectrum(sr=y, f_lim=f_lim)
+        fig, ax = plt.subplots(figsize=(30, 3))
+        ax.set_title(title)
         ax.plot(y.index, y.values)
         ax.set_xlabel('Time')
         ax.set_ylabel('%s'%y.name)
         fig.tight_layout()
-        plt.show()
+        if show: plt.show()
+        if save and savepath is not None:
+            os.makedirs(savepath, exist_ok=True)
+            fig.savefig(os.path.join(savepath, title.replace(' ', '_')+'.jpg'), bbox_inches='tight')
         plt.close()
 
 
+def get_spectrogram(ts_sr, fs=None, win=('tukey', 0.25), nperseg=None, noverlap=None, mode='psd', figsize=None, 
+                    vis_frac=1, ret_sxx=False, show=True, save=False, savepath=None, fname=None):
+    """
+    The purpose of this function is to find the spectrogram of a time series signal. 
+    It computes spectrogram, returns the spectrogram output and also i able to show spectrogram plot as heatmap.
 
-#### find the spectrogram of a time series signal ####
-# ts_sr : pandas.Series object containing the time series data, the series should contain its name as ts_sr.name
-# fs : int/flaot, sampling frequency of the signal, default is 1
-# win : (str, float), tuple of window parameters, default is (tukey, .25)
-# nperseg : int, number of data in each segment of the chunk taken for STFT, default is 256
-# noverlap : int, number of data in overlapping region, default is (nperseg // 8)
-# mode : str, type of the spectrogram output, default is power spectral density('psd')
-# figsize : tuple, figsize of the plot, default is (30, 6)
-# vis_frac : float or a list of length 2, fraction of the frequency from lower to higher, you want to visualize, default is 1(full range)
-# ret_sxx : bool, whehter to return spectrogram dataframe or not, default is False
-# show: bool, whether to show the plot or not, default is True
-# save : bool, whether to save the figure or not, default is False
-# savepath : str, path to save the figure, default is ''
-# fname : str, name of the figure to save in the savepath, default is fig_title
+    Inputs:
+        :ts_sr: pandas.Series object containing the time series data, the series should contain its name as ts_sr.name
+        :fs: int/flaot, sampling frequency of the signal, default is 1
+        :win: tuple of (str, float), tuple of window parameters, default is (tukey, .25)
+        :nperseg: int, number of data in each segment of the chunk taken for STFT, default is 256
+        :noverlap: int, number of data in overlapping region, default is (nperseg // 8)
+        :mode: str, type of the spectrogram output, default is power spectral density('psd')
+        :figsize: tuple, figsize of the plot, default is (30, 6)
+        :vis_frac: float or a list of length 2, fraction of the frequency from lower to higher, you want to visualize, default is 1(full range)
+        :ret_sxx: bool, whehter to return spectrogram dataframe or not, default is False
+        :show: bool, whether to show the plot or not, default is True
+        :save: bool, whether to save the figure or not, default is False
+        :savepath: str, path to save the figure, default is None
+        :fname: str, name of the figure to save in the savepath, default is figure title
+    
+    Outputs:
+        :sxx: returns spectrogram matrix if ret_sxx flag is set to True
+    """
 
-def get_spectrogram(ts_sr, fs = None, win = ('tukey', 0.25), nperseg = None, noverlap = None, mode = 'psd', figsize = None, vis_frac = 1, ret_sxx = False, show = True, save = False, savepath = '', fname = ''):
-   
     # default values
     if fs is None: fs = 1
     if nperseg is None: nperseg = 256
@@ -325,36 +480,43 @@ def get_spectrogram(ts_sr, fs = None, win = ('tukey', 0.25), nperseg = None, nov
         sns.heatmap(data = heatdata, cbar = True, ax = ax)
         fig.tight_layout()
         if show: plt.show()
-        if save and savepath != '':
-            fname = fig_title if fname == '' else fname
-            fig.savefig('%s/%s.jpg'%(savepath, fname), bbox_inches = 'tight')
+        if save and savepath is not None:
+            os.makedirs(savepath, exist_ok=True)
+            fname = fig_title if fname is None else fname
+            fig.savefig('%s/%s.jpg'%(savepath, fname.replace(' ', '_')), bbox_inches = 'tight')
         plt.close()
    
     # returning the spectrogram
     if ret_sxx: return sxx
-    
 
 
-
-# ###########  GROUPED_MODE  ############
-# data : pandas Series, list, numpy ndarray - must be 1-D
-# bins : int, list or ndarray, indicates bins to be tried to calculate mode value
-# neglect_values : list, ndarray, the values inside the list will be removed from data
-# neglect_above : float, values above this will be removed from the data
-# neglect_beloow : float, values bellow this will be removed from the data
-# neglect_quan : 0 < float < 1 , percentile range which will be removed from both sides from data distribution
 def invalid_bins(msg):
     raise msdExceptions.InvalidBins(msg)
-def grouped_mode(data, bins = None, neglect_values = [], neglect_above = None, neglect_bellow = None, neglect_quan = 0):
+def grouped_mode(data, bins = None, neglect_values=[], neglect_above=None, neglect_bellow=None, neglect_quan=0):
+    """
+    The purpose of this function is to calculate mode (mode of mean-median-mode) value
+
+    Inputs:
+        :data: pandas Series, list, numpy ndarray - must be 1-D
+        :bins: int, list or ndarray, indicates bins to be tried to calculate mode value. Default is None
+        :neglect_values: list, ndarray, the values inside the list will be removed from data. Default is []
+        :neglect_above: float, values above this will be removed from the data. Default is None
+        :neglect_beloow: float, values bellow this will be removed from the data. Default is None
+        :neglect_quan: 0 < float < 1 , percentile range which will be removed from both sides from data distribution. Default is 0
+
+    Outputs:
+        mode for the time series data
+    """
+
     if not isinstance(data, pd.Series): data = pd.Series(data)
     if neglect_above is not None: data = data[data <= neglect_above]
     if neglect_bellow is not None: data = data[data >= neglect_bellow]
     if len(neglect_values) > 0: data.replace(to_replace = neglect_values, value = np.nan, inplace = True)
     data.dropna(inplace = True)
     if neglect_quan != 0: data = data[(data >= data.quantile(q = neglect_quan)) & (data <= data.quantile(q = 1 - neglect_quan))]
-    if isinstance(bins, type(None)): bins = np.arange(10, 161, 10)
+    if isinstance(bins, type(None)): bins = np.arange(10, 101, 10)
     elif isinstance(bins, int): bins = [bins]
-    elif isinstance(bins, list) or isinstance(bins, list): pass
+    elif isinstance(bins, list) or isinstance(bins, np.ndarray): pass
     else: invalid_bins('Provided bins are not valid! Please check requirement for bins.')
     _mode = []
     for _bins in bins:
@@ -366,18 +528,27 @@ def grouped_mode(data, bins = None, neglect_values = [], neglect_above = None, n
     return np.mean(_mode)
 
 
+def get_edges_from_ts(sr, th_method='median', th_factor=.5, th=None,  del_side='up', name=None):
+    """
+    The purpose of this function is to find the edges specifically indices of start and end 
+    of certain regions by thresholding the desired time series data.
 
+    Inputs:
+        :sr: pandas Series, time series data with proper timestamp as indices of the series. Index timestamps must be timedelta type values.
+             Index timestamps must be sorted from old to new time (ascending order).
+        :th_method: {'mode', 'median', 'mean'}, method of calculating threshold, Default is 'median'
+        :th_factor: flaot/int, multiplication factor to be multiplied with th_method value to calculate threshold. Default is .5
+        :th: int/flaot, threshold value inserted as argument. Default is None
+        :del_side: {'up', 'down'}, indicating which side to be removed to get edges. Default is 'up'
+        :name: name of the events, default is None
 
+        Note: the algorithm starts recording when it exceeds the threshold value, so open interval system.
+    
+    Outputs:
+        :edges: pandas DataFrame, contains columns 'start', 'end', 'duration', 'interval' etc. 
+                related to the specific events found after thresholding
+    """
 
-# ############ GET_EDGES ##############
-# this function finds the edges specifically indices of start and end of certain regions by thresholding the desired time series data
-# sr : pandas Series, time series data with proper timestamp as indices of the series
-# th_method : {'mode', 'median', 'mean'}, method of calculating threshold
-# th_factor : flaot/int, multiplication factor to be multiplied with th_method value to calculate threshold
-# th : int/flaot, threshold value inserted as argument
-# del_side : {'up', 'down'}, indicating which side to be removed to get edges
-# Note: the algorithm starts recording when it exceeds the threshold value, so open interval system.
-def get_edges_from_ts(sr, th_method = 'median', th_factor = .5, th = None,  del_side = 'up', name = ''):
     if th is None:
         if th_method == 'median': th = sr.median() * th_factor
         elif th_method == 'mean': th = sr.mean() * th_factor
@@ -405,19 +576,30 @@ def get_edges_from_ts(sr, th_method = 'median', th_factor = .5, th = None,  del_
     edges['duration'] = edges['stop'] - edges['start']
     edges['interval'] = np.nan
     edges['interval'].iloc[1:] = [j - i for i,j in zip(edges['stop'].iloc[:-1], edges['start'].iloc[1:])]
-    edges.columns.name = '%s_edges'%sr.name if name == '' else name
+    if name is None:
+        if sr.name is not None:
+            edges.columns.name = '%s_edges'%sr.name
+        else:
+            edges.columns.name = 'edges'
+    else:
+        edges.columns.name = name
     return edges
 
 
-
-# ############## EACH_ROW_MAX ###############
-# this function gets the maximum values and corresponding columns for each row of a matrix
-# data : list of lists/numpy ndarray or pandas dataframe, matrix data from where max values will be calculated
-# returns same data with two new columns with max values and corresponding column names
 def each_row_max(data):
+    """
+    The purpose of this function is to get the maximum values and corresponding column names for each row of a matrix
+
+    Inputs:
+        :data: list of lists/numpy ndarray or pandas dataframe, matrix data from where max values will be calculated
+    
+    Outputs:
+        returns same data with two new columns with max values and corresponding column names
+    """
+
     if isinstance(data, np.ndarray) or isinstance(data, list): data = pd.DataFrame(data)
     elif isinstance(data, pd.DataFrame): pass
-    else: msd.InputVariableError('input data type must be list of lists or pandas dataframe or numpy ndarray!')
+    else: msdExceptions.InputVariableError('input data type must be list of lists or pandas dataframe or numpy ndarray!')
     if data.isnull().all().all():
         data['max_val'] = np.nan
         data['max_col'] = np.nan
@@ -425,7 +607,7 @@ def each_row_max(data):
         col = data.columns
         row = data.index
         data = data.values
-        max_idx = np.nanargmax(data, axis = 1)
+        max_idx = np.nanargmax(data, axis=1)
         max_val = [data[i, max_idx[i]] for i in range(data.shape[0])]
         max_col = col[max_idx]
         data = pd.DataFrame(data, index = row, columns = col)
@@ -434,15 +616,21 @@ def each_row_max(data):
     return data
 
 
-
-# moving slope is a function which calculates the slope inside a window for a variable
-# df : pandas DataFrame or Series, contains time series columns
-# fs : str, the base sampling period of the time series, default is the mode value of the difference in time between two consecutive samples
-# win : int, window length, deafult is 60
-# take_abs : bool, indicates whether to take the absolute value of the slope or not
-# returns the pandas DataFrame containing resultant windowed slope values
-def moving_slope(df, fs = None, win = 60, take_abs = False, nan_valid = True):
+def moving_slope(df, fs=None, win=60, take_abs=False, nan_valid=True):
+    """
+    The purpose of this function is to calculate the slope inside a window for a variable in a rolling method
    
+    Inputs
+        :df: pandas DataFrame or Series, contains time series columns
+        :fs: str, the base sampling period of the time series, default is the mode value of the difference in time between two consecutive samples
+        :win: int, window length, deafult is 60
+        :take_abs: bool, indicates whether to take the absolute value of the slope or not. Default is False\n
+                   returns the pandas DataFrame containing resultant windowed slope values. Default is True
+    
+    Outputs:
+        :new_df: pandas DataFrame, new dataframe with calculated rolling slope
+    """
+    
     # checking and resampling by the sampling frequency
     isdf = True
     if isinstance(df, pd.Series):
@@ -487,12 +675,18 @@ def moving_slope(df, fs = None, win = 60, take_abs = False, nan_valid = True):
     return new_df
 
 
-
-
-# #####  STANDARDIZE  #############3
-# data : pandas series, dataframe, list or numpy ndarray, input data to be standardized
-# zero_std : float, value used to replace std values in case std is 0 for any column
 def standardize(data, zero_std = 1):
+    """
+    This function applies z-standardization on the data
+
+    Inputs:
+        :data: pandas series, dataframe, list or numpy ndarray, input data to be standardized
+        :zero_std: float, value used to replace std values in case std is 0 for any column. Default is 1
+    
+    Outputs:
+        standardized data
+    """
+
     dtype = 0
     if isinstance(data, pd.Series):
         data = data.to_Frame()
@@ -501,7 +695,7 @@ def standardize(data, zero_std = 1):
         data = pd.DataFrame(data)
         dtype = 2
     elif isinstance(data, pd.DataFrame): pass
-    else: data_type_error('Provided data is inappropriate! ')
+    else: raise ValueError('Provided data is inappropriate! ')
     data_std = data.std()
     data_std[data_std == 0] = zero_std
     data = (data - data.mean()) / data_std
@@ -510,12 +704,23 @@ def standardize(data, zero_std = 1):
     else : return data.values
 
 
-
-# #####  NORMALIZE  #############
-# data : pandas series, dataframe, list or numpy ndarray, input data to be standardized
-# zero_range : float, value used to replace range values in case range is 0 for any column
-# method : {'zero_mean', 'min_max_0_1', 'min_max_-1_1'}
 def normalize(data, zero_range = 1, method = 'min_max_0_1'):
+    """
+    The purpose of this function is to apply normalization of the input data
+
+    Inputs:
+        :data: pandas series, dataframe, list or numpy ndarray, input data to be standardized
+        :zero_range: float, value used to replace range values in case range is 0 for any column. Default is 1
+        :method: {'zero_mean', 'min_max_0_1', 'min_max_-1_1'}.\n
+                'zero_mean' : normalizes the data in a way that makes the data mean as 0\n
+                'min_max_0_1' : normalizes the data in a way that the data becomes confined within 0 and 1\n
+                'min_max_-1_1' : normalizes the data in a way that the data becomes confined within -1 and 1\n
+                Default is 'min_max_0_1'
+    
+    Outputs:
+        Normalized data
+    """
+
     dtype = 0
     if isinstance(data, pd.Series):
         data = data.to_Frame()
@@ -524,7 +729,7 @@ def normalize(data, zero_range = 1, method = 'min_max_0_1'):
         data = pd.DataFrame(data)
         dtype = 2
     elif isinstance(data, pd.DataFrame): pass
-    else: data_type_error('Provided data is inappropriate! ')
+    else: raise ValueError('Provided data is inappropriate! ')
     data_range = data.max() - data.min()
     data_range[data_range == 0] = zero_range
     if method == 'min_max_0_1': data = (data - data.min()) / data_range
@@ -567,40 +772,53 @@ def name_separation(string, maxlen):
     return newstr
 
 
-
-
-# ################ PLOT_TIME_SERIES  ####################
-# This function plots time series data along with much additional information if provided as argument
-
-# same_srs : list of pandas series holding the variables which share same axis in matplotlib plot
-# srs : list of pandas series holding the variables which share different axes, default is []
-# segs : pandas dataframe with two columns 'start' and 'stop' indicating the start and stop of each axis plot segment
-# same_srs_width : list of flaots indicating each line width of corresponding same_srs time series data, must be same size as length of same_srs, default is []
-# spans : list of pandas dataframe indicating the 'start' and 'stop' of the span plotting elements
-# lines : list of pandas series where the values will be datetime of each line position, keys will be just serials
-# linestyle : list of str, marker for each line, '' indicates continuous straight line
-# linewidth : list of constant, line width for each line
-# fig_title : title of the entire figure
-# show : bool, indicating whether to show the figure or not
-# save bool, indicating whether to save the figure or not
-# savepath : str, location of the directory where the figure will be saved
-# fname  : str, figure name when the figure is saved
-# spine_dist : constant indicating distance of the right side spines from one another if any
-# spalpha : list of constants indicating alpha values for each of the span in spans
-# ylims : list of lists, indicating y axis limits in case we want to keep the limit same for all subplots
-# name_thres : maximum allowed characters in one line for plot labels
-# fig_x: float, horizontal length of the figure, default is 30
-# fig_y: float, vertical length of each row of plot, default is 3
-# marker: str, marker for time series plots, default is None
-# xlabel : str, label name for x axis for each row, default is 'Time'
-# ylabel : str, label name for y axis for each row, default is 'Data value'
-
 def input_variable_error(msg):
     raise msdExceptions.InputVariableError(msg)
-def plot_time_series(same_srs, srs = [], segs = None, same_srs_width = [], spans = [], lines = [], linestyle = [], linewidth = [],
-                     fig_title = '', show = True, save = False, savepath = '', fname = '', spine_dist = .035, spalpha = [],
-                     ylims = [], name_thres = 50, fig_x = 30, fig_y = 3, marker = None, xlabel = 'Time', ylabel = 'Data value'):
-   
+def plot_time_series(same_srs, srs=[], segs=None, same_srs_width=[], spans=[], lines=[], linestyle=[], linewidth=[],
+                     fig_title='', show=True, save=False, savepath=None, fname='', spine_dist=.035, spalpha=[],
+                     ylims=[], name_thres=50, fig_x=30, fig_y=4, marker=None, xlabel='Time', ylabel='Data value', xrot=0, x_ha='center', axobj=None):
+    """
+    This function generates plots for time series data along with much additional information if provided as argument.
+    This function provides many flexibilities such as dividing a time series into multiple subplots to visualize easily.
+    It can plot multiple time series with proper legends, backgrounds and grids. It can also plot span plots, veritcal lines, each with separate legends.
+    It allows multiple axes for multiple time series data with separate value ranges.
+
+    Inputs:
+        :same_srs: list of pandas series holding the variables which share same x-axis in matplotlib plot
+        :srs: list of pandas series holding the variables which share different x axes, default is []
+        :segs: int or pandas dataframe with two columns 'start' and 'stop' indicating the start and stop of each axis plot segment (subplot).\n
+               Providing int will split the time series signals into that number of segments and will show as separate row subplot.\n
+               Default is None
+        :same_srs_width: list of flaots indicating each line width of corresponding same_srs time series data,\n
+                        must be same size as length of same_srs, default is []
+        :spans: list of pandas dataframe indicating the 'start' and 'stop' of the span plotting elements, default is []
+        :lines: list of pandas series where the values will be datetime of each line position, keys will be just serials, default is []
+        :linestyle: list of str, marker for each line, '' indicates continuous straight line, default is []
+        :linewidth: list of constant, line width for each line, default is []
+        :fig_title: title of the entire figure, default is ''
+        :show: bool, indicating whether to show the figure or not, default is True
+        :save: bool, indicating whether to save the figure or not, default is False
+        :savepath: str, location of the directory where the figure will be saved, default is None
+        :fname: str, figure name when the figure is saved, default is ''
+        :spine_dist: constant indicating distance of the right side spines from one another if any, default is 0.035
+        :spalpha: list of constants indicating alpha values for each of the span in spans, default is []
+        :ylims: list of lists, indicating y axis limits in case we want to keep the limit same for all subplots, default is []
+        :name_thres: int, maximum allowed characters in one line for plot labels, default is 50
+        :fig_x: float, horizontal length of the figure, default is 30
+        :fig_y: float, vertical length of each row of plot, default is 3
+        :marker: str, marker for time series plots, default is None
+        :xlabel: str, label name for x axis for each row, default is 'Time'
+        :ylabel: str, label name for y axis for each row, default is 'Data value'
+        :xrot: float, rotation angle of x-axis tick values, default is 0
+        :x_ha: horizontal alignment of x axis tick values. It can be {'left', 'right', 'center'}. By default, it is 'center'.
+        :axobj: matplotlib axes object, to draw time series on this axes object plot. Default is None.\n
+                To use this option, segs must be 1 or None or dataframe with 1 row.
+    
+    Outputs:
+        :axobj: Returns matplotlib axes object is axobj is provided in input.\n
+                Otherwise, this function shows or stores plots, doesnt return anything
+    """
+
     totsame = len(same_srs)
     totdif = len(srs)
     if totsame == 0:
@@ -632,7 +850,8 @@ def plot_time_series(same_srs, srs = [], segs = None, same_srs_width = [], spans
     else: input_variable_error('Invalid line width! linewidth should be int/float or list of int/float with equal length of lines')
    
     nrows = segs.shape[0]
-    colors = ['darkcyan', 'coral', 'darkslateblue', 'limegreen', 'crimson', 'purple', 'blue', 'khaki', 'chocolate', 'forestgreen']
+    # colors = ['darkcyan', 'coral', 'darkslateblue', 'limegreen', 'crimson', 'purple', 'blue', 'khaki', 'chocolate', 'forestgreen']
+    colors = get_named_colors()
     spcolors = ['darkcyan', 'coral', 'purple', 'red', 'khaki', 'gray', 'darkslateblue', 'limegreen', 'red', 'blue']
     lcolors = ['crimson', 'darkcyan' , 'darkolivegreen', 'palevioletred', 'indigo', 'chokolate', 'blue', 'forestgreen', 'grey', 'magenta']
     if totsame + totdif > len(colors): colors = get_color_from_cmap(totsame + totdif, 'rainbow')
@@ -640,10 +859,15 @@ def plot_time_series(same_srs, srs = [], segs = None, same_srs_width = [], spans
     if totline > len(lcolors): colors = get_color_from_cmap(totline, 'rainbow')
     if spalpha == []: spalpha = [.3 for _ in range(totsp)]
     stamp_fl = True if isinstance(same_srs[0].index[0], pd.Timestamp) else False
-    fig, ax = plt.subplots(figsize = (fig_x, fig_y * nrows), nrows = nrows)
+    
     if fig_title == '': fig_title = 'Time Series Visualization'
-    fig.suptitle(fig_title, y = 1.03, fontsize = 20, fontweight = 'bold')
+    if axobj is None:
+        fig, ax = plt.subplots(figsize = (fig_x, fig_y * nrows), nrows = nrows)
+        fig.suptitle(fig_title, y = 1.03, fontsize = 20, fontweight = 'bold')
+    else:
+        ax = axobj
     if nrows == 1: ax = [ax]
+    
     for i in range(nrows):
         lg = [[], []]
         st = segs['start'].iloc[i]
@@ -709,38 +933,48 @@ def plot_time_series(same_srs, srs = [], segs = None, same_srs_width = [], spans
         ax[i].legend(lg[0], lg[1], loc = 3, bbox_to_anchor = (0, .98), ncol = len(lg[0]), fontsize = 10)
         ax[i].set_xlim(st, ed)
         ax[i].grid(True)
+        plt.setp(ax[i].get_xticklabels(), rotation=xrot, ha=x_ha)
         if len(ylims) > 0:
             if len(ylims[0]) == 2: ax[i].set_ylim(ylims[0][0], ylims[0][1])
-    fig.tight_layout()
-    if show: plt.show()
-    if save and savepath != '':
-        if fname == '': fname = fig_title.replace('.', '')
-        fig.savefig('%s/%s.jpg'%(savepath, fname), bbox_inches = 'tight')
-    plt.close()
+    if axobj is None:
+        fig.tight_layout()
+        if show: plt.show()
+        if save and savepath is not None:
+            os.makedirs(savepath, exist_ok=True)
+            if fname == '': fname = fig_title.replace('.', '')
+            fig.savefig('%s/%s.jpg'%(savepath, fname), bbox_inches = 'tight')
+        plt.close()
+    else:
+        return ax[0]
 
 
+def plot_heatmap(data, keep='both', rem_diag=False, cmap='gist_heat', cbar=True, stdz=False, annotate=False, fmt=None, vmin=None, vmax=None, center=None,
+                 show=True, save=False, savepath=None, figsize=(30, 10), fig_title='', file_name='', xrot=90, axobj=None):
+    """
+    This function draws table like heatmap for a matrix data (should be pandas DataFrame)
 
+    Inputs:
+        :data: pandas DataFrame, data to be plotted as heatmap
+        :stdz: bool, whether to standardize the data or not, default is False
+        :keep: {'both', 'up', 'down'}, which side of the heatmap matrix to plot, necessary for correlation heatmap plot, default is 'both'
+        :rem_diag: bool, whether to remove diagoanl if keep_only is not 'both', default is False
+        :cmap: str, matplotlib colormap, default is 'gist_heat'
+        :cbar: bool, show the colorbar with the heatmap or not
+        :annotate: bool, whether to show the values or not
+        :fmt: str, value format for printing if annotate is True, default is None
+        :show: bool, show the heatmap or not, default is True
+        :save: bool, save the figure or not, default is False
+        :savepath: str, path for saving the figure, default is None
+        :figsize: tuple, figure size, default is (30, 10)_
+        :fig_title: str, title of the heatmap, default is 'Heatmap of {data.columns.name}'
+        :file_name: str, name of the image as will be saved in savepath, default is fig_title
+        :xrot: float, rotation angle of x-axis labels, default is 0
+        :axobj: matplotlib axes object, to draw time series on this axes object plot. Default is None
+    
+    Outputs:
+        :ax: if axobj is not None and axobj is provided as matplotlib axes object, then this function returns the axes object after drawing
+    """
 
-
-
-# data : pandas DataFrame, data to be plotted as heatmap
-# stdz : bool, whether to standardize the data or not, default is False
-# keep : {'both', 'up', 'down'}, which side of the heatmap matrix to plot, necessary for correlation heatmap plot, default is 'both'
-# rem_diag : bool, whether to remove diagoanl if keep_only is not 'both', default is False
-# cmap : str, matplotlib colormap, default is 'gist_heat'
-# cbar : bool, show the colorbar with the heatmap or not
-# annotate : bool, whether to show the values or not
-# fmt : str, value format for printing if annotate is True
-# show : bool, show the heatmap or not
-# save : bool, save the figure or not
-# savepath : str, path for saving the figure
-# figsize : tuple, figure size
-# fig_title : str, title of the heatmap, default is 'Heatmap of {data.columns.name}'
-# file_name : str, name of the image as will be saved in savepath, default is fig_title
-# lbfactor : float/int, factor used for scaling the plot labels
-def plot_heatmap(data, keep = 'both', rem_diag = False, cmap = 'gist_heat', cbar = True, stdz = False, annotate = False, fmt = None, vmin = None, vmax = None, center = None,
-                 show = True, save = False, savepath = '', figsize = (30, 10), fig_title = '', file_name = '',
-                 lbfactor = 1.5, xrot = 90, axobj = None):
     ylb = data.index.name
     xlb = data.columns.name
     if stdz:
@@ -768,7 +1002,8 @@ def plot_heatmap(data, keep = 'both', rem_diag = False, cmap = 'gist_heat', cbar
     if axobj is None:
         fig.tight_layout()
         if show: plt.show()
-        if save and savepath != '':
+        if save and savepath is not None:
+            os.makedirs(savepath, exist_ok=True)
             if file_name == '': file_name = fig_title
             fig.savefig('%s/%s.jpg'%(savepath, file_name), bbox_inches = 'tight')
         plt.close()
@@ -776,44 +1011,54 @@ def plot_heatmap(data, keep = 'both', rem_diag = False, cmap = 'gist_heat', cbar
         return ax
 
 
+def data_gridplot(data, idf=[], idf_pref='', idf_suff='', diag='hist', bins=25, figsize=(16, 12), alpha=.7, 
+                  s=None, lg_font='x-small', lg_loc=1, fig_title='', show_corr=True, show_stat=True, show=True, 
+                  save=False, savepath=None, fname='', cmap=None):
+    """
+    This function creates a grid on nxn subplots showing scatter plot for each columns of 'data', n being the number of columns in 'data'.
+    This function also shows histogram/kde/line plot for each columns along grid diagonal.
+    The additional advantage is that we can separate each subplot data by a classifier item 'idf' which shows the class names for each row of data.
+    This functionality is specially helpful to understand class distribution of the data.
+    It also shows the correlation values (non-diagonal subplots) and general statistics (mean, median etc in diagonal subplots) for each subplot.
 
-# ########### DATA_GRIDPLOT  #############
-# this function generates scatter plots between every 2 columns in the data set and distribuition or kde or time series plot along diagonal
-# data : pandas dataframe, list or numpy ndarray of rank-2, columns are considered as features
-# idf : pandas series with length equal to total number of samples in the data, works as clussifier of each sample data, specially useful in clustering, default is []
-# idf_pref : str, idf prefix, default is ''
-# idf_suff: str, idf suffix, default is ''
-# diag : {'hish', 'kde', 'plot'}, selection of diagonal plot, default is 'hist'
-# bins : int, number of bins for histogram plot along diagonal, default is 25
-# figsize : tuple, size of the whole figure, default is (16, 12)
-# alpha : float (0~1), transparency parameter for scatter plot, deafult is .7
-# s : float, point size for scatter plot, deafult is None
-# lg_font : float or {'xx-small', 'x-small', 'small', 'medium', 'large', 'x-large', 'xx-large'}, legend font size, default is 'x-small'
-# lg_loc : int, location parameter for plot legend, deafult is 1
-# fig_title: str, titile of the whole figure, default is 'All Columns Grid Plot'
-# show_corr : bool, whether to show correlation value for each scatter plot, default is True
-# show_stat : bool, whether to show mean and std for each columns od data along diagonal plots, default is True
-# show : bool, whether to show the figure or not, default is True
-# save : bool, whether to save the graph or not, default is False
-# savepath : str, path to store the graph
-# fname : str, name used to store the graph in savepath
-# cnam : str, matplotlib color map
-def data_gridplot(data, idf = [], idf_pref = '', idf_suff = '', diag = 'hist', bins = 25, figsize = (16, 12), alpha = .7, 
-                  s = None, lg_font = 'x-small', lg_loc = 1, fig_title = '', show_corr = True, show_stat = True, show = True, 
-                  save = False, savepath = '', fname = '', cmap = ''):
-   
+    Inputs:
+        :data: pandas dataframe, list or numpy ndarray of rank-2, columns are considered as features
+        :idf: pandas series with length equal to total number of samples in the data, works as clussifier of each sample data,\n
+              specially useful in clustering, default is []
+        :idf_pref: str, idf prefix, default is ''
+        :idf_suff: str, idf suffix, default is ''
+        :diag: {'hish', 'kde', 'plot'}, selection of diagonal plot, default is 'hist'
+        :bins: int, number of bins for histogram plot along diagonal, default is 25
+        :figsize: tuple, size of the whole figure, default is (16, 12)
+        :alpha: float (0~1), transparency parameter for scatter plot, deafult is .7
+        :s: float, point size for scatter plot, deafult is None
+        :lg_font: float or {'xx-small', 'x-small', 'small', 'medium', 'large', 'x-large', 'xx-large'}, legend font size, default is 'x-small'
+        :lg_loc: int, location parameter for plot legend, deafult is 1
+        :fig_title: str, titile of the whole figure, default is 'All Columns Grid Plot'
+        :show_corr: bool, whether to show correlation value for each scatter plot, default is True
+        :show_stat: bool, whether to show mean and std for each columns od data along diagonal plots, default is True
+        :show: bool, whether to show the figure or not, default is True
+        :save: bool, whether to save the graph or not, default is False
+        :savepath: str, path to store the graph, default is None
+        :fname: str, name used to store the graph in savepath, defualt is fig_title
+        :cmap: str, matplotlib color map, default is None ('jet')
+
+    Outputs:
+        This function doesnt return anything.
+    """
+    
     if isinstance(idf, list) or isinstance(idf, np.ndarray): idf = pd.Series(idf, dtype = float)
     if isinstance(data, pd.Series): data = data.to_frame()
     elif isinstance(data, list) or isinstance(data, np.ndarray): data = pd.DataFrame(data, columns = ['col_%d'%i for i in range(len(data))])
     elif isinstance(data, pd.DataFrame): pass
     else: print('invalid data passed inside the function!')
     
-    if data.shape[1] <= 1: print('Data should include at least 2 columns!')
+    if data.shape[1] <= 1: raise ValueError('Data should include at least 2 columns!')
     if idf.shape[0] == 0: idf = pd.Series(np.zeros(data.shape[0]), index = data.index)
     colors = ['darkcyan', 'coral', 'limegreen', 'saddlebrown', 'grey', 'darkgoldenrod', 'forestgreen', 'purple',
               'crimson', 'cornflowerblue', 'darkslateblue', 'lightseagreen', 'darkkhaki', 'maroon', 'magenta', 'k']
-    if data.shape[1] > len(colors) and cmap == '': cmap = 'jet'
-    if cmap != '': colors = get_color_from_cmap(data.shape[1], cmap = cmap)
+    if data.shape[1] > len(colors) and cmap is None: cmap = 'jet'
+    if cmap is not None: colors = get_color_from_cmap(data.shape[1], cmap = cmap)
    
     fig, ax = plt.subplots(figsize = figsize, nrows = data.shape[1], ncols = data.shape[1])
     if fig_title == '': fig_title = 'All Columns Grid Plot'
@@ -825,7 +1070,7 @@ def data_gridplot(data, idf = [], idf_pref = '', idf_suff = '', diag = 'hist', b
         for j in range(data.shape[1]):
             coldata = data[col[[i, j]]].dropna()
             for k in range(idfslen):
-                idx = idf[idf == idfs[k]].index & coldata.index
+                idx = idf[idf == idfs[k]].index.intersection(coldata.index)
                 if idx.shape[0] > 0:
                     color = colors[j] if idfslen == 1 else colors[k]
                     if i == j:
@@ -854,6 +1099,7 @@ def data_gridplot(data, idf = [], idf_pref = '', idf_suff = '', diag = 'hist', b
     fig.tight_layout()
     if show: plt.show()
     if save and savepath != '':
+        os.makedirs(savepath, exist_ok=True)
         if fname == '': fname = fig_title
         fig.savefig('%s/%s.jpg'%(savepath, fname), bbox_inches = 'tight')
     plt.close()
@@ -869,16 +1115,30 @@ def plot_diag(arr, bins, ax, diag, color, label):
     else: print('Invalid diagonal plot type!')
     return None
 
-# ######## GET_COLOR_FROM_CMAP  ###########
-# this function gets color from colormap
-# n : int, number of colors you want to create
-# cmap : str, matplotlib colormap name, default is 'jet'
-# rng : array, list or tuple of length 2, edges of colormap, default is [.05, .95]
-def get_color_from_cmap(n, cmap = 'jet', rng = [.05, .95]):
+
+def get_color_from_cmap(n, cmap='jet', rng=[.05, .95]):
+    """
+    this function gets color from matplotlib colormap
+
+    Inputs:
+        :n: int, number of colors you want to create
+        :cmap: str, matplotlib colormap name, default is 'jet'
+        :rng: array, list or tuple of length 2, edges of colormap, default is [.05, .95]
+    
+    Outputs:
+        It returns a list of colors from the selected colormap
+    """
+    
     return [get_cmap(cmap)(i) for i in np.linspace(rng[0], rng[1], n)]
 
-# returns many CSS4 named colors available in matplotlib
+
 def get_named_colors():
+    """
+    This function returns 36 custom selected CSS4 named colors available in matplotlib
+
+    Outputs:
+        list of colors/color_names available in matplotlib
+    """
     colors = ['darkcyan', 'crimson', 'coral', 'forestgreen', 'purple', 'magenta', 'khaki', 'maroon',
               'darkslategray', 'brown', 'gray', 'darkorange', 'mediumseagreen', 'royalblue', 'midnightblue',
               'turquoise', 'rosybrown', 'darkgoldenrod', 'olive', 'saddlebrown', 'darkseagreen', 'deeppink',
@@ -887,33 +1147,42 @@ def get_named_colors():
     return colors
 
 
-"""
-plot_table creates figure with a pandas dataframe table
-_data: pandas dataframe, which will be used to make table and save as a matplotlib figure
-cell_width: float, each cell width
-cell_height: float, each cell height
-font_size: float, font size for table values
-header_color: str or rgb color code, column and index color
-row_colors: str or rgb color code, alternating colors to separate consecutive rows
-edge_color: str or rgb color code, cell border color
-bbox: list of four floats, edges of the table to cover figure
-header_cols: int, number of initial rows to coder column names
-index_cols: int, number of columns to cover index of dataframe
-fig_name: str, figure name to save the figure when save is True
-save: bool, whether to save the figure
-show: bool, whether to show the plot
-savepath: path to store the figure
-ax: matplotlib axis to include table in another figure
-"""
 def plot_table(_data, cell_width=2.5, cell_height=0.625, font_size=14, header_color='#003333', row_colors=['whitesmoke', 'w'], 
-    edge_color='w', bbox=[0, 0, 1, 1], header_cols=0, index_cols=0, fig_name='Table', save=False, show=True, savepath='.', ax=None, 
+    edge_color='w', bbox=[0, 0, 1, 1], header_cols=0, index_cols=0, fig_name='Table', save=False, show=True, savepath=None, axobj=None, 
     **kwargs):
-
+    """
+    This function creates figure for a pandas dataframe table. It drops the dataframe index at first. 
+    So, if index is necessary to show, keep it as a dataframe column.
+    
+    Inputs:
+        :_data: pandas dataframe, which will be used to make table and save as a matplotlib figure. Index is removed in the begining.\n
+               So, if index is necessary to show, keep it as a dataframe column.
+        :cell_width: float, each cell width, default is 2.5
+        :cell_height: float, each cell height, default is 0.625
+        :font_size: float, font size for table values, default is 14
+        :header_color: str or rgb color code, column and index color, default is '#003333'
+        :row_colors: str or rgb color code, alternating colors to separate consecutive rows, default is ['whitesmoke', 'w']
+        :edge_color: str or rgb color code, cell border color, default is 'w'
+        :bbox: list of four floats, edges of the table to cover figure, default is [0,0,1,1]
+        :header_cols: int, number of initial rows to cover column names, default is 0
+        :index_cols: int, number of columns to cover index of dataframe, default is 0 
+        :fig_name: str, figure name to save the figure when save is True, default is 'Table'
+        :save: bool, whether to save the figure, default is False
+        :show: bool, whether to show the plot, default is True
+        :savepath: path to store the figure, default is current directory from where the code is being run ('.')
+        :ax: matplotlib axis to include table in another figure, default is None
+    
+    Outputs:
+        :ax: matplotlib axes object used for plotting, if provided as axobj
+    """
+    
     data = _data.reset_index(drop=False)
-    if ax is None:
+    if axobj is None:
         size = (np.array(data.shape[::-1]) + np.array([0, 1])) * np.array([cell_width, cell_height])
         fig, ax = plt.subplots(figsize=size)
         ax.axis('off')
+    else:
+        ax = axobj
     mpl_table = ax.table(cellText=data.values, bbox=bbox, colLabels=data.columns, **kwargs)
     mpl_table.auto_set_font_size(False)
     mpl_table.set_fontsize(font_size)
@@ -925,36 +1194,64 @@ def plot_table(_data, cell_width=2.5, cell_height=0.625, font_size=14, header_co
             cell.set_facecolor(header_color)
         else:
             cell.set_facecolor(row_colors[rc[0]%len(row_colors) ])
-    fig.tight_layout()
-    if save: fig.savefig('%s/%s.png'%(savepath, fig_name), bbox_inches='tight')
-    if show: plt.show()
-    else: plt.close()
-    if ax is None: return ax
+    if axobj is None:
+        fig.tight_layout()
+        if save and savepath is not None:
+            os.makedirs(savepath, exist_ok=True)
+            fig.savefig('%s/%s.png'%(savepath, fig_name), bbox_inches='tight')
+        if show: plt.show()
+        else: plt.close()
+    else:
+        return ax
 
 
-# ########  FEATURE_EVALUATOR  ######################
-# data: should be a pandas dataframe containing label data inside it (it must contain only features and labels, no unnecessary columns are allowed)
-# label_name: list; containing name of the columns used as labels
-# label_type_num: list of bool, containing flag info if the labels are numerical or not (must be corresponding to label_name)
-# n_bin: int, expressing number of divisions of the label values. If any label is categorical, n_bin for that label will be equal to the number of categories, default is 40 for numerical labels
-# (here its okay to use labels before converting into one hot encoding, its even better not to convert into one hot)
-# is_all_num: bool, is a simplification flag indicates whether all the features are numerical or not
-# is_all_cat: bool, is a simplification flag indicates whether all the features are categorical or not
-# num_cols: list, containing name of numerical columns if needed
-# cat_cols: list, containing categorical feature names if needed
-# cmap: str, is the matplotlib colormap name, default is 'gist_rainbow'
-# fig_width: float, is the width of figure, default is 30
-# fig_height: float, is the height of figure, default is 5
-# rotation: float, rotational angle of x axis labels of the figure, default is 40
-# show : bool, whether to show the graph or not, default is True
-# save : bool, whether to save the figure or not, default is False
-# savepath : str, path where the data will be saved, default is None
-# fname : str, filename which will be used for saving the figure, default is None
-# fig_title : str, title of the figure, default is 'Feature Confidence Evaluation for categorical Features'
-# This function tries to calculate the importance of features by some statistical approaches
-def feature_evaluator(data, label_name, label_type_num, n_bin = 40, is_all_num = False, is_all_cat = False, num_cols = [], 
-                      cat_cols = [], cmap = 'gist_rainbow', fig_width = 30, fig_height = 5, rotation = 40, show = True, save = False, 
-                      savepath = None, fname = None, fig_title = ''):
+def feature_evaluator(data, label_name, label_type_num, n_bin=40, is_all_num=False, is_all_cat=False, num_cols=[], 
+                      cat_cols=[], cmap='gist_rainbow', fig_width=30, fig_height=5, rotation=40, show=True, save=False, 
+                      savepath=None, fname=None, fig_title=''):
+    """
+    This function calculates feature importance by statistical measures. 
+    Here its okay to use labels before converting into one hot encoding, its even better not to convert into one hot.
+    
+    The process is below-
+
+    --------- feature evaluation criteria --------
+    
+    for numerical feature evaluation:\n
+    group- a variable is divided into groups based on a constant interval of its values\n
+    group diversity- std of mean of every group\n
+    group uncertainty- mean of std of points for every group\n
+    
+    for categorical feature evaluation:\n
+    group diversity- mean of std of percentage of categories inside a feature\n
+    group uncertainty- mean of std of percentage of groups for each category\n
+
+    group confidence (Importance)- group diversity / group uncertainty
+
+    Inputs:
+        :data: must be a pandas dataframe containing feature and label data inside it\n
+              (it must contain only features and labels, no unnecessary columns are allowed)
+        :label_name: list; containing names of the columns used as labels
+        :label_type_num: list of bool, containing flag info if the labels are numerical or not (must be corresponding to label_name)
+        :n_bin: int, expressing number of divisions of the label values.\n
+               If any label is categorical, n_bin for that label will be equal to the number of categories.\n
+               Default is 40 for numerical labels.
+        :is_all_num: bool, is a simplification flag indicates whether all the features are numerical or not
+        :is_all_cat: bool, is a simplification flag indicates whether all the features are categorical or not
+        :num_cols: list, containing name of numerical columns if needed
+        :cat_cols: list, containing categorical feature names if needed
+        :cmap: str, is the matplotlib colormap name, default is 'gist_rainbow'
+        :fig_width: float, is the width of figure, default is 30
+        :fig_height: float, is the height of figure, default is 5
+        :rotation: float, rotational angle of x axis labels of the figure, default is 40
+        :show: bool, whether to show the graph or not, default is True
+        :save: bool, whether to save the figure or not, default is False
+        :savepath: str, path where the data will be saved, default is None
+        :fname: str, filename which will be used for saving the figure, default is None
+        :fig_title: str, title of the figure, default is 'Feature Confidence Evaluation for categorical Features'
+        
+    Outputs:
+        :num_lab_confids: dict, contains confidence values for each label
+    """    
     
     # separating numerical and categorical feature data 
     if is_all_num:
@@ -978,19 +1275,12 @@ def feature_evaluator(data, label_name, label_type_num, n_bin = 40, is_all_num =
     # n_bin arrangements
     default_n_bin = 25
     if n_bin is None:
-        n_bin = [ deafault_n_bin for i in label_type_num]
+        n_bin = [ default_n_bin for i in label_type_num]
     else:
         n_bin = [ n_bin for i in label_type_num]
     num_bin = np.array(n_bin)[label_type_num]
     cat_bin = [cat_labels[i].unique().shape[0] for i in cat_labels.columns]
-    # feature evaluation criteria:
-    # for numerical feature evaluation:
-    # group diversity : std of mean of every group
-    # group uncertainty : mean of std of points for every group
-    # group confidence : group diversity / group uncertainty
-    # for categorical feature evaluation:
-    # mean of std of percentage of categories inside a feature
-    # mean of std of percentage of groups for each category
+    
     # loop definitions
     labels_list = [num_labels, cat_labels]
     labels_tag = ['Numerical label', 'Categorical label']
@@ -1085,19 +1375,44 @@ def feature_evaluator(data, label_name, label_type_num, n_bin = 40, is_all_num =
     return num_lab_confids
 
 
+def get_weighted_scores(score, y_test):
+    """
+    This function calculates weighted average of score values we get from class_result function
+
+    Inputs:
+        :score: pandas DataFrame, contains classifiaction scores that we get from msd.class_result() function
+        :y_test: numpy array, pandas Series or python list, contains true classification labels
+
+    Outputs:
+        :_score: pandas DataFrame, output score DataFrame with an additional column containing weighted score values
+    """
+    _score = score.copy()
+    counts = pd.Series(y_test).value_counts().sort_index().to_frame().T
+    _score['weighted_average'] = (_score.drop('accuracy').drop('average', axis=1).values * counts.values / counts.values.sum()).sum(axis=1).tolist()+[_score['average'].loc['accuracy']]
+    return _score
 
 
+def class_result(y, pred, out_confus=False):
+    """
+    This function computes classification result with confusion matrix
+    For classification result, it calculates precision, recall, f1_score, accuracy and specificity for each classes.
 
-# ############ CLASS_RESULT  ##############
-# classification result with confusion matrix
-# ARGUMENTS
-# y --> True labels, a vector holding class indices like 0, 1, 2 .. etc.
-# pred --> Predictions, a vector containing prediction opt for class indices similar to True labels 
-# out_confus --> returns confusion matrix if set True
-# RETURNS
-# result --> DataFrame containing precision, recall and f1 scores for all labels
-# con_mat --> DataFrame containing confusion matrix, depends on out_confus
-def class_result(y, pred, out_confus = False):
+    Inputs:
+        :y: numpy 1-d array, list or pandas Series, true classification labels, a vector holding class names/indices for each sample
+        :pred: numpy 1-d array, list or pandas Series, predicted values, a vector containing prediction opt for class indices similar to y.\n
+               Must be same length as y
+        :out_confus: bool, returns confusion matrix if set True. Default is False
+    
+    Outputs:
+        :result: DataFrame containing precision, recall and f1 scores for all labels
+        :con_mat: DataFrame containing confusion matrix, depends on out_confus
+    """
+    
+    if not any([isinstance(y, np.ndarray), isinstance(y, pd.Series)]):
+        y = np.array(y)
+    if not any([isinstance(pred, np.ndarray), isinstance(pred, pd.Series)]):
+        pred = np.array(pred)
+        
     y = y.ravel()
     pred = pred.ravel()
     y_labels = set(np.unique(y))
@@ -1116,9 +1431,18 @@ def class_result(y, pred, out_confus = False):
     recall = []
     f_msr = []
     acc = []
+    spec = []
     sum_pred = con_mat.sum()
     sum_true = con_mat.T.sum()
+    total = y.shape[0]
     for label in labels:
+        tn = total - (sum_true.loc[label] + sum_pred.loc[label] - con_mat[label].loc[label])
+        fp = sum_pred.loc[label] - con_mat[label].loc[label]
+        if (tn+fp) != 0:
+            sp = tn / (tn + fp)
+        else:
+            sp = 0
+        spec.append(sp)
         if sum_pred.loc[label] != 0:
             pr = con_mat[label].loc[label] / sum_pred.loc[label]
         else:
@@ -1135,26 +1459,41 @@ def class_result(y, pred, out_confus = False):
             f = 0
         f_msr.append(f)
         acc.append(np.nan)
-    result = pd.DataFrame([prec, recall, f_msr], columns = labels, index = ['precision', 'recall', 'f1_score'])
+    result = pd.DataFrame([spec, prec, recall, f_msr], columns = labels, index = ['specificity', 'precision', 'recall', 'f1_score'])
     result.columns = [str(c) for c in result.columns]
     avg = result.T.mean()
     avg.name = 'average'
     result = pd.concat((result, avg), axis = 1, sort = False)
     result.columns.name = 'labels'
-    acc = pd.DataFrame([acc + [np.sum(y == pred) / y.shape[0]]], columns = result.columns, index = ['accuracy'])
+    acc = pd.DataFrame([acc + [np.trace(con_mat.values) / y.shape[0]]], columns = result.columns, index = ['accuracy'])
     result = pd.concat((result, acc), axis = 0, sort = False)
+    result = get_weighted_scores(result, y)
     if out_confus:
         return result, con_mat
     else:
         return result
 
 
-
-
-# determination of coefficient R square value and root mean squared error value for regression evaluation
-# y: true values
-# pred: prediction values
 def rsquare_rmse(y, pred):
+    """
+    This function calculates R-square value (coefficient of determination) and root mean squared error value for regression evaluation.
+
+    Inputs:
+        :y: numpy 1-d array, list or pandas Series, contains true regression labels
+        :pred: numpy 1-d array, list or pandas Series, prediction values against y. Must be same size as y.
+    
+    Outputs:
+        :r_sq: calculated R-square value (coefficient of determination)
+        :rmse: root mean square error value
+    """
+
+    if not any([isinstance(y, np.ndarray), isinstance(y, pd.Series)]):
+        y = np.array(y)
+    if not any([isinstance(pred, np.ndarray), isinstance(pred, pd.Series)]):
+        pred = np.array(pred)
+        
+    y = y.ravel()
+    pred = pred.ravel()
     y = np.array(y)
     pred = np.array(pred)
     y_mean = np.mean(y)
@@ -1163,12 +1502,20 @@ def rsquare_rmse(y, pred):
     return r_sq, rmse
 
 
+def one_hot_encoding(arr, class_label=None, ret_label=False, out_type='ndarray'):
+    """
+    This function converts categorical values into one hot encoded format.
 
-# ############  ONE_HOT_ENCODING  ###################
-# arr : numpy array or list or pandas series, containing all class labels with same size as data set
-# class_label(optional) : numpy array or list, list or pandas series, containing only class labels
-# out_type : {'ndarray', 'series', 'list'}, data type of the output
-def one_hot_encoding(arr, class_label = None, ret_label = False, out_type = 'ndarray'):
+    Inputs:
+        :arr: numpy 1-d array, list or pandas Series, containing all class names/indices
+        :class_label: numpy array or list, list or pandas Series, containing only class labels inside 'arr'
+        :out_type: {'ndarray', 'dataframe', 'list'}, data type of the output
+    
+    Outputs:
+        :label: one hot encoded output data, can be ndarray, list or pandas DataFrame based on 'out_type'
+        :class_label: names of class labels corresponding to each column of one hot encoded data.\n
+                      It is provided only if ret_label is set as True.
+    """
     if isinstance(arr, pd.Series): pass
     else: arr = pd.Series(arr)
     if class_label is None: class_label = np.sort(arr.unique())
@@ -1183,23 +1530,27 @@ def one_hot_encoding(arr, class_label = None, ret_label = False, out_type = 'nda
     else: return label
 
 
-
-
-# This class contains method to split data set into train, validation and test
-# it allows both k-fold cross validation and casual random splitting
 class SplitDataset():
+    """
+    This class contains method to split data set into train, validation and test.
+    It allows both k-fold cross validation and casual random splitting.
+    Additionally it allows sequence splitting, necessary to model time series data using LSTM.
     
-    # initialize the class
-    # data: pandas dataframe or series or numpy array of dimension #samples X other dimensions with rank 2 or higher
-    # label: pandas dataframe or series or numpy array with dimension #samples X #classes with rank 2
-    # index : numpy array, we can explicitly insert indices of the data set and labels
-    # test_ratio : float, ratio of test data
-    # np_seed : int, numpy seed used for random shuffle
-    # same_ratio : bool, should be only true if the labels are classification labels and we want to keep the test and validation ratio same for all classes
-    # make_onehot : bool, if True, the labels will be converted into one hot encoded format
-    def __init__(self, data, label, index = '', test_ratio = 0, np_seed = 1216, same_ratio = False, make_onehot = False):
+    Inputs:
+        :data: pandas DataFrame or Series or numpy ndarray of dimension #samples X other dimensions with rank 2 or higher in total
+        :label: pandas dataframe or series or numpy ndarray with dimension #samples X #classes with rank 2 in total
+        :index: numpy array, we can explicitly insert indices of the data set and labels, default is None
+        :test_ratio: float, ratio of test data, default is 0
+        :np_seed: int, numpy seed used for random shuffle, default is 1216
+        :same_ratio: bool, keep the test and validation ratio same for all classes.\n
+                        Should be only true if the labels are classification labels, default is False
+        :make_onehot: bool, if True, the labels will be converted into one hot encoded format. Default is False
+    """
+    
+    def __init__(self, data, label, index=None, test_ratio=0, np_seed=1216, same_ratio=False, make_onehot=False):
+        
         # checking initial criteria and fixing stuffs
-        if isinstance(index, str):
+        if index is None:
             if isinstance(data, pd.DataFrame) or isinstance(data, pd.Series):
                 index = data.index
             elif isinstance(label, pd.DataFrame) or isinstance(label, pd.Series):
@@ -1208,6 +1559,7 @@ class SplitDataset():
         if isinstance(label, pd.DataFrame) or isinstance(label, pd.Series): label = label.values
         if isinstance(data, list): data = np.array(data)
         if isinstance(label, list): label = np.array(label)
+        
         # defining data and label parameter
         self.data = data.copy()
         self.label = one_hot_encoding(label) if make_onehot else label.copy()
@@ -1215,13 +1567,14 @@ class SplitDataset():
         self.test_ratio = test_ratio
         # checking mismatch in data and label sizes
         self.check_data_label()
-        # setting numpy random seed
-        np.random.seed(np_seed)
         # setting balanced sampling for different class labels if same_ratio = True
         self.prepare_class_index(same_ratio)
-        self.index = np.arange(self.data_shape[0]) if isinstance(index, str) else index
+        self.index = np.arange(self.data_shape[0]) if index is None else index
         # shuffling indices
-        for k in self.idx: np.random.shuffle(self.idx[k])
+        for k in self.idx:
+            # setting numpy random seed
+            np.random.seed(np_seed)
+            np.random.shuffle(self.idx[k])
         # setting test length based on
         self.test_len = {i : int(self.idx[i].shape[0] * self.test_ratio) for i in self.idx}
         # initializing the input and output data
@@ -1260,11 +1613,16 @@ class SplitDataset():
             self.cls = np.arange(self.label.shape[1])
             self.idx = {i : np.where(self.label[:, i] == 1)[0] for i in self.cls}
     
-    # ############ RANDOM_SPLIT  ################
-    # this function is for simple random split
-    # val_ratio : float, validation data set ratio, default is .15
-    # returns data, label and indices for train, validation and test data sets as pydict
     def random_split(self, val_ratio = .15):
+        """
+        This method splits the data randomly into train, validation and test sets.
+
+        Inputs:
+            :val_ratio: float, validation data set ratio, default is .15
+            
+        Outputs:
+            :outdata: dict containing data, label and indices for train, validation and test data sets
+        """
         self.val_len = {i : int(self.idx[i].shape[0] * val_ratio) for i in self.idx}
         # defining starting and ending indices
         sted = {'test' : {'st': {i : 0 for i in self.cls}, 'ed' : self.test_len},
@@ -1282,10 +1640,19 @@ class SplitDataset():
     
     # ###############  CROSS_VALIDATION_SPLIT  ####################
     # this function is prepared to run cross validation using proper data and labels
-    # fold : int, number of folds being applied to the data, default is 5
-    # returns data, label and indices for train, validation and test data sets as pydict
+
     def cross_validation_split(self, fold = 5):
-         #defining validation length for each type of class labels
+        """
+        This method applies cross validation splitting.
+
+        Inputs:
+            :fold: int, number of folds being applied to the data, default is 5
+        
+        Outputs:
+            :outdata: dict containing data, label and indices for train, validation and test data sets
+        """
+        
+        #defining validation length for each type of class labels
         self.val_len = {i : (self.idx[i].shape[0] - self.test_len[i]) // fold for i in self.cls}
         # defining starting and ending indices
         sted = {'test' : {'st': {i : 0 for i in self.cls}, 'ed' : self.test_len},
@@ -1315,19 +1682,30 @@ class SplitDataset():
                         outdata[_set][lb]['fold_%d'%i] = np.concatenate(outdata[_set][lb]['fold_%d'%i], axis = 0)
         return outdata
 
-
-
-# ######### SEQUENCE_SPLIT  ################
-    # seq_len : int, length of each sequence
-    # val_ratio : float, validation data set ratio, deafult is .15
-    # data_stride : int, indicates the number of shift between two adjacent example data to prepare the data set, default is 1
-    # label_shift : temporal difference between the label and the corresponding data's last time step, default is 1
-    # split_method : {'train_val', 'multiple_train_val'}, default is 'multiple_train_val'
-    # sec : int or pandas dataframe with columns naming 'start' and 'stop', number of sections for multiple_train_val method splitting (basically train_val splitting is multiple_train_val method with sec = 1), deafult is 1
-    # dist : int, number of data to be leftover between two adjacent sec, default is 0
     # returns data, label and indices for train, validation and test data sets as pydict
-    def sequence_split(self, seq_len, val_ratio = .15, data_stride = 1, label_shift = 1,
-                       split_method = 'multiple_train_val', sec = 1, dist = 0, inference = False):
+    def sequence_split(self, seq_len, val_ratio=.15, data_stride=1, label_shift=1,
+                       split_method='multiple_train_val', sec=1, dist=0, inference=False):
+        """
+        This method creates sequences of time series data and then splits those sequence data into train, validation and test sets. 
+        We can create mutiple pairs of train and validation data sets if we want.
+        Test data set will be only one set.
+
+        Note : As this method creates sequential data, it may also be needed in inference time.
+
+        Inputs:
+            :seq_len: int, length of each sequence
+            :val_ratio: float, validation data set ratio, deafult is .15
+            :data_stride: int, indicates the number of shift between two adjacent example data to prepare the data set, default is 1
+            :label_shift: temporal difference between the label and the corresponding data's last time step, default is 1
+            :split_method: {'train_val', 'multiple_train_val'}, default is 'multiple_train_val'
+            :sec: int or pandas dataframe with columns naming 'start' and 'stop', number of sections for multiple_train_val method splitting (basically train_val splitting is multiple_train_val method with sec = 1), deafult is 1
+            :dist: int, number of data to be leftover between two adjacent sec, default is 0
+            :inference: bool, whether the method is called in inference or not. Default is False
+        
+        Outputs:
+           :outdata: dict containing data, label and indices for train, validation and test data sets
+        """
+        
         # split_method
         if split_method == 'train_val':
             if sec == 1: sec = 1
@@ -1381,19 +1759,23 @@ class SplitDataset():
                     outdata[nm][k] = outdata[nm][k]['section_1']
         return outdata
 
-   
-
-# params : dict of lists containing choices for each of the param keys
-# mode : str, search mode; avaialble modes {'random', 'grid'}, default is 'random'
-# find : str, minimizing or maximizing the score ? ; available {'min', 'max'}, default 'min'
-# iteration : int, number of iterations to be done, default is None
-# top : int, number of top scores to be stored; default is 3
-# rand_it_perc : float (0 ~ 1), indirectly sets the total number of iteration in 'random' model if iteration is not given, default is .5
-# shuffle_queue : bool, whether to shuffle the parameter queue or not, default is True
 
 class paramOptimizer():
+    """
+    This class is used for hyper-parameter optimization for Machine Learning or other usage.
+
+    Inputs:
+        :params: dict of lists, containing choices for each of the param keys
+        :mode: str, search mode. avaialble modes {'random', 'grid'}, default is 'random'
+        :find: str, available {'min', 'max'}, indicates whether minimizing or maximizing the score, default is 'min'
+        :iteration: int, number of iterations to be done, default is None
+        :top: int, number of top scores to be stored; default is 3
+        :rand_it_perc: float (0 ~ 1), indirectly sets the total number of iteration in 'random' model if iteration is not given, default is .5
+        :shuffle_queue: bool, whether to shuffle the parameter queue or not, default is True
+        :random_seed: float, random seed to use for random actions, default is 1216
     
-    def __init__(self, params, mode = 'random', find = 'min', iteration = None, top = 3, rand_it_perc = .5, shuffle_queue = True):
+    """
+    def __init__(self, params, mode='random', find='min', iteration=None, top=3, rand_it_perc=.5, shuffle_queue=True, random_seed=1216):
         self.params = params
         self.paramlen = {p : len(params[p]) for p in params}
         self.queue = self.get_queue()
@@ -1404,7 +1786,9 @@ class paramOptimizer():
             else: self.iteration = iteration
             shuffle_queue = True
         elif self.mode == 'grid': self.iteration = self.total_it
-        if shuffle_queue: random.shuffle(self.queue)
+        if shuffle_queue:
+            np.random.seed(random_seed)
+            np.random.shuffle(self.queue)
         self.queue = pd.DataFrame(self.queue)
         self.queue['score'] = np.nan
         self.queue_cnt = 0
@@ -1432,10 +1816,18 @@ class paramOptimizer():
     def get_param(self,):
         return dict(self.queue.drop('score', axis = 1).iloc[self.queue_cnt])
     
-    # this function takes in score value on what optimization is done
-    # score : the score value
-    # element : any additional storage element like model or any other variable etc.
     def set_score(self, score, element = ''):
+        """
+        This method takes in score value found for the current set of parameters and shows if the iteration is finished or not.
+
+        Inputs:
+            :score: float, the score value
+            :element: anything, any additional storage element like model or any other variable etc.
+        
+        Outputs:
+            :stop_iteration_flag: bool, if True, it means that the optimization is finished.
+        """
+        
         self.queue['score'].iloc[self.queue_cnt] = score
         if self.queue_cnt < self.top + 1:
             self.tops.iloc[self.queue_cnt] = [self.queue_cnt, score]
@@ -1450,6 +1842,9 @@ class paramOptimizer():
         if self.queue_cnt == self.iteration: return True
         else: return False
     
-    # this function provides the best parameter set in the end (can also be used at any time instance in stead of end)
     def best(self,):
+        """
+        this function provides the best parameter set in the end of optimization (can also be used at any time in stead of end)
+        """
+
         return self.queue.iloc[self.tops['queue_idx'].values[:-1]].reset_index(drop = True), self.storage[:-1]

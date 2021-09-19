@@ -3,234 +3,261 @@
 </h1>
 <br>
 
-[![PyPI license](https://img.shields.io/pypi/l/msdlib.svg)](https://pypi.python.org/pypi/msdlib/)
-[![PyPI version](https://badge.fury.io/py/msdlib.svg)](https://badge.fury.io/py/msdlib)
-![Build : passing](https://travis-ci.org/abdullah-al-masud/msdlib.svg?branch=master)
-<br>
-<br>
-<br>
-<br>
+<img src="msdlib_logo_fit.png" alt="msdlib_logo" width="150"/>
 
-![](https://github.com/abdullah-al-masud/msdlib/blob/master/msdlib/images/data_gridplot_irish.jpeg)
-<br>
+![](https://img.shields.io/pypi/l/msdlib.svg)
+![](https://badge.fury.io/py/msdlib.svg)
+![](https://travis-ci.org/abdullah-al-masud/msdlib.svg?branch=master)
+![](https://readthedocs.org/projects/pip/badge/?version=latest)
 
+![](examples/plot_time_series_example/Combined_Time_Series_Plot.jpg)
 
-<h2>
-    Introduction
-</h2>
-
-This library was first designed for my personal usage for data visualization, processing and machine learning purposes. But then I thought it might help others to do the same things with easier ways. That thought motivated me to make new functions inside the library. Its not yet rich but I am strongly willing to make it much bigger, richer and helpful for all.
-<br>
 
 
 <h2>
-    Dependencies
-</h2>
+Introduction
+</h2><br>
+The main purpose of this library is to make data science works easier and simpler with less amount of coding, providing helper functions for plotting, 
+ML training, evaluation, result summarization etc. 
+The purpose is to focus more on making common tasks easier so that a beginner to mid level developer is able to do his/her jobs easily and can get started career with enough pace.
 
-This library mostly works on top of pandas, numpy, matplotlib and some other several packages. I am providing a list here-
-<li>Numpy</li>
-<li>Pandas</li>
-<li>Matplotlib</li>
-<li>Scipy</li>
-<li>Seaborn</li>
-<li>Pytorch (for mlutils sub-module)</li>
-
-
-Its best to install the most updated versions of these dependencies
-<br>
 
 
 <h2>
-  Installation
-</h2>
+Dependencies
+</h2><br>
+- Numpy
+- Pandas
+- Matplotlib
+- Scipy
+- Seaborn
+- joblib
+- Pytorch (for mlutils package)
 
-```pip install msdlib```
+All of these packages except Pytorch will be installed automatically during msdlib installation.
+
+Pytorch should be installed by following installation procedure suggested https://pytorch.org/.
+
+
+
+<h2>
+Installation
+</h2><br>
+
+``pip install msdlib``
 
 or if you have --user related issues during installation, please use
 
-```pip install --user msdlib```
-<br>
+``pip install --user msdlib``
+
 
 
 <h2>
-    License
-</h2>
-
+License
+</h2><br>
 MIT open source License has been issued for this library.
-<br>
+
+
+
+<h2>
+Examples
+</h2><br>
+You can find easy examples on how to use the functions and classes from this library `here <https://github.com/abdullah-al-masud/msdlib/tree/master/msdlib/examples>`_.
+Necessary data is also provided in this directory.
+
 
 
 <h2>
-  Examples
-</h2>
+Documentation
+</h2><br>
+Complete documentation of classes and functions can be found here https://msdlib.readthedocs.io/.
 
-You can find easy examples on how to use the functions and classes from this library [here](https://github.com/abdullah-al-masud/msdlib/tree/master/msdlib/examples).
-Please download the used data from [here](https://drive.google.com/open?id=15gKhIKcNncteSxJxr0GEC967UwL51l5n).
-<br>
 
-<h2>
-  Documentation
-</h2>
-
-Complete documentation of classes and functions can be found [here](https://github.com/abdullah-al-masud/msdlib/blob/master/docs/DOC.md). The list is alphabetically ordered.
-<br>
 
 <h2>
-    Overview
-</h2>
+Reference/citation
+</h2><br>
+
+```
+@manual{msdlib,
+title        = "{msdlib}: A package for easier data science practices",
+author       = "{Abdullah Al Masud and {msdlib Developers}}",
+month        = Jan,
+year         = 2020,
+url          = "{https://github.com/abdullah-al-masud/msdlib}"
+}
+```
+
+
+
+<h2>
+Call for contributions
+</h2><br>
+
+We seek active participation of enthusiastic developers from around the world to enrich this library more, adding more functionalities from different aspects,
+giving more flexibility, completing unfinished functionalities and maintain the library in regular manner. 
+We would be grateful for your invaluable suggestions and participations.
+
+
+
+<h2>
+Overview
+</h2><br>
 
 The whole library can be divided into 4 main portions.
 
-1. Visualization tools
-2. Data processing tools
-3. Machine learning tools
-4. Miscellaneous
-<br>
+1. Machine learning tools
+2. Visualization tools
+3. Data processing tools
+4. Fintech and Miscellaneous
+
 
 Some of the frequently used programs are shown bellow.
 
 
-<h2>
-    Visualization Tools
-</h2>
+<h3>
+1. Machine Learning Tools
+</h3><br>
 
-![](msdlib/images/All%20Columns%20Grid%20Plot.jpg)
+
+<h4>
+mlutils:
+</h4><br>
+This module provides functionalities for easier implementation of Pytorch Deep Learning models. It offers several facilities such as-
+
+    - Scikit-like easy implementation of Pytorch models using fit, predict and evaluate methods
+    - Constructing Deep Learning models in a few lines of code
+    - Producing automated results with beautiful tables having precision, recall, f1_score, accuracy and specificity in classification problems
+    - Producing automated graphs of true-vs-prediction and result preparation for regression model
+
+
+
+<h4>
+paramOptimizer:
+</h4><br>
+This is a class which can conduct easy Hyper-parameter optimization process. 
+Currently it enables us to apply grid search and random search for any model/function/mathematical entity
+
+
+
+<h4>
+SplitDataset:
+</h4><br>
+This is one of the most useful classes in this library. It enables us to split data set into train, validation and test sets. 
+We have three options here to split data set-
+
+    - random_split
+    - cross_validation_split
+    - sequence_split (specially necessary for RNN/LSTM)
+
+
+
+<h4>
+one_hot_encoding: 
+</h4><br>
+This function converts classification labels in one hot encoded format
+
+
+
+<h4>
+feature_evaluator:
+</h4><br>
+This function is one of the most useful tools. It can calculate feature importance from statistical point of view. 
+It can show the results using bar plot and can handle classification and regression both kind of labels.
+
+
+
+<h4>
+class_result: 
+</h4><br>
+This function calculates classification model evaluation parameters like precision, recall, accuracy, f1 score, specificity etc. and also able to show confusion matrix as a pandas dataframe.
+
+
+
+<h4>
+rsquare_rmse: 
+</h4><br>
+This function calculates r square value and root mean square error.
+
+
 
 <h3>
-    data_gridplot:
-</h3>
+2. Visualization Tools
+</h3><br>
+
+
+<h4>
+data_gridplot:
+</h4><br>
+
+![](examples/data_grid_plot_example/Grid_plot_for_Iris_dataset.jpg)
 
 Its a function for scatter plots between every pair of features along with distributions (similar to matrix_plot in pandas). But it enables you to save the image, change figure_size, titles etc and also has one special feature for clusters in the data if any.
-<br>
 
 
-![](msdlib/images/Combined%20Time%20Series%20Plot.jpg)
-<br>
-<h3>
-    plot_time_series:
-</h3>
+
+<h4>
+plot_time_series:
+</h4><br>
+
+![](examples/plot_time_series_example/Combined_Time_Series_Plot.jpg)
 
 This is a function and the most useful function for me from all my library functions and classes. It helps to plot time series data with a lot of flexibility. Please check out the example scripts for illustrations and guidance to use it.
 
-<h3>
-    plot_heatmap:
-</h3>
 
+
+<h4>
+plot_heatmap:
+</h4><br>
 Flexible heatmap plotter function with options to remove symmetrical triangular side and many other options.
 
-<h3>
-    get_color_from_cmap:
-</h3>
 
-This function creates colors from a specified matplotlib colormap
-<br>
-<br>
-
-
-<h2>
-    Data Processing Tools
-</h2>
-
-![](msdlib/images/filter_spectrum.png)
-![](msdlib/images/filtered_freq_spectrum.png)
-![](msdlib/images/time_series_filtered.png)
 
 <h3>
-    Filters:
-</h3>
+3. Data Processing Tools
+</h3><br>
+
+
+
+<h4>
+Filters:
+</h4><br>
+
+![](examples/filters_and_spectrogram_example/recorded_signal.jpg)
+![](.. image:: examples/filters_and_spectrogram_example/filter_spectrum.jpg)
+![](examples/filters_and_spectrogram_example/Frequency_Spectrum_of_filtered_stereo_1.jpg)
+![](examples/filters_and_spectrogram_example/filtered_stereo_1_with_bp_filter_with_cut_offs_[1800._2500.].jpg)
+![](examples/filters_and_spectrogram_example/Spectrogram_of_stereo_1.jpg)
+![](examples/filters_and_spectrogram_example/Spectrogram_of_filtered_stereo_1.jpg)
 
 This is a class defined for applying low pass, high pass, band pass and band stop filters. It also enables us to visualize frequency domain of the signal, designed filter and also let us visualize the filtered signal if we apply a filter on the signal.
 
-<h3>
-    get_spectrogram:
-</h3>
 
+
+<h4>
+get_spectrogram:
+</h4><br>
 This is a function that allows us to calculate spectrogram of any time series signal and also plots heatmap for that spectrogram with proper frequency bins and time axis.
 
-<h3>
-    grouped_mode:
-</h3>
 
-This function calculates the mode for grouped data. It iterates over different number of groupings and tries to find the most accurate mode value for a grouped data. It also have supports to ignore one or more values when calculating mode.
 
 <h3>
-    get_edges_from_ts:
-</h3>
-
-This function finds edges of a time series signal if we apply threshold to remove parts of the signal. It also provides the duration and interval of the edges.
-
-<h3>
-    moving_slope:
-</h3>
-
-This is a function intended to calculate moving/rolling slope using linear regression on chunks of the signal. Quite capable to handle nan data and data missing problem so no need to worry about that.
-
-<h3>
-    standardize: <h4>standardization function</h4>
-</h3>
-
-<h3>
-    normalize: <h4>normalization function</h4>
-</h3>
-<br>
-<br>
+4. Fintech & Miscellaneous
+</h3><br>
 
 
 
-<h2>
-    Machine Learning Tools
-</h2>
-
-<h3>
-    feature_evaluator:
-</h3>
-
-This function is one of the most useful tools. It can calculate feature importance from statistical point of view with applying any tree based approach. It can show the results using bar plot and can handle classification and regression both kind of labels.
-
-<h3>
-    class_result: 
-</h3>
-
-This function calculates classification evaluation parameters like precision, recall, accuracy, f1 score etc and also able to show confusion matrix as a pandas dataframe.
-
-<h3>
-    rsquare_rmse: 
-</h3>
-
-This function calculates r square value and root mean square error.
-
-<h3>
-    one_hot_encoding: 
-</h3>
-
-This function converts classification labels in one hot encoded format
-
-<h3>
-    SplitDataset:
-</h3>
-
-This is one of the most useful classes in this library. It enables us to split data set into train, validation and test sets. We have three options here to split data set.
-    <li>random_split</li>
-    <li>cross_validation_split</li>
-    <li>sequence_split (specially necessary for RNN)</li>
-<br>
-<br>
+<h4>
+msdbacktest (under development):
+</h4><br>
+This module intends to provide helper functionalities for trading automation, strategy implementation, back-testing, 
+evaluating strategy by different popular ratios like maximum drawdown, calmar ratio, sharpe ratio etc.
+Currently only a few functionalities are available and is still under development.
 
 
-<h2>
-    Miscellaneous
-</h2>
 
-![](msdlib/images/progressbar_image.PNG)
-
-<h3>
-    ProgressBar
-</h3>
+<h4>
+ProgressBar:
+</h4><br>
 
 This is a custom progress bar which shows loop progress with a visual bar along with other information like elapsed and remaining time, loop count, total count, percentage of completion etc. (You should only use it if you dont print anything inside your loop)
-
-<h3>
-    name_separation
-</h3>
-
-This function helps to create new line is the number of character exceeds maximum length in one line. Its very useful for plotting in matplotlib with large names in axis labels or titles.

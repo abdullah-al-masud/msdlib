@@ -2,12 +2,14 @@ language: python
 
 sudo : false
 
-python: 
-  - "3.7"
+python:
   - "3.8"
+  - "3.9"
 
 install:
   - python setup.py install
+  - pip install -r requirements-dev.txt
+  - pip install torch
 
 script: 
-  - pytest tests/test.py
+  - pytest tests
