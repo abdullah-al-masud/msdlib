@@ -24,7 +24,7 @@ class NNmodel(nn.Module):
     Inputs:
         :layer_funcs: list, contains sequential layer classes (nn.Module). 
 
-            For example-
+            For example-\n
             [nn.Linear(50), nn.ReLU(), nn.Linear(3), nn.Softmax(dim=-1)]
 
         :seed_value: float/int, random seed for reproducibility, default is 1216
@@ -58,9 +58,7 @@ class AutoEncoderModel(nn.Module):
 
     Inputs:
         :enc_layers: python list, containing the encoder layers (torch.nn.Module class objects) sequentially
-
         :dec_layers: python list, containing the decoder layers (torch.nn.Module class objects) sequentially
-
         :seed_value: float/int, random seed for reproducibility
     """
 
@@ -111,7 +109,12 @@ class AutoEncoderModel(nn.Module):
     def forward(self, x):
         """
         pytorch forward function for forward propagation, applies encoder and then decoder sequentially on the input data
-        x: input tensor for autoencoder model 
+
+        Inputs:
+            :x: input tensor for autoencoder model 
+
+        Outputs:
+            :x: final output of the whole auto-encoder model
         """
 
         x = self.encode(x)
@@ -130,7 +133,9 @@ class torchModel():
     In stead, the class label values should be indices like 0, 1, 2...
 
     Inputs:
-        :layers: a list of torch.nn.Module objects indicating layers/activation functions. The list should contain all elements sequentially. Default is [].
+        :layers: a list of torch.nn.Module objects indicating layers/activation functions. The list should contain all elements sequentially. 
+                 Default is []. Each element of this list must be callable function object. 
+                 For Sigmoid function, we can use torch.nn.Sigmoid() or torch.sigmoid (use the brackets this way).
         :loss_func: loss function for the ML model. default is torch.nn.MSELoss. It can also be a custom loss function, but should be equivalent to the default
         :optimizer: optimizer for the ML model. default is torch.optim.Adam
         :learning_rate: learning rate of the training steps, default is .0001
@@ -324,10 +329,14 @@ class torchModel():
         # running through epoch
         loss_curves = [[], []]
         val_loss = torch.tensor(np.nan)
+        total_train = train_data.shape[0]
         t1 = time.time()
         self.set_parallel()
         for ep in range(self.epoch):
             tr_mean_loss = []
+            idx = torch.randperm(total_train)
+            train_data = train_data[idx]
+            train_label = train_label[idx]
             self.model.train()
             for i in range(total_batch):
                 # preparing data set
@@ -399,7 +408,7 @@ class torchModel():
 
     def predict(self, data):
         """
-        a wrapper function that generates prediction from pytorch model
+        A wrapper function that generates prediction from pytorch model
 
         Inputs:
             :data: input data to predict on, must be a torch tensor or numpy ndarray
