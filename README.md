@@ -261,7 +261,7 @@ Reference/citation
 
 ```
 @manual{msdlib,
-title={{msdlib}: A package for easier data science practices},
+title={{{msdlib}: A package for easier data science practices}},
 author={Abdullah Al Masud and {msdlib Developers}}",
 year=2020,
 month=Jan,
