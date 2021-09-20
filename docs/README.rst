@@ -248,9 +248,9 @@ Reference/citation
 .. code:: bibtex
 
     @manual{msdlib,
-        title        = {{msdlib}: A package for easier data science practices},
-        author       = {{Abdullah Al Masud and {msdlib Developers}}},
+        title        = "{{msdlib}: A package for easier data science practices}",
+        author       = "{Abdullah Al Masud and {msdlib Developers}}",
         year         = 2020,
         month        = Jan,
-        url          = {{https://github.com/abdullah-al-masud/msdlib}}
+        url          = "{https://github.com/abdullah-al-masud/msdlib}"
     }
