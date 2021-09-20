@@ -63,14 +63,15 @@ MIT open source License has been issued for this library.<br><br>
 <h2>
 Examples
 </h2><br>
-You can find easy examples on how to use the functions and classes from this library `here <https://github.com/abdullah-al-masud/msdlib/tree/master/msdlib/examples>`_.
-Necessary data is also provided in this directory.<br><br>
+
+You can find easy examples on how to use the functions and classes from this library [here](examples/). Necessary data is also provided in this directory.<br><br>
 
 
 
 <h2>
 Documentation
 </h2><br>
+
 Complete documentation of classes and functions can be found here https://msdlib.readthedocs.io/.
 <br><br>
 
@@ -115,7 +116,7 @@ This module provides functionalities for easier implementation of Pytorch Deep L
     * Producing automated results with beautiful tables having precision, recall, f1_score, accuracy and specificity in classification problems
     * Producing automated graphs of true-vs-prediction and result preparation for regression model
 
-Examples are available for regression, binary and multi-class classification models ![here](../examples/).
+Examples are available for regression, binary and multi-class classification models [here](examples/).
 <br><br>
 
 
@@ -137,7 +138,7 @@ We have three options here to split data set-
     * cross_validation_split
     * sequence_split (specially necessary for RNN/LSTM)
 
-Examples are available ![here](../examples/).
+Examples are available [here](examples/).
 <br><br>
 
 
@@ -159,7 +160,7 @@ It can show the results using bar plot and can handle classification and regress
 <h4>
 class_result: 
 </h4>
-This function calculates classification model evaluation parameters like precision, recall, accuracy, f1 score, specificity etc. and also able to show confusion matrix as a pandas dataframe. Example can be found ![here](../examples/class_result_example.py).
+This function calculates classification model evaluation parameters like precision, recall, accuracy, f1 score, specificity etc. and also able to show confusion matrix as a pandas dataframe. Example can be found [here](examples/class_result_example.py).
 <br><br>
 
 
@@ -181,7 +182,7 @@ data_gridplot:
 
 ![](examples/data_grid_plot_example/Grid_plot_for_Iris_dataset.jpg)<br>
 
-Its a function for scatter plots between every pair of features along with distributions (similar to matrix_plot in pandas). But it enables you to save the image, change figure_size, titles etc and also has one special feature for clusters in the data if any. Example can be found ![here](../examples/data_grid_plot_example.py).
+Its a function for scatter plots between every pair of features along with distributions (similar to matrix_plot in pandas). But it enables you to save the image, change figure_size, titles etc and also has one special feature for clusters in the data if any. Example can be found [here](examples/data_grid_plot_example.py).
 <br><br>
 
 
@@ -191,14 +192,14 @@ plot_time_series:
 
 ![](examples/plot_time_series_example/Combined_Time_Series_Plot.jpg)<br>
 
-This is a function and the most useful function for me from all my library functions and classes. It helps to plot time series data with a lot of flexibility. Please check out the example scripts for illustrations and guidance to use it. Example can be found ![here](../examples/plot_time_series_example.py).
+This is one of the the most useful functions in this library. It helps to plot time series data with a lot of flexibility. Please check out the example scripts for illustrations and guidance to use it. Example can be found [here](examples/plot_time_series_example.py).
 <br><br>
 
 
 <h4>
 plot_heatmap:
 </h4>
-Flexible heatmap plotter function with options to remove symmetrical triangular side and many other options.
+Flexible heatmap plotter function with options to remove symmetrical triangular side and several other options.
 <br><br>
 
 
@@ -219,7 +220,7 @@ Filters:
 ![](examples/filters_and_spectrogram_example/Spectrogram_of_stereo_1.jpg)<br>
 ![](examples/filters_and_spectrogram_example/Spectrogram_of_filtered_stereo_1.jpg)<br>
 
-This is a class defined for applying low pass, high pass, band pass and band stop filters. It also enables us to visualize frequency domain of the signal, designed filter and also let us visualize the filtered signal if we apply a filter on the signal. Example can be found ![here](../examples/filters_and_spectrogram_example.py)
+This is a class defined for applying low pass, high pass, band pass and band stop filters. It also enables us to visualize frequency domain of the signal, designed filter and also let us visualize the filtered signal if we apply a filter on the signal. Example can be found [here](examples/filters_and_spectrogram_example.py)
 <br><br>
 
 
