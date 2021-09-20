@@ -192,14 +192,14 @@ plot_time_series:
 
 ![](examples/plot_time_series_example/Combined_Time_Series_Plot.jpg)<br>
 
-This is a function and the most useful function for me from all my library functions and classes. It helps to plot time series data with a lot of flexibility. Please check out the example scripts for illustrations and guidance to use it. Example can be found [here](examples/plot_time_series_example.py).
+This is one of the the most useful functions in this library. It helps to plot time series data with a lot of flexibility. Please check out the example scripts for illustrations and guidance to use it. Example can be found [here](examples/plot_time_series_example.py).
 <br><br>
 
 
 <h4>
 plot_heatmap:
 </h4>
-Flexible heatmap plotter function with options to remove symmetrical triangular side and many other options.
+Flexible heatmap plotter function with options to remove symmetrical triangular side and several other options.
 <br><br>
 
 
