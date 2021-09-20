@@ -63,6 +63,7 @@ MIT open source License has been issued for this library.<br><br>
 <h2>
 Examples
 </h2><br>
+
 You can find easy examples on how to use the functions and classes from this library [here](examples/). Necessary data is also provided in this directory.<br><br>
 
 
@@ -70,6 +71,7 @@ You can find easy examples on how to use the functions and classes from this lib
 <h2>
 Documentation
 </h2><br>
+
 Complete documentation of classes and functions can be found here https://msdlib.readthedocs.io/.
 <br><br>
 
