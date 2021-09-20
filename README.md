@@ -230,7 +230,7 @@ get_spectrogram:
 
 ![](examples/filters_and_spectrogram_example/Spectrogram_of_stereo_1.jpg)<br>
 
-This is a function that allows us to calculate spectrogram of any time series signal and also plots heatmap for that spectrogram with proper frequency bins and time axis.
+This is a function that allows us to calculate spectrogram of any time series signal and also plots heatmap for that spectrogram with proper frequency bins and time axis. Example can be found [here](examples/filters_and_spectrogram_example.py)
 <br><br>
 
 
