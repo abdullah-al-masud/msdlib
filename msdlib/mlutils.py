@@ -133,7 +133,9 @@ class torchModel():
     In stead, the class label values should be indices like 0, 1, 2...
 
     Inputs:
-        :layers: a list of torch.nn.Module objects indicating layers/activation functions. The list should contain all elements sequentially. Default is [].
+        :layers: a list of torch.nn.Module objects indicating layers/activation functions. The list should contain all elements sequentially. 
+                 Default is []. Each element of this list must be callable function object. 
+                 For Sigmoid function, we can use torch.nn.Sigmoid() or torch.sigmoid (use the brackets this way).
         :loss_func: loss function for the ML model. default is torch.nn.MSELoss. It can also be a custom loss function, but should be equivalent to the default
         :optimizer: optimizer for the ML model. default is torch.optim.Adam
         :learning_rate: learning rate of the training steps, default is .0001
@@ -327,10 +329,14 @@ class torchModel():
         # running through epoch
         loss_curves = [[], []]
         val_loss = torch.tensor(np.nan)
+        total_train = train_data.shape[0]
         t1 = time.time()
         self.set_parallel()
         for ep in range(self.epoch):
             tr_mean_loss = []
+            idx = torch.randperm(total_train)
+            train_data = train_data[idx]
+            train_label = train_label[idx]
             self.model.train()
             for i in range(total_batch):
                 # preparing data set

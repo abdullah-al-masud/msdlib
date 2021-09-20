@@ -76,22 +76,6 @@ Complete documentation of classes and functions can be found here https://msdlib
 
 
 <h2>
-Reference/citation
-</h2><br>
-
-```
-@manual{msdlib,
-title        = "{msdlib}: A package for easier data science practices",
-author       = "{Abdullah Al Masud and {msdlib Developers}}",
-month        = Jan,
-year         = 2020,
-url          = "{https://github.com/abdullah-al-masud/msdlib}"
-}
-```
-<br><br>
-
-
-<h2>
 Call for contributions
 </h2><br>
 
@@ -118,7 +102,7 @@ Some of the frequently used programs are shown bellow.
 
 <h3>
 1. Machine Learning Tools
-</h3><br>
+</h3>
 <br><br>
 
 <h4>
@@ -130,6 +114,8 @@ This module provides functionalities for easier implementation of Pytorch Deep L
     * Constructing Deep Learning models in a few lines of code
     * Producing automated results with beautiful tables having precision, recall, f1_score, accuracy and specificity in classification problems
     * Producing automated graphs of true-vs-prediction and result preparation for regression model
+
+Examples are available for regression, binary and multi-class classification models ![here](../examples/).
 <br><br>
 
 
@@ -150,6 +136,8 @@ We have three options here to split data set-
     * random_split
     * cross_validation_split
     * sequence_split (specially necessary for RNN/LSTM)
+
+Examples are available ![here](../examples/).
 <br><br>
 
 
@@ -171,7 +159,7 @@ It can show the results using bar plot and can handle classification and regress
 <h4>
 class_result: 
 </h4>
-This function calculates classification model evaluation parameters like precision, recall, accuracy, f1 score, specificity etc. and also able to show confusion matrix as a pandas dataframe.
+This function calculates classification model evaluation parameters like precision, recall, accuracy, f1 score, specificity etc. and also able to show confusion matrix as a pandas dataframe. Example can be found ![here](../examples/class_result_example.py).
 <br><br>
 
 
@@ -193,7 +181,7 @@ data_gridplot:
 
 ![](examples/data_grid_plot_example/Grid_plot_for_Iris_dataset.jpg)<br>
 
-Its a function for scatter plots between every pair of features along with distributions (similar to matrix_plot in pandas). But it enables you to save the image, change figure_size, titles etc and also has one special feature for clusters in the data if any.
+Its a function for scatter plots between every pair of features along with distributions (similar to matrix_plot in pandas). But it enables you to save the image, change figure_size, titles etc and also has one special feature for clusters in the data if any. Example can be found ![here](../examples/data_grid_plot_example.py).
 <br><br>
 
 
@@ -203,7 +191,7 @@ plot_time_series:
 
 ![](examples/plot_time_series_example/Combined_Time_Series_Plot.jpg)<br>
 
-This is a function and the most useful function for me from all my library functions and classes. It helps to plot time series data with a lot of flexibility. Please check out the example scripts for illustrations and guidance to use it.
+This is a function and the most useful function for me from all my library functions and classes. It helps to plot time series data with a lot of flexibility. Please check out the example scripts for illustrations and guidance to use it. Example can be found ![here](../examples/plot_time_series_example.py).
 <br><br>
 
 
@@ -231,7 +219,7 @@ Filters:
 ![](examples/filters_and_spectrogram_example/Spectrogram_of_stereo_1.jpg)<br>
 ![](examples/filters_and_spectrogram_example/Spectrogram_of_filtered_stereo_1.jpg)<br>
 
-This is a class defined for applying low pass, high pass, band pass and band stop filters. It also enables us to visualize frequency domain of the signal, designed filter and also let us visualize the filtered signal if we apply a filter on the signal.
+This is a class defined for applying low pass, high pass, band pass and band stop filters. It also enables us to visualize frequency domain of the signal, designed filter and also let us visualize the filtered signal if we apply a filter on the signal. Example can be found ![here](../examples/filters_and_spectrogram_example.py)
 <br><br>
 
 
@@ -264,3 +252,20 @@ Currently only a few functionalities are available and is still under developmen
 ProgressBar:
 </h4>
 This is a custom progress bar which shows loop progress with a visual bar along with other information like elapsed and remaining time, loop count, total count, percentage of completion etc. (You should only use it if you dont print anything inside your loop)
+<br><br>
+
+
+<h2>
+Reference/citation
+</h2><br>
+
+```
+@manual{msdlib,
+	title        = {{msdlib}: A package for easier data science practices},
+	author       = {{Abdullah Al Masud and {msdlib Developers}}},
+	year         = 2020,
+	month        = Jan,
+	url          = {{https://github.com/abdullah-al-masud/msdlib}}
+}
+```
+<br><br>
