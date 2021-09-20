@@ -180,7 +180,7 @@ data_gridplot:
 
 ![](examples/data_grid_plot_example/Grid_plot_for_Iris_dataset.jpg)<br>
 
-Its a function for scatter plots between every pair of features along with distributions (similar to matrix_plot in pandas). But it enables you to save the image, change figure_size, titles etc and also has one special feature for clusters in the data if any. Example can be found ![here](./examples/data_grid_plot_example.py).
+Its a function for scatter plots between every pair of features along with distributions (similar to matrix_plot in pandas). But it enables you to save the image, change figure_size, titles etc and also has one special feature for clusters in the data if any. Example can be found ![here](examples/data_grid_plot_example.py).
 <br><br>
 
 
