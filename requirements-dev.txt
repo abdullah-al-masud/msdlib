@@ -5,3 +5,4 @@ skorch
 scikit-learn
 sounddevice
 opencv-python
+twine

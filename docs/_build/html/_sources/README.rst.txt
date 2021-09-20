@@ -75,21 +75,6 @@ Complete documentation of classes and functions can be found here https://msdlib
 
 
 
-Reference/citation
--------------------
-
-.. code:: bibtex
-
-   @manual{msdlib,
-   title        = "{msdlib}: A package for easier data science practices",
-   author       = "{Abdullah Al Masud and {msdlib Developers}}",
-   month        = Jan,
-   year         = 2020,
-   url          = "{https://github.com/abdullah-al-masud/msdlib}"
-   }
-
-
-
 Call for contributions
 -----------------------
 
@@ -126,6 +111,8 @@ This module provides functionalities for easier implementation of Pytorch Deep L
     - Producing automated results with beautiful tables having precision, recall, f1_score, accuracy and specificity in classification problems
     - Producing automated graphs of true-vs-prediction and result preparation for regression model
 
+Examples are available for regression, binary and multi-class classification models `here <../examples/>`_.
+
 
 ---------------
 paramOptimizer:
@@ -143,6 +130,8 @@ We have three options here to split data set-
     - random_split
     - cross_validation_split
     - sequence_split (specially necessary for RNN/LSTM)
+
+Examples are available `here <../examples/>`_.
 
 
 -----------------
@@ -162,6 +151,7 @@ It can show the results using bar plot and can handle classification and regress
 class_result: 
 -------------
 This function calculates classification model evaluation parameters like precision, recall, accuracy, f1 score, specificity etc. and also able to show confusion matrix as a pandas dataframe.
+Example can be found `here <../examples/class_result_example.py>`_.
 
 
 -------------
@@ -182,6 +172,7 @@ data_gridplot:
 .. image:: ../examples/data_grid_plot_example/Grid_plot_for_Iris_dataset.jpg
 
 Its a function for scatter plots between every pair of features along with distributions (similar to matrix_plot in pandas). But it enables you to save the image, change figure_size, titles etc and also has one special feature for clusters in the data if any.
+Example can be found `here <../examples/data_grid_plot_example.py>`_.
 
 
 -----------------
@@ -191,6 +182,7 @@ plot_time_series:
 .. image:: ../examples/plot_time_series_example/Combined_Time_Series_Plot.jpg
 
 This is a function and the most useful function for me from all my library functions and classes. It helps to plot time series data with a lot of flexibility. Please check out the example scripts for illustrations and guidance to use it.
+Example can be found `here <../examples/plot_time_series_example.py>`_.
 
 
 -------------
@@ -216,11 +208,15 @@ Filters:
 .. image:: ../examples/filters_and_spectrogram_example/Spectrogram_of_filtered_stereo_1.jpg
 
 This is a class defined for applying low pass, high pass, band pass and band stop filters. It also enables us to visualize frequency domain of the signal, designed filter and also let us visualize the filtered signal if we apply a filter on the signal.
+Example can be found `here <../examples/filters_and_spectrogram_example.py>`_.
 
 
 ----------------
 get_spectrogram:
 ----------------
+
+.. image:: ../examples/filters_and_spectrogram_example/Spectrogram_of_stereo_1.jpg
+
 This is a function that allows us to calculate spectrogram of any time series signal and also plots heatmap for that spectrogram with proper frequency bins and time axis.
 
 
@@ -243,3 +239,18 @@ ProgressBar:
 ------------
 
 This is a custom progress bar which shows loop progress with a visual bar along with other information like elapsed and remaining time, loop count, total count, percentage of completion etc. (You should only use it if you dont print anything inside your loop)
+
+
+
+Reference/citation
+-------------------
+
+.. code:: bibtex
+
+    @manual{msdlib,
+        title        = {{msdlib}: A package for easier data science practices},
+        author       = {{Abdullah Al Masud and {msdlib Developers}}},
+        year         = 2020,
+        month        = Jan,
+        url          = {{https://github.com/abdullah-al-masud/msdlib}}
+    }
