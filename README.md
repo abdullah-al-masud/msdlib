@@ -109,6 +109,7 @@ Some of the frequently used programs are shown bellow.
 <h4>
 mlutils:
 </h4>
+
 This module provides functionalities for easier implementation of Pytorch Deep Learning models. It offers several facilities such as-
 
     * Scikit-like easy implementation of Pytorch models using fit, predict and evaluate methods
@@ -123,6 +124,7 @@ Examples are available for regression, binary and multi-class classification mod
 <h4>
 paramOptimizer:
 </h4>
+
 This is a class which can conduct easy Hyper-parameter optimization process. 
 Currently it enables us to apply grid search and random search for any model/function/mathematical entity
 <br><br>
@@ -131,6 +133,7 @@ Currently it enables us to apply grid search and random search for any model/fun
 <h4>
 SplitDataset:
 </h4>
+
 This is one of the most useful classes in this library. It enables us to split data set into train, validation and test sets. 
 We have three options here to split data set-
 
@@ -145,6 +148,7 @@ Examples are available [here](examples/).
 <h4>
 one_hot_encoding: 
 </h4>
+
 This function converts classification labels in one hot encoded format
 <br><br>
 
@@ -152,6 +156,7 @@ This function converts classification labels in one hot encoded format
 <h4>
 feature_evaluator:
 </h4>
+
 This function is one of the most useful tools. It can calculate feature importance from statistical point of view. 
 It can show the results using bar plot and can handle classification and regression both kind of labels.
 
@@ -160,6 +165,7 @@ It can show the results using bar plot and can handle classification and regress
 <h4>
 class_result: 
 </h4>
+
 This function calculates classification model evaluation parameters like precision, recall, accuracy, f1 score, specificity etc. and also able to show confusion matrix as a pandas dataframe. Example can be found [here](examples/class_result_example.py).
 <br><br>
 
@@ -167,6 +173,7 @@ This function calculates classification model evaluation parameters like precisi
 <h4>
 rsquare_rmse: 
 </h4>
+
 This function calculates r square value and root mean square error.
 <br><br>
 
@@ -199,6 +206,7 @@ This is one of the the most useful functions in this library. It helps to plot t
 <h4>
 plot_heatmap:
 </h4>
+
 Flexible heatmap plotter function with options to remove symmetrical triangular side and several other options.
 <br><br>
 
@@ -243,6 +251,7 @@ This is a function that allows us to calculate spectrogram of any time series si
 <h4>
 msdbacktest (under development):
 </h4>
+
 This module intends to provide helper functionalities for trading automation, strategy implementation, back-testing, 
 evaluating strategy by different popular ratios like maximum drawdown, calmar ratio, sharpe ratio etc.
 Currently only a few functionalities are available and is still under development.
@@ -252,7 +261,9 @@ Currently only a few functionalities are available and is still under developmen
 <h4>
 ProgressBar:
 </h4>
+
 This is a custom progress bar which shows loop progress with a visual bar along with other information like elapsed and remaining time, loop count, total count, percentage of completion etc. (You should only use it if you dont print anything inside your loop)
+Example can be found [here](examples/ProgressBar_example.py)
 <br><br>
 
 

@@ -238,7 +238,7 @@ ProgressBar:
 ------------
 
 This is a custom progress bar which shows loop progress with a visual bar along with other information like elapsed and remaining time, loop count, total count, percentage of completion etc. (You should only use it if you dont print anything inside your loop)
-
+Example can be found `here <https://github.com/abdullah-al-masud/msdlib/tree/master/examples/ProgressBar_example.py>`_.
 
 
 Reference/citation
