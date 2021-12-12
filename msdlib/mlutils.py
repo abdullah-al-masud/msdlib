@@ -148,7 +148,9 @@ class torchModel():
                     - 'binary-classifier' indicates binary classifier with 1 output unit. The output values must be 0 ~ 1 (sigmoid like activations should be used at model output). 
                     - 'multi-classifier' indicates classifier with more than one output unit
         :use_gpu: bool, whether to use gpu or not, default is True.
-        :gpu_devices: list, a list of cuda ids starting from 0. Default is None which will try to use all available gpus. If you have 4 gpus in your machine, and want to use first 3 of them, the list should be [0, 1, 2]
+        :gpu_devices: list, a list of cuda ids starting from 0. Default is None which will try to use all available gpus. 
+                    If you have 4 gpus in your machine, and want to use first 3 of them, the list should be [0, 1, 2]
+                    It can also be used to select a particular GPU device. For example to use GPU device 1, make it [1]
         :model_name: str, name of the model, default is 'pytorch'
         :dtype: dtype of processing inside the model, default is torch.float32
         :plot_loss: bool, whether to plot loss curves after training or not, default is True
@@ -189,7 +191,14 @@ class torchModel():
 
         # setting up gpu usage
         self.gpu_string = "cuda" if self.use_gpu and torch.cuda.is_available() else "cpu"
-        self.device = torch.device(self.gpu_string)
+        if self.gpu_string == 'cuda':
+            if isinstance(self.gpu_devices, list):
+                if len(self.gpu_devices) == 1:
+                    self.device = torch.device('cuda:%d' % self.gpu_devices[0])
+                else:
+                    self.device = torch.device(self.gpu_string)
+            else:
+                self.device = torch.device(self.gpu_string)
         self.model = self.model.to(device=self.device, dtype=self.dtype)
 
         # setting up loss and optimizer
