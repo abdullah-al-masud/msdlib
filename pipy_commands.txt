@@ -1,3 +1,14 @@
 python setup.py sdist bdist_wheel
 
 python -m twine upload --repository pypi dist/*
+
+
+Doc commands:
+make necessary changes
+go to docs
+type: make html
+push the code to github
+to to the website of readthedocs and log in
+go to the builds section
+press on build button for a new build
+done!!
