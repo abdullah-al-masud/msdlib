@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>mlutils &mdash; msdlib 1.0.1 documentation</title>
+  <title>mlutils &mdash; msdlib 1.0.3.1 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -14,6 +14,7 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -72,7 +73,7 @@
            <div itemprop="articleBody">
              
   <section id="mlutils">
-<h1>mlutils<a class="headerlink" href="#mlutils" title="Permalink to this headline"></a></h1>
+<h1>mlutils<a class="headerlink" href="#mlutils" title="Permalink to this heading"></a></h1>
 <p>This module is intended to provide support for easy usage of pytorch models.
 It provides support for using Pytorch models in a few lines of code, has similar (not exactly same) functionalities as scikit-learn models.
 We can train the model using simple ‘fit’ method, can generate predictions using ‘predict’ method and can evaluate model performance using ‘evaluate’ method.</p>
@@ -82,8 +83,8 @@ We can train the model using simple ‘fit’ method, can generate predictions u
 <p>LICENSE : MIT License</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="msdlib.mlutils.AutoEncoderModel">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">msdlib.mlutils.</span></span><span class="sig-name descname"><span class="pre">AutoEncoderModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">enc_layers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dec_layers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1216</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msdlib.mlutils.AutoEncoderModel" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">msdlib.mlutils.</span></span><span class="sig-name descname"><span class="pre">AutoEncoderModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">enc_layers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dec_layers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1216</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msdlib.mlutils.AutoEncoderModel" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
 <p>This class creates an auto-encoder model.</p>
 <dl class="simple">
 <dt>Inputs:</dt><dd><dl class="field-list simple">
@@ -153,15 +154,36 @@ We can train the model using simple ‘fit’ method, can generate predictions u
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="msdlib.mlutils.AutoEncoderModel.training">
-<span class="sig-name descname"><span class="pre">training</span></span><em class="property"><span class="pre">:</span> <span class="pre">bool</span></em><a class="headerlink" href="#msdlib.mlutils.AutoEncoderModel.training" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">training</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#msdlib.mlutils.AutoEncoderModel.training" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="msdlib.mlutils.DataSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">msdlib.mlutils.</span></span><span class="sig-name descname"><span class="pre">DataSet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cuda'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">torch.float32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'regressor'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msdlib.mlutils.DataSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Dataset</span></code></p>
+<p>This is a customized Data set object which can build a torch.utils.data.Dataset object given the data and labels. 
+This is only usable when we have complete data and labels (data and label lengths must be equal)</p>
+<dl class="simple">
+<dt>Inputs:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">data</dt>
+<dd class="field-odd"><p>ideally should be numpy ndarray, pandas DataFrame or torch tensor. Contains feature data tor model training.
+Can be python list or python set too but not much appreciated as it will be mostly used for training pytorch model.</p>
+</dd>
+<dt class="field-even">label</dt>
+<dd class="field-even"><p>ideally should be numpy ndarray, pandas Series/DataFrame or torch tensor. Contains true labels tor model training.
+Can be python list or python set too but not much appreciated as it will be mostly used for training pytorch model.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="msdlib.mlutils.NNmodel">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">msdlib.mlutils.</span></span><span class="sig-name descname"><span class="pre">NNmodel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layer_funcs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1216</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msdlib.mlutils.NNmodel" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">msdlib.mlutils.</span></span><span class="sig-name descname"><span class="pre">NNmodel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layer_funcs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1216</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msdlib.mlutils.NNmodel" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
 <p>This class constructs a deep neural network model upon providing the layers we intend to build the model with.</p>
 <dl>
 <dt>Inputs:</dt><dd><dl class="field-list">
@@ -184,7 +206,7 @@ We can train the model using simple ‘fit’ method, can generate predictions u
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="msdlib.mlutils.NNmodel.training">
-<span class="sig-name descname"><span class="pre">training</span></span><em class="property"><span class="pre">:</span> <span class="pre">bool</span></em><a class="headerlink" href="#msdlib.mlutils.NNmodel.training" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">training</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#msdlib.mlutils.NNmodel.training" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -248,6 +270,38 @@ Output activation function is provided</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="msdlib.mlutils.evaluate_with_data">
+<span class="sig-prename descclassname"><span class="pre">msdlib.mlutils.</span></span><span class="sig-name descname"><span class="pre">evaluate_with_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">outdata</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">models</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figure_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'multi-classifier'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msdlib.mlutils.evaluate_with_data" title="Permalink to this definition"></a></dt>
+<dd><p>This function will be used to train models. We can use both scikit-models and torchModel objects for model training.</p>
+<dl class="simple">
+<dt>Inputs:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">outdata</dt>
+<dd class="field-odd"><p>dict, contains dicts with structure like : outdata = {‘train’: {‘data’: &lt;numpy-array&gt;, ‘label’: &lt;numpy-array&gt;, ‘index’: &lt;numpy-array&gt;}}
+‘train’ dict is mandatory. ‘validation’ dict is mandatory for torchModel objects inside “models” argument.
+‘data’, ‘label’ and ‘index’ must be of same length.</p>
+</dd>
+<dt class="field-even">models</dt>
+<dd class="field-even"><p>dict, contains scikit-models, xgboost, lightgbm etc. scikit-like models and torchModel objects. 
+If its a torchModel object, the key must contain ‘pytorch’ in it.</p>
+</dd>
+<dt class="field-odd">figure_dir</dt>
+<dd class="field-odd"><p>string/None, path to the directory where figures will be saved for feature improtances and evaluation figures.</p>
+</dd>
+<dt class="field-even">model_type</dt>
+<dd class="field-even"><p>string, can be either ‘regressor’, ‘multi-classifier’ or ‘binary-classifier’. It controls the evaluation process.</p>
+</dd>
+</dl>
+</dd>
+<dt>Outputs:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">predictions</dt>
+<dd class="field-odd"><p>dict, contains detailed predictions on all sets in outdata argument, evaluation results etc.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="msdlib.mlutils.get_factors">
 <span class="sig-prename descclassname"><span class="pre">msdlib.mlutils.</span></span><span class="sig-name descname"><span class="pre">get_factors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_layers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msdlib.mlutils.get_factors" title="Permalink to this definition"></a></dt>
 <dd><p>This function calculates factors/multipliers to calculate number of units inside define_layers() function</p>
@@ -274,6 +328,13 @@ Output activation function is provided</p>
 </dl>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="msdlib.mlutils.instantiate_models">
+<span class="sig-prename descclassname"><span class="pre">msdlib.mlutils.</span></span><span class="sig-name descname"><span class="pre">instantiate_models</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#msdlib.mlutils.instantiate_models" title="Permalink to this definition"></a></dt>
+<dd><p>This is not a real function, this is a dummy function which shows how a “models” dict looks like.
+This models dict can be used for input arguments for the function “train_with_data”</p>
 </dd></dl>
 
 <dl class="py function">
@@ -331,7 +392,7 @@ For pytorch models, the key must contain ‘pytorch’ phrase (Case insensitive)
 
 <dl class="py class">
 <dt class="sig sig-object py" id="msdlib.mlutils.torchModel">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">msdlib.mlutils.</span></span><span class="sig-name descname"><span class="pre">torchModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss_func</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimizer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">learning_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epoch</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lr_reduce</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss_reduction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'regressor'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_gpu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gpu_devices</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pytorch'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">torch.float32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_loss</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quant_perc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.98</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_evaluation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss_roll_period</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">savepath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msdlib.mlutils.torchModel" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">msdlib.mlutils.</span></span><span class="sig-name descname"><span class="pre">torchModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss_func</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimizer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">learning_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epoch</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lr_reduce</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss_reduction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'regressor'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_gpu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gpu_devices</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pytorch'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">torch.float32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_loss</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quant_perc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.98</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_evaluation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss_roll_period</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">savepath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shuffle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lr_scheduler</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msdlib.mlutils.torchModel" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>This class controls the deep neural network model training, inference, prediction and evaluation.
 It can provide the training loss curves and evaluation results very nicely. It is capable of using multiple GPUs.</p>
@@ -345,7 +406,7 @@ Default is []. Each element of this list must be callable function object.
 For Sigmoid function, we can use torch.nn.Sigmoid() or torch.sigmoid (use the brackets this way).</p>
 </dd>
 <dt class="field-even">loss_func</dt>
-<dd class="field-even"><p>loss function for the ML model. default is torch.nn.MSELoss. It can also be a custom loss function, but should be equivalent to the default</p>
+<dd class="field-even"><p>loss function for the ML model. default is torch.nn.MSELoss [without brackets ()]. It can also be a custom loss function, but should be equivalent to the default</p>
 </dd>
 <dt class="field-odd">optimizer</dt>
 <dd class="field-odd"><p>optimizer for the ML model. default is torch.optim.Adam</p>
@@ -375,7 +436,9 @@ Must be 0 ~ 1. Default is 1 (No reduction of learning rate during training)</p>
 <dd class="field-even"><p>bool, whether to use gpu or not, default is True.</p>
 </dd>
 <dt class="field-odd">gpu_devices</dt>
-<dd class="field-odd"><p>list, a list of cuda ids starting from 0. Default is None which will try to use all available gpus. If you have 4 gpus in your machine, and want to use first 3 of them, the list should be [0, 1, 2]</p>
+<dd class="field-odd"><p>list, a list of cuda ids starting from 0. Default is None which will try to use all available gpus. 
+If you have 4 gpus in your machine, and want to use first 3 of them, the list should be [0, 1, 2]
+It can also be used to select a particular GPU device. For example to use GPU device 1, make it [1]</p>
 </dd>
 <dt class="field-even">model_name</dt>
 <dd class="field-even"><p>str, name of the model, default is ‘pytorch’</p>
@@ -402,6 +465,9 @@ Must be 0 ~ 1. Default is 1 (No reduction of learning rate during training)</p>
 </dd>
 <dt class="field-odd">savepath</dt>
 <dd class="field-odd"><p>str, path to store the learning curve and evaluation results</p>
+</dd>
+<dt class="field-even">shuffle</dt>
+<dd class="field-even"><p>bool, whether the training dataset should be shuffled during training or not. Default is True (data set will be shuffles).</p>
 </dd>
 </dl>
 </dd>
@@ -443,16 +509,16 @@ Must be 0 ~ 1. Default is 1 (No reduction of learning rate during training)</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="msdlib.mlutils.torchModel.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validation_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">evaluate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(18,</span> <span class="pre">4)</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msdlib.mlutils.torchModel.fit" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validation_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">evaluate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(18,</span> <span class="pre">4)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_loader</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val_loader</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msdlib.mlutils.torchModel.fit" title="Permalink to this definition"></a></dt>
 <dd><p>scikit like wrapper for training DNN pytorch model</p>
 <p>Inputs:</p>
 <blockquote>
 <div><dl class="field-list simple">
 <dt class="field-odd">data</dt>
-<dd class="field-odd"><p>input train data, must be torch tensor, numpy ndarray or pandas DataFrame/Series</p>
+<dd class="field-odd"><p>input train data, must be torch tensor, numpy ndarray or pandas DataFrame/Series. Default value in None</p>
 </dd>
 <dt class="field-even">label</dt>
-<dd class="field-even"><p>supervised labels for data, must be torch tensor, numpy ndarray or pandas DataFrame/Series</p>
+<dd class="field-even"><p>supervised labels for data, must be torch tensor, numpy ndarray or pandas DataFrame/Series. Default value in None</p>
 </dd>
 <dt class="field-odd">val_data</dt>
 <dd class="field-odd"><p>validation data, must be torch tensor, numpy ndarray or pandas DataFrame/Series, default is None</p>
@@ -469,10 +535,20 @@ Must be 0 ~ 1. Default is 1 (No reduction of learning rate during training)</p>
 <dt class="field-odd">figsize</dt>
 <dd class="field-odd"><p>tuple of (width, height) of the figure, size of the figure for loss curve plot and evaluation plots. Default is (18, 4)</p>
 </dd>
+<dt class="field-even">train_loader</dt>
+<dd class="field-even"><p>torch.utils.data.DataLaoder instance for handling training data set. Default is None</p>
+</dd>
+<dt class="field-odd">val_loader</dt>
+<dd class="field-odd"><p>torch.utils.data.DataLaoder instance for handling validation data set. Default is None</p>
+</dd>
 </dl>
 </div></blockquote>
 <dl class="simple">
-<dt>Outputs:</dt><dd><p>doesnt return anything. The trained model is stored inside the attribute torchModel.model</p>
+<dt>Outputs:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">self</dt>
+<dd class="field-odd"><p>torchModel object, returns the self object variable just like scikit-learn model objects</p>
+</dd>
+</dl>
 </dd>
 </dl>
 </dd></dl>
@@ -484,11 +560,60 @@ Must be 0 ~ 1. Default is 1 (No reduction of learning rate during training)</p>
 <dl class="simple">
 <dt>Inputs:</dt><dd><dl class="field-list simple">
 <dt class="field-odd">data</dt>
-<dd class="field-odd"><p>input data to predict on, must be a torch tensor or numpy ndarray</p>
+<dd class="field-odd"><p>input data to predict on, can be a torch tensor, numpy ndarray, pandas DataFrame or even torch DataLoader object</p>
 </dd>
 </dl>
 </dd>
-<dt>Outputs:</dt><dd><p>returns predictions</p>
+<dt>Outputs:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">preds</dt>
+<dd class="field-odd"><p>predicted values against the inserted data</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="msdlib.mlutils.torchModel.prepare_data_loader">
+<span class="sig-name descname"><span class="pre">prepare_data_loader</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val_label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validation_ratio</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_loader</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val_loader</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msdlib.mlutils.torchModel.prepare_data_loader" title="Permalink to this definition"></a></dt>
+<dd><p>This function prepares the data format and creates training and validation data loader from training and validation data. 
+If no validation data is provided, it uses validation_ratio to split training data into train and validation and creates separate data loader for each set.
+If direct train and validation data loaders are provided, then no additional processing is used.</p>
+<dl class="simple">
+<dt>Inputs:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">train_data</dt>
+<dd class="field-odd"><p>input training data, must be torch tensor, numpy ndarray or pandas DataFrame/Series. Default value in None</p>
+</dd>
+<dt class="field-even">train_label</dt>
+<dd class="field-even"><p>supervised labels for train_data, must be torch tensor, numpy ndarray or pandas DataFrame/Series. Default value in None</p>
+</dd>
+<dt class="field-odd">val_data</dt>
+<dd class="field-odd"><p>validation data, must be torch tensor, numpy ndarray or pandas DataFrame/Series, default is None.
+Note: If val_data is not provided, validation data will be taken from training data set using validation_ratio.</p>
+</dd>
+<dt class="field-even">val_label</dt>
+<dd class="field-even"><p>supervised labels for val_data, must be torch tensor, numpy ndarray or pandas DataFrame/Series, default is None</p>
+</dd>
+<dt class="field-odd">validation_ratio</dt>
+<dd class="field-odd"><p>ratio of ‘data’ that will be used for validation during training. It will be used only when val_data or val_label or both are None. Default is 0.15</p>
+</dd>
+<dt class="field-even">train_loader</dt>
+<dd class="field-even"><p>torch.utils.data.DataLaoder instance for handling training data set or None. Default is None.
+Note: If train_loader is provided, its expected that val_loader will also be provided.</p>
+</dd>
+<dt class="field-odd">val_loader</dt>
+<dd class="field-odd"><p>torch.utils.data.DataLaoder instance for handling validation data set or None. Default is None</p>
+</dd>
+</dl>
+</dd>
+<dt>Outputs:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">train_loader</dt>
+<dd class="field-odd"><p>torch.utils.data.DataLaoder instance for handling training data set.</p>
+</dd>
+<dt class="field-even">val_loader</dt>
+<dd class="field-even"><p>torch.utils.data.DataLaoder instance for handling validation data set.</p>
+</dd>
+</dl>
 </dd>
 </dl>
 </dd></dl>
@@ -505,6 +630,47 @@ Must be 0 ~ 1. Default is 1 (No reduction of learning rate during training)</p>
 <dd><p>This method sets multiple GPUs to use for training depending on the machine’s cuda availability and use_gpu parameter.</p>
 </dd></dl>
 
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="msdlib.mlutils.train_with_data">
+<span class="sig-prename descclassname"><span class="pre">msdlib.mlutils.</span></span><span class="sig-name descname"><span class="pre">train_with_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">outdata</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_columns</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">models</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">featimp_models</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figure_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'multi-classifier'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">evaluate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msdlib.mlutils.train_with_data" title="Permalink to this definition"></a></dt>
+<dd><p>This function will be used to train models. We can use both scikit-models and torchModel objects for model training.</p>
+<dl class="simple">
+<dt>Inputs:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">outdata</dt>
+<dd class="field-odd"><p>dict, contains dicts with structure like : outdata = {‘train’: {‘data’: &lt;numpy-array&gt;, ‘label’: &lt;numpy-array&gt;, ‘index’: &lt;numpy-array&gt;}}
+‘train’ dict is mandatory. ‘validation’ dict is mandatory for torchModel objects inside “models” argument.
+‘data’, ‘label’ and ‘index’ must be of same length.</p>
+</dd>
+<dt class="field-even">feature_columns</dt>
+<dd class="field-even"><p>list/numpy array, contains feature names of ‘data’ inside outdata. seature_columns length must be equal to number of columns in ‘data’</p>
+</dd>
+<dt class="field-odd">models</dt>
+<dd class="field-odd"><p>dict, contains scikit-models, xgboost, lightgbm etc. scikit-like models and torchModel objects. 
+If its a torchModel object, the key must contain ‘pytorch’ in it.</p>
+</dd>
+<dt class="field-even">featimp_models</dt>
+<dd class="field-even"><p>list of strings, contains model names which belong to models dict keys and which can provide feature importances</p>
+</dd>
+<dt class="field-odd">figure_dir</dt>
+<dd class="field-odd"><p>string/None, path to the directory where figures will be saved for feature improtances and evaluation figures.</p>
+</dd>
+<dt class="field-even">model_type</dt>
+<dd class="field-even"><p>string, can be either ‘regressor’, ‘multi-classifier’ or ‘binary-classifier’. It controls the evaluation process.</p>
+</dd>
+</dl>
+</dd>
+<dt>Outputs:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">models</dt>
+<dd class="field-odd"><p>dict, contains trained models instances, same as ‘models’ argument</p>
+</dd>
+<dt class="field-even">predictions</dt>
+<dd class="field-even"><p>dict, contains detailed predictions on all sets in outdata argument, evaluation results etc.</p>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 </section>

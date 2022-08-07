@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Index &mdash; msdlib 1.0.1 documentation</title>
+  <title>Index &mdash; msdlib 1.0.3.1 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -13,6 +13,7 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="#" />
@@ -42,6 +43,7 @@
 <li class="toctree-l1"><a class="reference internal" href="msdbacktest.html">msdbacktest</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dataset.html">dataset</a></li>
 <li class="toctree-l1"><a class="reference internal" href="msdExceptions.html">msdExceptions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stats.html">stats</a></li>
 </ul>
 
         </div>
@@ -144,9 +146,11 @@
 </li>
       <li><a href="msd.html#msdlib.msd.SplitDataset.data_label_mismatch">data_label_mismatch() (msdlib.msd.SplitDataset method)</a>
 </li>
+      <li><a href="msdExceptions.html#msdlib.msdExceptions.DataLabelMismatchError">DataLabelMismatchError</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="msdExceptions.html#msdlib.msdExceptions.DataLabelMismatchError">DataLabelMismatchError</a>
+      <li><a href="mlutils.html#msdlib.mlutils.DataSet">DataSet (class in msdlib.mlutils)</a>
 </li>
       <li><a href="mlutils.html#msdlib.mlutils.AutoEncoderModel.decode">decode() (msdlib.mlutils.AutoEncoderModel method)</a>
 </li>
@@ -160,11 +164,13 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="msd.html#msdlib.msd.each_row_max">each_row_max() (in module msdlib.msd)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="mlutils.html#msdlib.mlutils.AutoEncoderModel.encode">encode() (msdlib.mlutils.AutoEncoderModel method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="mlutils.html#msdlib.mlutils.torchModel.evaluate">evaluate() (msdlib.mlutils.torchModel method)</a>
+</li>
+      <li><a href="mlutils.html#msdlib.mlutils.evaluate_with_data">evaluate_with_data() (in module msdlib.mlutils)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -202,6 +208,8 @@
 </li>
       <li><a href="msdbacktest.html#msdlib.msdbacktest.get_calmar">get_calmar() (in module msdlib.msdbacktest)</a>
 </li>
+      <li><a href="msd.html#msdlib.msd.get_category_edges">get_category_edges() (in module msdlib.msd)</a>
+</li>
       <li><a href="msd.html#msdlib.msd.get_color_from_cmap">get_color_from_cmap() (in module msdlib.msd)</a>
 </li>
       <li><a href="msdbacktest.html#msdlib.msdbacktest.get_crossover">get_crossover() (in module msdlib.msdbacktest)</a>
@@ -238,9 +246,11 @@
 </li>
       <li><a href="msd.html#msdlib.msd.input_variable_error">input_variable_error() (in module msdlib.msd)</a>
 </li>
+      <li><a href="msdExceptions.html#msdlib.msdExceptions.InputVariableError">InputVariableError</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="msdExceptions.html#msdlib.msdExceptions.InputVariableError">InputVariableError</a>
+      <li><a href="mlutils.html#msdlib.mlutils.instantiate_models">instantiate_models() (in module msdlib.mlutils)</a>
 </li>
       <li><a href="msd.html#msdlib.msd.invalid_bins">invalid_bins() (in module msdlib.msd)</a>
 </li>
@@ -252,10 +262,14 @@
 <h2 id="L">L</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="msdbacktest.html#msdlib.msdbacktest.load_data">load_data() (in module msdlib.msdbacktest)</a>
+      <li><a href="stats.html#msdlib.stats.likelihood_for_categorics">likelihood_for_categorics() (in module msdlib.stats)</a>
+</li>
+      <li><a href="stats.html#msdlib.stats.likelihood_for_numerics">likelihood_for_numerics() (in module msdlib.stats)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="msdbacktest.html#msdlib.msdbacktest.load_data">load_data() (in module msdlib.msdbacktest)</a>
+</li>
       <li><a href="mlutils.html#msdlib.mlutils.load_models">load_models() (in module msdlib.mlutils)</a>
 </li>
   </ul></td>
@@ -279,6 +293,8 @@
         <li><a href="msdbacktest.html#module-msdlib.msdbacktest">msdlib.msdbacktest</a>
 </li>
         <li><a href="msdExceptions.html#module-msdlib.msdExceptions">msdlib.msdExceptions</a>
+</li>
+        <li><a href="stats.html#module-msdlib.stats">msdlib.stats</a>
 </li>
       </ul></li>
       <li><a href="msd.html#msdlib.msd.moving_slope">moving_slope() (in module msdlib.msd)</a>
@@ -327,6 +343,13 @@
         <li><a href="msdExceptions.html#module-msdlib.msdExceptions">module</a>
 </li>
       </ul></li>
+      <li>
+    msdlib.stats
+
+      <ul>
+        <li><a href="stats.html#module-msdlib.stats">module</a>
+</li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
@@ -359,21 +382,27 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="msd.html#msdlib.msd.paramOptimizer">paramOptimizer (class in msdlib.msd)</a>
 </li>
+      <li><a href="msd.html#msdlib.msd.plot_class_score">plot_class_score() (in module msdlib.msd)</a>
+</li>
       <li><a href="msd.html#msdlib.msd.plot_diag">plot_diag() (in module msdlib.msd)</a>
 </li>
       <li><a href="msd.html#msdlib.msd.Filters.plot_filter">plot_filter() (msdlib.msd.Filters method)</a>
 </li>
       <li><a href="msd.html#msdlib.msd.plot_heatmap">plot_heatmap() (in module msdlib.msd)</a>
 </li>
-      <li><a href="msd.html#msdlib.msd.plot_table">plot_table() (in module msdlib.msd)</a>
+      <li><a href="msd.html#msdlib.msd.plot_regression_score">plot_regression_score() (in module msdlib.msd)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="msd.html#msdlib.msd.plot_table">plot_table() (in module msdlib.msd)</a>
+</li>
       <li><a href="msd.html#msdlib.msd.plot_time_series">plot_time_series() (in module msdlib.msd)</a>
 </li>
       <li><a href="mlutils.html#msdlib.mlutils.torchModel.predict">predict() (msdlib.mlutils.torchModel method)</a>
 </li>
       <li><a href="msd.html#msdlib.msd.SplitDataset.prepare_class_index">prepare_class_index() (msdlib.msd.SplitDataset method)</a>
+</li>
+      <li><a href="mlutils.html#msdlib.mlutils.torchModel.prepare_data_loader">prepare_data_loader() (msdlib.mlutils.torchModel method)</a>
 </li>
       <li><a href="msdbacktest.html#msdlib.msdbacktest.prev_dates">prev_dates() (in module msdlib.msdbacktest)</a>
 </li>
@@ -389,9 +418,11 @@
 </li>
       <li><a href="msd.html#msdlib.msd.Filters.raise_filter_error">raise_filter_error() (msdlib.msd.Filters method)</a>
 </li>
+      <li><a href="msd.html#msdlib.msd.SplitDataset.random_split">random_split() (msdlib.msd.SplitDataset method)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="msd.html#msdlib.msd.SplitDataset.random_split">random_split() (msdlib.msd.SplitDataset method)</a>
+      <li><a href="msd.html#msdlib.msd.regression_result">regression_result() (in module msdlib.msd)</a>
 </li>
       <li><a href="mlutils.html#msdlib.mlutils.torchModel.relieve_parallel">relieve_parallel() (msdlib.mlutils.torchModel method)</a>
 </li>
@@ -432,6 +463,8 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="mlutils.html#msdlib.mlutils.torchModel">torchModel (class in msdlib.mlutils)</a>
+</li>
+      <li><a href="mlutils.html#msdlib.mlutils.train_with_data">train_with_data() (in module msdlib.mlutils)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>

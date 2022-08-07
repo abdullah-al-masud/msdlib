@@ -44,6 +44,7 @@ Get started from this `page <README.html>`_
    msdbacktest
    dataset
    msdExceptions
+   stats
 
 
 Indices and tables

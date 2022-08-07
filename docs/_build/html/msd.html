@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>msd &mdash; msdlib 1.0.1 documentation</title>
+  <title>msd &mdash; msdlib 1.0.3.1 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -14,6 +14,7 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -72,7 +73,7 @@
            <div itemprop="articleBody">
              
   <section id="msd">
-<h1>msd<a class="headerlink" href="#msd" title="Permalink to this headline"></a></h1>
+<h1>msd<a class="headerlink" href="#msd" title="Permalink to this heading"></a></h1>
 <p>This module provides many useful functions and classes to ease works for a data scientist/ML engineer. The key elements are like below.</p>
 <blockquote>
 <div><dl class="simple">
@@ -114,7 +115,7 @@
 <p>LICENSE : MIT License</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="msdlib.msd.Filters">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">msdlib.msd.</span></span><span class="sig-name descname"><span class="pre">Filters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">savepath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msdlib.msd.Filters" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">msdlib.msd.</span></span><span class="sig-name descname"><span class="pre">Filters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">savepath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msdlib.msd.Filters" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>This class is used to apply FIR filters as high-pass, low-pass, band-pass and band-stop filters.
 It also shows the proper graphical representation of the filter response, signal before filtering and after filtering and filter spectram.
@@ -304,7 +305,7 @@ The core purpose of this class is to make the filtering process super easy and c
 
 <dl class="py class">
 <dt class="sig sig-object py" id="msdlib.msd.ProgressBar">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">msdlib.msd.</span></span><span class="sig-name descname"><span class="pre">ProgressBar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">desc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'progress'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">barlen</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">40</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">front_space</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tblink_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tblink_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.18</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msdlib.msd.ProgressBar" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">msdlib.msd.</span></span><span class="sig-name descname"><span class="pre">ProgressBar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">desc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'progress'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">barlen</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">40</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">front_space</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tblink_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tblink_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.18</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msdlib.msd.ProgressBar" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="simple">
 <dt>Inputs:</dt><dd><dl class="field-list simple">
@@ -365,7 +366,7 @@ The core purpose of this class is to make the filtering process super easy and c
 
 <dl class="py class">
 <dt class="sig sig-object py" id="msdlib.msd.SplitDataset">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">msdlib.msd.</span></span><span class="sig-name descname"><span class="pre">SplitDataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">np_seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1216</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">same_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">make_onehot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msdlib.msd.SplitDataset" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">msdlib.msd.</span></span><span class="sig-name descname"><span class="pre">SplitDataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">np_seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1216</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">same_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">make_onehot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msdlib.msd.SplitDataset" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>This class contains method to split data set into train, validation and test.
 It allows both k-fold cross validation and casual random splitting.
@@ -708,6 +709,35 @@ Here its okay to use labels before converting into one hot encoding, its even be
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="msdlib.msd.get_category_edges">
+<span class="sig-prename descclassname"><span class="pre">msdlib.msd.</span></span><span class="sig-name descname"><span class="pre">get_category_edges</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">categories</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msdlib.msd.get_category_edges" title="Permalink to this definition"></a></dt>
+<dd><p>This function calculates edges for categorical values and returns start, stop, duration and interval</p>
+<dl>
+<dt>Inputs:</dt><dd><dl class="field-list">
+<dt class="field-odd">dt</dt>
+<dd class="field-odd"><p>pandas Series, numpy array or list, time series signal containing categorical variable values.</p>
+</dd>
+<dt class="field-even">categories</dt>
+<dd class="field-even"><p>list or None. all possible values for the signal dt. If None, then unique values found in dt</p>
+<p>are considered only possible values for dt.</p>
+</dd>
+<dt class="field-odd">names</dt>
+<dd class="field-odd"><p>dict, contains name of span DataFrame for each unique value of dt. 
+Default is None means name of span DataFrame will be designated by its value</p>
+</dd>
+</dl>
+</dd>
+<dt>Outputs:</dt><dd><dl class="field-list">
+<dt class="field-odd">spans</dt>
+<dd class="field-odd"><p>list of pandas DataFrame, each DataFrame contains four columns ‘start’, ‘stop’, ‘duration’, ‘interval’</p>
+<p>which describes the edges of each categorical value in categories.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="msdlib.msd.get_color_from_cmap">
 <span class="sig-prename descclassname"><span class="pre">msdlib.msd.</span></span><span class="sig-name descname"><span class="pre">get_color_from_cmap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'jet'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.05,</span> <span class="pre">0.95]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msdlib.msd.get_color_from_cmap" title="Permalink to this definition"></a></dt>
 <dd><p>this function gets color from matplotlib colormap</p>
@@ -1037,7 +1067,7 @@ True will output time string</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="msdlib.msd.paramOptimizer">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">msdlib.msd.</span></span><span class="sig-name descname"><span class="pre">paramOptimizer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'random'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">find</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'min'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iteration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rand_it_perc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shuffle_queue</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1216</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msdlib.msd.paramOptimizer" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">msdlib.msd.</span></span><span class="sig-name descname"><span class="pre">paramOptimizer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'random'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">find</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'min'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iteration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rand_it_perc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shuffle_queue</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1216</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msdlib.msd.paramOptimizer" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>This class is used for hyper-parameter optimization for Machine Learning or other usage.</p>
 <dl class="simple">
@@ -1111,6 +1141,38 @@ True will output time string</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="msdlib.msd.plot_class_score">
+<span class="sig-prename descclassname"><span class="pre">msdlib.msd.</span></span><span class="sig-name descname"><span class="pre">plot_class_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">score</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">confmat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xrot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figure_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figtitle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(15,</span> <span class="pre">5)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Blues'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msdlib.msd.plot_class_score" title="Permalink to this definition"></a></dt>
+<dd><p>This function generates figure showing the classification score and confusion matrix as tables side by side.</p>
+<dl class="simple">
+<dt>Inputs:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">score</dt>
+<dd class="field-odd"><p>pandas DataFrame, contains score matrix values of all classes for all matrices</p>
+</dd>
+<dt class="field-even">confmat</dt>
+<dd class="field-even"><p>pandas DataFrame, contains confusion matrix values for all classes</p>
+</dd>
+<dt class="field-odd">xrot</dt>
+<dd class="field-odd"><p>float, rotation angle for x-axis labels (expected to be class names). Default is 0.</p>
+</dd>
+<dt class="field-even">figure_dir</dt>
+<dd class="field-even"><p>str or None, path to the directory where the figure will be saved. Default is None (means it wont be saved)</p>
+</dd>
+<dt class="field-odd">figsize</dt>
+<dd class="field-odd"><p>tuple of floats (xsize, ysize) sets the matplotlib figure size. Default is (15, 5)</p>
+</dd>
+<dt class="field-even">show</dt>
+<dd class="field-even"><p>bool, whether to show the figure or not, default is False</p>
+</dd>
+<dt class="field-odd">cmap</dt>
+<dd class="field-odd"><p>str, colormap name of the score and confusion matrix tables</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="msdlib.msd.plot_diag">
 <span class="sig-prename descclassname"><span class="pre">msdlib.msd.</span></span><span class="sig-name descname"><span class="pre">plot_diag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bins</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msdlib.msd.plot_diag" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
@@ -1174,6 +1236,38 @@ True will output time string</p>
 <dt>Outputs:</dt><dd><dl class="field-list simple">
 <dt class="field-odd">ax</dt>
 <dd class="field-odd"><p>if axobj is not None and axobj is provided as matplotlib axes object, then this function returns the axes object after drawing</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="msdlib.msd.plot_regression_score">
+<span class="sig-prename descclassname"><span class="pre">msdlib.msd.</span></span><span class="sig-name descname"><span class="pre">plot_regression_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pred</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figure_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figtitle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(10,</span> <span class="pre">5)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">point_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'darkcyan'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msdlib.msd.plot_regression_score" title="Permalink to this definition"></a></dt>
+<dd><p>This function generates true-value VS predicted value scatter plot for regression problems.</p>
+<dl class="simple">
+<dt>Inputs:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">true</dt>
+<dd class="field-odd"><p>1D list, numpy array etc. containing true values</p>
+</dd>
+<dt class="field-even">pred</dt>
+<dd class="field-even"><p>1D list, numpy array etc. containing predicted values</p>
+</dd>
+<dt class="field-odd">figure_dir</dt>
+<dd class="field-odd"><p>str or None, path to the directory where the figure will be saved. Default is None (means it wont be saved)</p>
+</dd>
+<dt class="field-even">figsize</dt>
+<dd class="field-even"><p>tuple of floats (xsize, ysize) sets the matplotlib figure size. Default is (10, 5)</p>
+</dd>
+<dt class="field-odd">show</dt>
+<dd class="field-odd"><p>bool, whether to show the figure or not, default is False</p>
+</dd>
+<dt class="field-even">point_color</dt>
+<dd class="field-even"><p>str, color of the scatter points, default is ‘darkcyan’</p>
+</dd>
+<dt class="field-odd">s</dt>
+<dd class="field-odd"><p>float, scatter point size, default is 8</p>
 </dd>
 </dl>
 </dd>
@@ -1338,6 +1432,35 @@ It allows multiple axes for multiple time series data with separate value ranges
 <dt class="field-odd">axobj</dt>
 <dd class="field-odd"><p>Returns matplotlib axes object is axobj is provided in input.</p>
 <p>Otherwise, this function shows or stores plots, doesnt return anything</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="msdlib.msd.regression_result">
+<span class="sig-prename descclassname"><span class="pre">msdlib.msd.</span></span><span class="sig-name descname"><span class="pre">regression_result</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pred</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msdlib.msd.regression_result" title="Permalink to this definition"></a></dt>
+<dd><p>This function calculates R-square value (coefficient of determination) and root mean squared error value for regression evaluation.</p>
+<dl class="simple">
+<dt>Inputs:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">y</dt>
+<dd class="field-odd"><p>numpy 1-d array, list or pandas Series, contains true regression labels</p>
+</dd>
+<dt class="field-even">pred</dt>
+<dd class="field-even"><p>numpy 1-d array, list or pandas Series, prediction values against y. Must be same size as y.</p>
+</dd>
+</dl>
+</dd>
+<dt>Outputs:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">r_sq</dt>
+<dd class="field-odd"><p>float, calculated R-square value (coefficient of determination)</p>
+</dd>
+<dt class="field-even">rmse</dt>
+<dd class="field-even"><p>float, root mean square error value</p>
+</dd>
+<dt class="field-odd">corr</dt>
+<dd class="field-odd"><p>float, correlation coefficient between y and pred</p>
 </dd>
 </dl>
 </dd>
