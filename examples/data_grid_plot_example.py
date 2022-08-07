@@ -5,8 +5,14 @@ LICENSE : MIT License
 """
 
 import pandas as pd
-from msdlib import msd
 from sklearn.datasets import load_iris
+
+import os
+import sys
+project_dir = os.getcwd()
+sys.path.append(project_dir)
+from msdlib import msd
+
 
 # Loading Iris data set from sklearn
 loader = load_iris()
@@ -24,7 +30,7 @@ print(data)
 print(classes)
 
 fig_title = 'Grid plot for Iris dataset'
-savepath = 'data_grid_plot_example'
+savepath = 'examples/data_grid_plot_example'
 msd.data_gridplot(data, idf=classes, idf_pref='', idf_suff='', diag='kde', figsize=(16, 12), alpha=.7,
                   s=8, lg_font='x-small', lg_loc=1, fig_title=fig_title, show_corr=True, savepath=savepath,
                   show_stat=True, cmap=None, save=True, show=False, fname=fig_title.replace(' ', '_'))

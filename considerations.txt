@@ -1,4 +1,12 @@
+Bug-
+
+mlutils -> torchModel -> fit()
+
+valdata.squeeze() when it can be None
+
+
 Things to to-
 
 - adding more test cases for better code coverage
 - Using DataLoader and DataSet from pytorch in torchModel inside mlutils.py
+- shuffling option insife fit for torchModel

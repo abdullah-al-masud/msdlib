@@ -3,4 +3,4 @@ __pycache__
 build
 dist
 msdlib.egg*
-pipy_commands.txt
+.ipynb*

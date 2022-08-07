@@ -4,9 +4,15 @@ email : abdullahalmasud.buet@gmail.com\n
 LICENSE : MIT License
 """
 
-from msdlib import msd
 import pandas as pd
 import numpy as np
+
+import os
+import sys
+project_dir = os.getcwd()
+sys.path.append(project_dir)
+from msdlib import msd
+
 
 """
 We want to see 3 things.
@@ -24,7 +30,7 @@ We want to see 3 things.
 columns = ['date', 'open', 'high', 'low',
            'close', 'volume', 'percentage_change']
 ts_data = pd.read_csv(
-    'data/US_corn_futures_historical_data.csv').reset_index(drop=True)
+    'examples/data/US_corn_futures_historical_data.csv').reset_index(drop=True)
 ts_data.columns = [c.lower().strip() for c in ts_data.columns]
 ts_data = ts_data[columns]
 tmp = []
@@ -76,4 +82,4 @@ fig_title = 'Combined Time Series Plot'
 # plotting simple time series plot for multiple time series variables
 msd.plot_time_series(same_srs=same_srs, srs=srs, spans=spans, spine_dist=.05, ylabel='Price',
                      segs=segs, lines=lines, linestyle='--', fig_title=fig_title, save=True,
-                     savepath='plot_time_series_example', fname=fig_title.replace(' ', '_'))
+                     savepath='examples/plot_time_series_example', fname=fig_title.replace(' ', '_'))

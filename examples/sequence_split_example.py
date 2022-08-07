@@ -4,9 +4,14 @@ email : abdullahalmasud.buet@gmail.com\n
 LICENSE : MIT License
 """
 
-from msdlib import msd
 import numpy as np
 import pandas as pd
+
+import os
+import sys
+project_dir = os.getcwd()
+sys.path.append(project_dir)
+from msdlib import msd
 
 
 np.random.seed(1216)

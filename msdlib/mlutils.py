@@ -14,6 +14,7 @@ import numpy as np
 import os
 import joblib
 import time
+import pdb
 plt.rcParams['figure.facecolor'] = 'white'
 
 
@@ -39,15 +40,14 @@ class NNmodel(nn.Module):
         torch.backends.cudnn.deterministic = True
         torch.backends.cudnn.benchmark = False
 
-        self.layers = nn.ModuleList(layer_funcs)
+        self.model = nn.Sequential(*layer_funcs)
 
     def forward(self, x):
         """
         pytorch forward function for forward propagation
         """
 
-        for layer in self.layers:
-            x = layer(x)
+        x = self.model(x)
         return x
 
 
@@ -71,8 +71,8 @@ class AutoEncoderModel(nn.Module):
         torch.backends.cudnn.deterministic = True
         torch.backends.cudnn.benchmark = False
 
-        self.encode_layers = nn.ModuleList(enc_layers)
-        self.decode_layers = nn.ModuleList(dec_layers)
+        self.encode_layers = nn.Sequential(*enc_layers)
+        self.decode_layers = nn.Sequential(*dec_layers)
         self.enc_len = len(self.encode_layers)
         self.dec_len = len(self.decode_layers)
 
@@ -136,7 +136,7 @@ class torchModel():
         :layers: a list of torch.nn.Module objects indicating layers/activation functions. The list should contain all elements sequentially. 
                  Default is []. Each element of this list must be callable function object. 
                  For Sigmoid function, we can use torch.nn.Sigmoid() or torch.sigmoid (use the brackets this way).
-        :loss_func: loss function for the ML model. default is torch.nn.MSELoss. It can also be a custom loss function, but should be equivalent to the default
+        :loss_func: loss function for the ML model. default is torch.nn.MSELoss [without brackets ()]. It can also be a custom loss function, but should be equivalent to the default
         :optimizer: optimizer for the ML model. default is torch.optim.Adam
         :learning_rate: learning rate of the training steps, default is .0001
         :epoch: number of epoch for training, default is 2
@@ -161,13 +161,16 @@ class torchModel():
         :loss_roll_preiod: int, rolling/moving average period for loss curve
         :model: torch.nn.Module class (ML model class), so that we are able to write the model ourselves and use fit, predict etc methods from here.  
         :savepath: str, path to store the learning curve and evaluation results
+        :shuffle: bool, whether the training dataset should be shuffled during training or not. Default is True (data set will be shuffles).
     """
 
     def __init__(self, layers=[], loss_func=None, optimizer=None, learning_rate=.0001, epoch=2, batch_size=32, lr_reduce=1,
                  loss_reduction='mean', model_type='regressor', use_gpu=True, gpu_devices=None, model_name='pytorch', dtype=torch.float32,
-                 plot_loss=True, quant_perc=.98, plot_evaluation=True, loss_roll_period=1, model=None, savepath=None):
+                 plot_loss=True, quant_perc=.98, plot_evaluation=True, loss_roll_period=1, model=None, savepath=None, shuffle=True, lr_scheduler=None):
 
         # defining model architecture
+        if model is None and len(layers) == 0:
+            raise ValueError('Must provide either "layers" or "model" argument')
         self.model = NNmodel(layers) if model is None else model
 
         # defining training formation parameters
@@ -182,6 +185,8 @@ class torchModel():
         self.dtype = dtype
         self.savepath = savepath
         self.gpu_devices = gpu_devices
+        self.shuffle = shuffle
+        self.lr_scheduler = lr_scheduler
 
         # evaluation parameters
         self.plot_loss = plot_loss
@@ -199,6 +204,8 @@ class torchModel():
                     self.device = torch.device(self.gpu_string)
             else:
                 self.device = torch.device(self.gpu_string)
+        else:
+            self.device = torch.device('cpu')
         self.model = self.model.to(device=self.device, dtype=self.dtype)
 
         # setting up loss and optimizer
@@ -220,9 +227,10 @@ class torchModel():
             self.model.parameters(), lr=self.learning_rate)
 
         # learning rate scheduler
-        def lr_lambda(ep): return self.lr_reduce ** ep
-        self.scheduler = torch.optim.lr_scheduler.LambdaLR(
-            self.optimizer, lr_lambda)
+        if self.lr_scheduler is None:
+            def lr_lambda(ep): return self.lr_reduce ** ep
+            self.scheduler = torch.optim.lr_scheduler.LambdaLR(
+                self.optimizer, lr_lambda)
 
         self.parallel = False  # whether DataParallel will be used or not
 
@@ -234,15 +242,13 @@ class torchModel():
         if self.gpu_string == 'cuda':
             print('Cuda is available and will be used for training')
             if self.gpu_devices is None:
-                self.gpu_devices = [i for i in range(
-                    torch.cuda.device_count())]
+                self.gpu_devices = [i for i in range(torch.cuda.device_count())]
             if isinstance(self.gpu_devices, list):
                 if len(self.gpu_devices) > 1:
                     self.model = nn.DataParallel(
                         self.model, device_ids=self.gpu_devices)
                     self.parallel = True
-                    print('Training will be done on these cuda devices:',
-                          self.gpu_devices)
+                print('Training will be done on these cuda devices:', self.gpu_devices)
         else:
             print('Cuda/GPU isnt detected, training will be done in CPU')
 
@@ -254,109 +260,40 @@ class torchModel():
         if self.parallel:
             self.model = self.model.module
 
-    def fit(self, data, label, val_data=None, val_label=None, validation_ratio=.15, evaluate=True, figsize=(18, 4)):
+    def fit(self, data=None, label=None, val_data=None, val_label=None, validation_ratio=.15, evaluate=True, figsize=(18, 4), train_loader=None, val_loader=None):
         """
         scikit like wrapper for training DNN pytorch model
 
         Inputs:
 
-            :data: input train data, must be torch tensor, numpy ndarray or pandas DataFrame/Series
-            :label: supervised labels for data, must be torch tensor, numpy ndarray or pandas DataFrame/Series
+            :data: input train data, must be torch tensor, numpy ndarray or pandas DataFrame/Series. Default value in None
+            :label: supervised labels for data, must be torch tensor, numpy ndarray or pandas DataFrame/Series. Default value in None
             :val_data: validation data, must be torch tensor, numpy ndarray or pandas DataFrame/Series, default is None
             :val_label: supervised labels for val_data, must be torch tensor, numpy ndarray or pandas DataFrame/Series, default is None
             :validation_ratio: ratio of 'data' that will be used for validation during training. It will be used only when val_data or val_label or both are None. Default is 0.15
             :evaluate: bool, whether to evaluate model performance after training ends or not. evaluate performance if set True. Default is True.
             :figsize: tuple of (width, height) of the figure, size of the figure for loss curve plot and evaluation plots. Default is (18, 4)
+            :train_loader: torch.utils.data.DataLaoder instance for handling training data set. Default is None
+            :val_loader: torch.utils.data.DataLaoder instance for handling validation data set. Default is None
 
         Outputs:
-            doesnt return anything. The trained model is stored inside the attribute torchModel.model
+            :self: torchModel object, returns the self object variable just like scikit-learn model objects
         """
 
-        # allowing pandas dataframe or series input
-        if isinstance(data, pd.DataFrame):
-            data = data.values
-        elif isinstance(data, pd.Series):
-            data = data.to_frame().values
-        if isinstance(label, pd.DataFrame):
-            label = label.values
-        elif isinstance(label, pd.Series):
-            label = label.values
-
-        if isinstance(val_data, pd.DataFrame):
-            val_data = val_data.values
-        elif isinstance(val_data, pd.Series):
-            val_data = val_data.to_frame().values
-        if isinstance(val_label, pd.DataFrame):
-            val_label = val_label.values
-        elif isinstance(val_label, pd.Series):
-            val_label = val_label.values
-
-        data = data.squeeze()
-        label = label.squeeze()
-        val_data = val_data.squeeze()
-        val_label = val_label.squeeze()
-
-        if val_data is None or val_label is None:
-            # splitting data set
-            train_ratio = 1 - validation_ratio
-            idx = np.arange(label.shape[0])
-            np.random.shuffle(idx)
-            train_idx = idx[:int(train_ratio * label.shape[0])]
-            val_idx = idx[int(train_ratio * label.shape[0]):]
-
-            train_data = data[train_idx]
-            train_label = label[train_idx]
-            val_data = data[val_idx]
-            val_label = label[val_idx]
-
-        else:
-            train_data = data
-            train_label = label
-
-        # getting the model and data ready
-        total_batch = train_data.shape[0] // self.batch_size + \
-            int(bool(train_data.shape[0] % self.batch_size))
-
-        # handling data sets and labels
-        if not isinstance(train_data, torch.Tensor):
-            train_data = torch.from_numpy(train_data)
-        if not isinstance(val_data, torch.Tensor):
-            val_data = torch.from_numpy(val_data)
-        if not isinstance(train_label, torch.Tensor):
-            train_label = torch.from_numpy(train_label)
-        if not isinstance(val_label, torch.Tensor):
-            val_label = torch.from_numpy(val_label)
-
-        # data type conversion
-        train_data = train_data.to(device=self.device, dtype=self.dtype)
-        train_label = train_label.to(device=self.device, dtype=torch.long) if self.model_type.lower(
-        ) == 'multi-classifier' else train_label.to(device=self.device, dtype=self.dtype)
-        val_data = val_data.to(device=self.device, dtype=self.dtype)
-        val_label = val_label.to(device=self.device, dtype=torch.long) if self.model_type.lower(
-        ) == 'multi-classifier' else val_label.to(device=self.device, dtype=self.dtype)
+        train_loader, val_loader = self.prepare_data_loader(
+            data, label, val_data, val_label, validation_ratio, train_loader, val_loader)
 
         # running through epoch
         loss_curves = [[], []]
         val_loss = torch.tensor(np.nan)
-        total_train = train_data.shape[0]
         t1 = time.time()
         self.set_parallel()
+        total_batch = len(train_loader)
         for ep in range(self.epoch):
             tr_mean_loss = []
-            idx = torch.randperm(total_train)
-            train_data = train_data[idx]
-            train_label = train_label[idx]
             self.model.train()
-            for i in range(total_batch):
+            for i, (batch_data, batch_label) in enumerate(train_loader):
                 # preparing data set
-                if i != total_batch - 1:
-                    batch_data = train_data[i *
-                                            self.batch_size: (i + 1) * self.batch_size]
-                    batch_label = train_label[i *
-                                              self.batch_size: (i + 1) * self.batch_size]
-                else:
-                    batch_data = train_data[-self.batch_size:]
-                    batch_label = train_label[-self.batch_size:]
 
                 # loss calculation
                 self.model.zero_grad()
@@ -380,12 +317,18 @@ class torchModel():
             # storing losses
             loss_curves[0].append(np.mean(tr_mean_loss))
 
-            if val_data.shape[0] > 0:
+            if len(val_loader) > 0:
                 # run evaluation to get validation score
-                out = self.predict(val_data).squeeze()
-                val_loss = self.loss_func(out, val_label)
+                out = self.predict(val_loader).squeeze()
+                if self.model_type.lower() == 'multi-classifier':
+                    _dtype = torch.long
+                else:
+                    _dtype = self.dtype
+                val_loss = self.loss_func(out, val_loader.dataset.label.to(device=self.device, dtype=_dtype))
                 # storing losses
                 loss_curves[1].append(val_loss.item())
+            else:
+                loss_curves[1].append(np.nan)
 
         print('...training complete !!')
         losses = pd.DataFrame(loss_curves, index=['train_loss', 'validation_loss'], columns=np.arange(
@@ -411,46 +354,59 @@ class torchModel():
 
         self.relieve_parallel()
         # model training evaluation
+
         if evaluate:
-            self.evaluate([train_data, val_data], [train_label, val_label], set_names=[
-                          'Train_set (from training data)', 'Validation_set (from training data)'], figsize=figsize, savepath=self.savepath)
+            self.evaluate([train_loader.dataset.data, val_loader.dataset.data], 
+                          [train_loader.dataset.label, val_loader.dataset.label], 
+                          set_names=['Train_set (from training data)', 'Validation_set (from training data)'], 
+                          figsize=figsize, savepath=self.savepath)
+
+        return self
 
     def predict(self, data):
         """
         A wrapper function that generates prediction from pytorch model
 
         Inputs:
-            :data: input data to predict on, must be a torch tensor or numpy ndarray
+            :data: input data to predict on, can be a torch tensor, numpy ndarray, pandas DataFrame or even torch DataLoader object
 
         Outputs:
-            returns predictions
+            :preds: predicted values against the inserted data
         """
 
         # evaluation mode set up
         self.model.eval()
 
-        # checking data type
-        if isinstance(data, pd.DataFrame) or isinstance(data, pd.Series):
-            data = data.values
-        if isinstance(data, np.ndarray):
-            data = torch.from_numpy(data)
-        data = data.to(device=self.device, dtype=self.dtype)
+        if isinstance(data, torch.utils.data.dataloader.DataLoader):
+            with torch.no_grad():
+                preds = []
+                for i, (batch, label) in enumerate(data):
+                    pred = self.model(batch)
+                    preds.append(pred.detach())
+                preds = torch.cat(preds)
+        else:
+            # checking data type
+            if isinstance(data, pd.DataFrame) or isinstance(data, pd.Series):
+                data = data.values
+            if isinstance(data, np.ndarray):
+                data = torch.from_numpy(data)
+            data = data.to(device=self.device, dtype=self.dtype)
 
-        # estimating number of mini-batch
-        n_batch = data.shape[0] // self.batch_size + \
-            int(bool(data.shape[0] % self.batch_size))
+            # estimating number of mini-batch
+            n_batch = data.shape[0] // self.batch_size + \
+                int(bool(data.shape[0] % self.batch_size))
 
-        with torch.no_grad():
-            # generates prediction
-            preds = []
-            for i in range(n_batch):
-                if i != n_batch - 1:
-                    pred = self.model(
-                        data[i * self.batch_size: (i + 1) * self.batch_size])
-                else:
-                    pred = self.model(data[i * self.batch_size:])
-                preds.append(pred.detach())
-            preds = torch.cat(preds)
+            with torch.no_grad():
+                # generates prediction
+                preds = []
+                for i in range(n_batch):
+                    if i != n_batch - 1:
+                        pred = self.model(
+                            data[i * self.batch_size: (i + 1) * self.batch_size])
+                    else:
+                        pred = self.model(data[i * self.batch_size:])
+                    preds.append(pred.detach())
+                preds = torch.cat(preds)
         return preds
 
     def evaluate(self, data_sets, label_sets, set_names=[], figsize=(18, 4), savepath=None):
@@ -537,6 +493,152 @@ class torchModel():
 
         return results, all_results
 
+    def prepare_data_loader(self, data, label, val_data, val_label, validation_ratio, train_loader, val_loader):
+        """
+        This function prepares the data format and creates training and validation data loader from training and validation data. 
+        If no validation data is provided, it uses validation_ratio to split training data into train and validation and creates separate data loader for each set.
+        If direct train and validation data loaders are provided, then no additional processing is used.
+
+        Inputs:
+            :train_data: input training data, must be torch tensor, numpy ndarray or pandas DataFrame/Series. Default value in None
+            :train_label: supervised labels for train_data, must be torch tensor, numpy ndarray or pandas DataFrame/Series. Default value in None
+            :val_data: validation data, must be torch tensor, numpy ndarray or pandas DataFrame/Series, default is None.
+                        Note: If val_data is not provided, validation data will be taken from training data set using validation_ratio.
+            :val_label: supervised labels for val_data, must be torch tensor, numpy ndarray or pandas DataFrame/Series, default is None
+            :validation_ratio: ratio of 'data' that will be used for validation during training. It will be used only when val_data or val_label or both are None. Default is 0.15
+            :train_loader: torch.utils.data.DataLaoder instance for handling training data set or None. Default is None.
+                           Note: If train_loader is provided, its expected that val_loader will also be provided.
+            :val_loader: torch.utils.data.DataLaoder instance for handling validation data set or None. Default is None
+
+        Outputs:
+            :train_loader: torch.utils.data.DataLaoder instance for handling training data set.
+            :val_loader: torch.utils.data.DataLaoder instance for handling validation data set.
+        """
+
+        if train_loader is None:
+            # allowing pandas dataframe or series input
+            if isinstance(data, pd.DataFrame):
+                data = data.values
+            elif isinstance(data, pd.Series):
+                data = data.to_frame().values
+            if isinstance(label, pd.DataFrame):
+                label = label.values
+            elif isinstance(label, pd.Series):
+                label = label.values
+
+            if not (isinstance(data, np.ndarray) or isinstance(data, torch.Tensor)):
+                raise ValueError(
+                    'provided data has invalid format (valid formats are: torch tensor, numpy array or pandas dataframe/Series)')
+            if not (isinstance(label, np.ndarray) or isinstance(label, torch.Tensor)):
+                raise ValueError(
+                    'provided label has invalid format (valid formats are: torch tensor, numpy array or pandas dataframe/Series)')
+
+            data = data.squeeze()
+            label = label.squeeze()
+
+        if val_loader is None:
+            if isinstance(val_data, pd.DataFrame):
+                val_data = val_data.values
+            elif isinstance(val_data, pd.Series):
+                val_data = val_data.to_frame().values
+            if isinstance(val_label, pd.DataFrame):
+                val_label = val_label.values
+            elif isinstance(val_label, pd.Series):
+                val_label = val_label.values
+
+            if val_data is None or val_label is None:
+                if data is not None and label is not None:
+                    # splitting data set
+                    train_ratio = 1 - validation_ratio
+                    idx = np.arange(label.shape[0])
+                    np.random.shuffle(idx)
+                    train_idx = idx[:int(train_ratio * label.shape[0])]
+                    val_idx = idx[int(train_ratio * label.shape[0]):]
+
+                    train_data = data[train_idx]
+                    train_label = label[train_idx]
+                    val_data = data[val_idx]
+                    val_label = label[val_idx]
+            else:
+                train_data = data
+                train_label = label
+
+            if not (isinstance(val_data, np.ndarray) or isinstance(val_data, torch.Tensor)):
+                raise ValueError(
+                    'provided validation data has invalid format (valid formats are: torch tensor, numpy array or pandas dataframe/Series)')
+            if not (isinstance(val_label, np.ndarray) or isinstance(val_label, torch.Tensor)):
+                raise ValueError(
+                    'provided validation label has invalid format (valid formats are: torch tensor, numpy array or pandas dataframe/Series)')
+            val_data = val_data.squeeze()
+            val_label = val_label.squeeze()
+        else:
+            train_data = data
+            train_label = label
+
+        if train_loader is None:
+            # handling data sets and labels
+            if not isinstance(train_data, torch.Tensor):
+                train_data = torch.from_numpy(train_data)
+            if not isinstance(train_label, torch.Tensor):
+                train_label = torch.from_numpy(train_label)
+
+            train_loader = torch.utils.data.DataLoader(DataSet(train_data, train_label, self.device, self.dtype, self.model_type),
+                                                       batch_size=self.batch_size, shuffle=self.shuffle)
+
+        if val_loader is None:
+            if not isinstance(val_data, torch.Tensor):
+                val_data = torch.from_numpy(val_data)
+            if not isinstance(val_label, torch.Tensor):
+                val_label = torch.from_numpy(val_label)
+
+            val_loader = torch.utils.data.DataLoader(DataSet(val_data, val_label, self.device, self.dtype, self.model_type),
+                                                     batch_size=self.batch_size, shuffle=self.shuffle)
+
+        return train_loader, val_loader
+
+
+class DataSet(torch.utils.data.Dataset):
+    """
+    This is a customized Data set object which can build a torch.utils.data.Dataset object given the data and labels. 
+    This is only usable when we have complete data and labels (data and label lengths must be equal)
+
+    Inputs:
+        :data: ideally should be numpy ndarray, pandas DataFrame or torch tensor. Contains feature data tor model training.
+               Can be python list or python set too but not much appreciated as it will be mostly used for training pytorch model.
+        :label: ideally should be numpy ndarray, pandas Series/DataFrame or torch tensor. Contains true labels tor model training.
+                Can be python list or python set too but not much appreciated as it will be mostly used for training pytorch model.
+    """
+
+    def __init__(self, data, label=None, device='cuda', dtype=torch.float32, model_type='regressor'):
+        self.data = data
+        self.label = label
+        if self.label is not None:
+            self._check_samples()
+        self.datalen = data.shape[0]
+        self.device = device
+        self.dtype = dtype
+        self.model_type = model_type
+
+    def __len__(self):
+        return self.datalen
+
+    def __getitem__(self, index):
+        # data type conversion
+        batch_data = self.data[index].to(device=self.device, dtype=self.dtype)
+        
+        if self.label is not None:
+            if self.model_type.lower() == 'multi-classifier':
+                batch_label = self.label[index].to(device=self.device, dtype=torch.long) 
+            else:
+                batch_label = self.label[index].to(device=self.device, dtype=self.dtype)
+        else:
+            batch_label = None
+        return batch_data, batch_label
+
+    def _check_samples(self):
+        assert len(self.data) == len(
+            self.label), "Data and Label lengths are not same"
+
 
 def get_factors(n_layers, base_factor=5, max_factor=10, offset_factor=2):
     """
@@ -610,7 +712,7 @@ def define_layers(input_units, output_units, unit_factors, dropout_rate=None, mo
     layers.append(nn.Linear(units[-2], units[-1]))
     if final_activation is None:
         if model_type.lower() == 'multi-classifier':
-            layers.append(nn.Softmax(dim=1))
+            layers.append(nn.LogSoftmax(dim=1))
         elif model_type.lower() == 'binary-classifier':
             layers.append(torch.sigmoid)
     else:
@@ -638,9 +740,9 @@ def store_models(models, folder_path):
         print('storing models... %s_model...' % modelname, end='')
         if 'pytorch' in modelname.lower():
             torch.save(models[modelname].state_dict(),
-                       folder_path + '/%s_model.pt' % modelname)
+                       os.path.join(folder_path, '%s_model.pt' % modelname))
         else:
-            with open(folder_path + '/%s_model.pickle' % modelname, 'wb') as f:
+            with open(os.path.join(folder_path, '%s_model.pickle' % modelname), 'wb') as f:
                 joblib.dump(models[modelname], f)
         print('   ...storing completed !!')
 
@@ -670,9 +772,137 @@ def load_models(models, folder_path):
         print('\rloading models... %s_model...' % modelname, end='')
         if 'pytorch' in modelname.lower():
             models[modelname].load_state_dict(
-                torch.load(folder_path + '/%s_model.pt' % modelname))
+                torch.load(os.path.join(folder_path, '%s_model.pt' % modelname)))
         else:
-            with open(folder_path + '%s_model.pickle' % modelname, 'rb') as f:
+            with open(os.path.join(folder_path, '%s_model.pickle' % modelname), 'rb') as f:
                 models[modelname] = joblib.load(f)
         print('   ...loading completed !!')
     return models
+
+
+def train_with_data(outdata, feature_columns, models, featimp_models=[], figure_dir=None, model_type='multi-classifier', evaluate=True):
+    """
+    This function will be used to train models. We can use both scikit-models and torchModel objects for model training.
+
+    Inputs:
+        :outdata: dict, contains dicts with structure like : outdata = {'train': {'data': <numpy-array>, 'label': <numpy-array>, 'index': <numpy-array>}}
+                    'train' dict is mandatory. 'validation' dict is mandatory for torchModel objects inside "models" argument.
+                    'data', 'label' and 'index' must be of same length.
+        :feature_columns: list/numpy array, contains feature names of 'data' inside outdata. seature_columns length must be equal to number of columns in 'data'
+        :models: dict, contains scikit-models, xgboost, lightgbm etc. scikit-like models and torchModel objects. 
+                    If its a torchModel object, the key must contain 'pytorch' in it.
+        :featimp_models: list of strings, contains model names which belong to models dict keys and which can provide feature importances
+        :figure_dir: string/None, path to the directory where figures will be saved for feature improtances and evaluation figures.
+        :model_type: string, can be either 'regressor', 'multi-classifier' or 'binary-classifier'. It controls the evaluation process.
+
+    Outputs:
+        :models: dict, contains trained models instances, same as 'models' argument
+        :predictions: dict, contains detailed predictions on all sets in outdata argument, evaluation results etc.
+    """
+    
+    if figure_dir is not None:
+        os.makedirs(figure_dir, exist_ok=True)
+    for modelname in models:
+        print('training %s model...    '%modelname, end='', flush=True)
+        if 'pytorch' in modelname:
+            if figure_dir is not None:
+                models[modelname].savepath = figure_dir
+            models[modelname] = models[modelname].fit(outdata['train']['data'], np.squeeze(outdata['train']['label']), 
+                                                      val_data=outdata['validation']['data'], 
+                                                      val_label=np.squeeze(outdata['validation']['label']), evaluate=False)
+        else:
+            models[modelname] = models[modelname].fit(outdata['train']['data'], np.squeeze(outdata['train']['label']))
+        print('  complete !!')
+
+        # feature importance plot
+        if figure_dir is not None:
+            if modelname in featimp_models:
+                fig, ax = plt.subplots(figsize=(30, 5))
+                feat_imp = pd.Series(models[modelname].feature_importances_, index=feature_columns).sort_values(ascending=False)
+                feat_imp.plot(kind='bar', ax=ax, title='Feature importances from %s model'%modelname)
+                fig.tight_layout()
+                fig.savefig('%s/feature_importances_%s_model.png'%(figure_dir, modelname), bbox_inches='tight')
+                plt.close()
+
+    if evaluate:
+        predictions = evaluate_with_data(outdata, models, figure_dir, model_type)
+    else:
+        predictions = {}
+
+    return models, predictions
+
+
+def evaluate_with_data(outdata, models, figure_dir=None, model_type='multi-classifier'):
+    """
+    This function will be used to train models. We can use both scikit-models and torchModel objects for model training.
+
+    Inputs:
+        :outdata: dict, contains dicts with structure like : outdata = {'train': {'data': <numpy-array>, 'label': <numpy-array>, 'index': <numpy-array>}}
+                    'train' dict is mandatory. 'validation' dict is mandatory for torchModel objects inside "models" argument.
+                    'data', 'label' and 'index' must be of same length.
+        :models: dict, contains scikit-models, xgboost, lightgbm etc. scikit-like models and torchModel objects. 
+                    If its a torchModel object, the key must contain 'pytorch' in it.
+        :figure_dir: string/None, path to the directory where figures will be saved for feature improtances and evaluation figures.
+        :model_type: string, can be either 'regressor', 'multi-classifier' or 'binary-classifier'. It controls the evaluation process.
+
+    Outputs:
+        :predictions: dict, contains detailed predictions on all sets in outdata argument, evaluation results etc.
+    """
+    
+    predictions = {}
+    if figure_dir is not None:
+        os.makedirs(figure_dir, exist_ok=True)
+    for modelname in models:
+        # calculating predictions scores
+        predictions[modelname] = {}
+        for setname in outdata:
+            print('predicting and evaluating for %s set from %s model'%(setname, modelname), end='', flush=True)
+            predictions[modelname][setname] = {}
+            if 'pytorch' in modelname:
+                preds = models[modelname].predict(outdata[setname]['data']).detach().cpu().numpy()
+                if model_type.lower() == 'binary-classifier':
+                    preds = np.squeeze(preds.round())
+                elif model_type.lower() == 'multi-classifier':
+                    preds = np.squeeze(np.argmax(preds, axis=1))
+            else:
+                preds = models[modelname].predict(outdata[setname]['data'])
+            predictions[modelname][setname]['prediction'] = preds.copy()
+
+            if model_type.lower() in ['binary-classifier', 'multi-classifier']:
+                score, confmat = msd.class_result(np.squeeze(outdata[setname]['label']), preds, True)
+                predictions[modelname][setname]['score'] = score.copy()
+                predictions[modelname][setname]['confusion_matrix'] = confmat.copy()
+
+                if figure_dir is not None:
+                    fig_title = 'Classification Score on %s set for %s model'%(setname, modelname)
+                    msd.plot_class_score(score, confmat, xrot=0, figure_dir=figure_dir, figtitle=fig_title, figsize=(15, 5))
+            elif model_type.lower() == 'regressor':
+                rsquare, rmse, corr = msd.regression_result(np.squeeze(outdata[setname]['label']), preds)
+                predictions[modelname][setname]['rsquare'] = rsquare
+                predictions[modelname][setname]['rmse'] = rmse
+                predictions[modelname][setname]['corr'] = corr
+
+                if figure_dir is not None:
+                    fig_title = 'Regression Score on %s set for %s model'%(setname, modelname)
+                    metrics = {'R-square': rsquare.round(4), 'RMSE': rmse.round(4), 'Corr. Coefficient': corr.round(4)}
+                    msd.plot_regression_score(np.squeeze(outdata[setname]['label']), preds, figure_dir=figure_dir,
+                                              figtitle=fig_title, figsize=(10, 6), metrics=metrics)
+
+            print('  complete !!')
+    
+    return predictions
+
+
+def instantiate_models():
+    """
+    This is not a real function, this is a dummy function which shows how a "models" dict looks like.
+    This models dict can be used for input arguments for the function "train_with_data"
+    """
+    models = {
+        'Lightgbm': LGBC(),
+        'pytorch': torchModel()
+    }
+
+    featimp_models = ['RandomForest', 'Xgboost', 'Lightgbm']
+    
+    return models, featimp_models

@@ -18,6 +18,7 @@ import datetime
 from threading import Thread
 from msdlib import msdExceptions
 import os
+import warnings
 
 
 sns.set()
@@ -122,7 +123,7 @@ class ProgressBar():
         if time.time() - self.tprrec >= self.min_tprint or not self.flblink:
             self.bar = self.sym * self.barelap + self.blink * int(self.flblink) + self.non * (self.barlen - self.barelap - int(self.flblink))
             self.pr = self.desc + '[' + self.bar + ']  ' + '%d/%d <%3d%%>'%(self.cnt, self.xlen, self.cnt / self.xlen * 100) + '  ( %s'%self.prpastime + ' < %s'%self.prleftime + ' )%s'%(self.barend)
-            print('\r%s'%self.pr, end = end, flush = False)
+            print('\r%s'%self.pr, end=end, flush=True)
             self.tprrec = time.time()
     
     def blink_func(self):
@@ -526,6 +527,55 @@ def grouped_mode(data, bins = None, neglect_values=[], neglect_above=None, negle
         mode_group = mode_group[mode_group == max_val]
         _mode.append(np.mean([i.mid for i in mode_group.index]))
     return np.mean(_mode)
+
+
+def get_category_edges(dt, categories=None, names=None):
+    """
+    This function calculates edges for categorical values and returns start, stop, duration and interval
+    
+    Inputs:
+        :dt: pandas Series, numpy array or list, time series signal containing categorical variable values.
+        :categories: list or None. all possible values for the signal dt. If None, then unique values found in dt \n
+                     are considered only possible values for dt.
+        :names: dict, contains name of span DataFrame for each unique value of dt. 
+                Default is None means name of span DataFrame will be designated by its value
+    
+    Outputs:
+        :spans: list of pandas DataFrame, each DataFrame contains four columns 'start', 'stop', 'duration', 'interval' \n
+                which describes the edges of each categorical value in categories.
+    """
+    
+    if isinstance(dt, (list, np.ndarray)):
+        dt = pd.Series(dt)
+    elif isinstance(dt, pd.DataFrame):
+        dt = dt.iloc[:, 0]
+    elif isinstance(dt, pd.Series):
+        pass
+    else:
+        raise ValueError('type %s for dt isnt supported (can be list, pandas Series, numpy array)'%type(dt))
+    
+    if categories is None:
+        categories = np.sort(dt.unique())
+    
+    spans = {cat: [] for cat in categories}
+    st = dt.index[0]
+    cat = dt.iloc[0]
+    for i in range(1, dt.shape[0]):
+        if cat != dt.iloc[i]:
+            spans[cat].append([st, dt.index[i-1]])
+            st = dt.index[i]
+            cat = dt.iloc[i]
+    spans[dt.values[-1]].append([st, dt.index[-1]])
+    
+    for cat in categories:
+        spans[cat] = pd.DataFrame(spans[cat], columns=['start', 'stop'])
+        if names is None:
+            names = {}
+        names[cat] = str(cat)
+        spans[cat].columns.name = names[cat]
+    spans = list(spans.values())
+    
+    return spans
 
 
 def get_edges_from_ts(sr, th_method='median', th_factor=.5, th=None,  del_side='up', name=None):
@@ -1387,8 +1437,19 @@ def get_weighted_scores(score, y_test):
         :_score: pandas DataFrame, output score DataFrame with an additional column containing weighted score values
     """
     _score = score.copy()
-    counts = pd.Series(y_test).value_counts().sort_index().to_frame().T
-    _score['weighted_average'] = (_score.drop('accuracy').drop('average', axis=1).values * counts.values / counts.values.sum()).sum(axis=1).tolist()+[_score['average'].loc['accuracy']]
+    score_cols = _score.columns.drop('average').to_list()
+    counts = pd.Series(y_test).value_counts()
+    countidx2str = {i: str(i) for i in counts.index}
+    countstr2idx = {countidx2str[i]: i for i in countidx2str}
+    counts = counts.to_frame().T
+
+    for col in score_cols:
+        if col not in countstr2idx:
+            counts[col] = 0
+        else:
+            counts[col] = counts[countstr2idx[col]]
+            counts.drop([countstr2idx[col]], axis=1, inplace=True)
+    _score['weighted_average'] = (_score.drop('accuracy').drop('average', axis=1)[score_cols].values * counts[score_cols].values / counts.values.sum()).sum(axis=1).tolist()+[_score['average'].loc['accuracy']]
     return _score
 
 
@@ -1487,19 +1548,44 @@ def rsquare_rmse(y, pred):
         :rmse: root mean square error value
     """
 
-    if not any([isinstance(y, np.ndarray), isinstance(y, pd.Series)]):
+    if not isinstance(y, np.ndarray):
         y = np.array(y)
-    if not any([isinstance(pred, np.ndarray), isinstance(pred, pd.Series)]):
+    if not isinstance(pred, np.ndarray):
         pred = np.array(pred)
-        
-    y = y.ravel()
-    pred = pred.ravel()
-    y = np.array(y)
-    pred = np.array(pred)
+    y = np.squeeze(y)
+    pred = np.squeeze(pred)
+
     y_mean = np.mean(y)
     r_sq = 1 - np.sum((pred - y) ** 2) / np.sum((y - y_mean) ** 2)
     rmse = np.sqrt(np.mean((y - pred) ** 2))
     return r_sq, rmse
+
+
+def regression_result(y, pred):
+    """
+    This function calculates R-square value (coefficient of determination) and root mean squared error value for regression evaluation.
+
+    Inputs:
+        :y: numpy 1-d array, list or pandas Series, contains true regression labels
+        :pred: numpy 1-d array, list or pandas Series, prediction values against y. Must be same size as y.
+    
+    Outputs:
+        :r_sq: float, calculated R-square value (coefficient of determination)
+        :rmse: float, root mean square error value
+        :corr: float, correlation coefficient between y and pred
+    """
+
+    if not isinstance(y, np.ndarray):
+        y = np.array(y)
+    if not isinstance(pred, np.ndarray):
+        pred = np.array(pred)
+    y = np.squeeze(y)
+    pred = np.squeeze(pred)
+
+    rsquare, rmse = rsquare_rmse(y, pred)
+    corr = np.corrcoef(y, pred)[1, 0]
+
+    return rsquare, rmse, corr
 
 
 def one_hot_encoding(arr, class_label=None, ret_label=False, out_type='ndarray'):
@@ -1785,6 +1871,7 @@ class paramOptimizer():
             if iteration is None: self.iteration = int(self.total_it * rand_it_perc)
             else: self.iteration = iteration
             shuffle_queue = True
+            print('total number of iterations is : %d'%self.iteration)
         elif self.mode == 'grid': self.iteration = self.total_it
         if shuffle_queue:
             np.random.seed(random_seed)
@@ -1828,6 +1915,7 @@ class paramOptimizer():
             :stop_iteration_flag: bool, if True, it means that the optimization is finished.
         """
         
+        warnings.filterwarnings('ignore')
         self.queue['score'].iloc[self.queue_cnt] = score
         if self.queue_cnt < self.top + 1:
             self.tops.iloc[self.queue_cnt] = [self.queue_cnt, score]
@@ -1848,3 +1936,80 @@ class paramOptimizer():
         """
 
         return self.queue.iloc[self.tops['queue_idx'].values[:-1]].reset_index(drop = True), self.storage[:-1]
+
+
+def plot_class_score(score, confmat, xrot=0, figure_dir=None, figtitle=None, figsize=(15, 5), show=False, cmap='Blues'):
+    """
+    This function generates figure showing the classification score and confusion matrix as tables side by side.
+
+    Inputs:
+        :score: pandas DataFrame, contains score matrix values of all classes for all matrices
+        :confmat: pandas DataFrame, contains confusion matrix values for all classes
+        :xrot: float, rotation angle for x-axis labels (expected to be class names). Default is 0.
+        :figure_dir: str or None, path to the directory where the figure will be saved. Default is None (means it wont be saved)
+        :figsize: tuple of floats (xsize, ysize) sets the matplotlib figure size. Default is (15, 5)
+        :show: bool, whether to show the figure or not, default is False
+        :cmap: str, colormap name of the score and confusion matrix tables
+    """
+
+    fig, ax = plt.subplots(figsize=figsize, ncols=2)
+    if figtitle is None:
+        figtitle = 'Classification score'
+    fig.suptitle(figtitle, y=1.04, fontweight='bold', fontsize=12)
+    ax[0] = plot_heatmap(score, axobj=ax[0], annotate=True, fmt='.3f', vmin=0, vmax=1, fig_title='Score Matrix', cmap=cmap, xrot=xrot)
+    ax[1] = plot_heatmap(confmat, axobj=ax[1], annotate=True, fmt='d', fig_title='Confusion Matrix', cmap=cmap, xrot=xrot)
+    fig.tight_layout()
+    if figure_dir is not None:
+        fig.savefig('%s/%s.png'%(figure_dir, figtitle), bbox_inches='tight')
+    if show:
+        plt.show()
+    else:
+        plt.close()
+
+
+def plot_regression_score(true, pred, figure_dir=None, figtitle=None, figsize=(10, 5), show=False,
+                          point_color='darkcyan', s=8, metrics={}):
+    """
+    This function generates true-value VS predicted value scatter plot for regression problems.
+
+    Inputs:
+        :true: 1D list, numpy array etc. containing true values
+        :pred: 1D list, numpy array etc. containing predicted values
+        :figure_dir: str or None, path to the directory where the figure will be saved. Default is None (means it wont be saved)
+        :figsize: tuple of floats (xsize, ysize) sets the matplotlib figure size. Default is (10, 5)
+        :show: bool, whether to show the figure or not, default is False
+        :point_color: str, color of the scatter points, default is 'darkcyan'
+        :s: float, scatter point size, default is 8
+    """
+
+    if not isinstance(true, np.ndarray):
+        true = np.array(true)
+    if not isinstance(pred, np.ndarray):
+        pred = np.array(pred)
+    
+    fig, ax = plt.subplots(figsize=figsize)
+    ax.scatter(true, pred, color=point_color, s=s)
+    _min = np.min([true.min(), pred.min()])
+    _max = np.max([true.max(), pred.max()])
+    ax.plot([_min, _max], [_min, _max], color='k', lw=2)
+    
+    ax.set_xlabel('true-label')
+    ax.set_ylabel('prediction')
+    if figtitle is None:
+        figtitle = 'True-Label VS Prediction Scatter plot'
+    savetitle = figtitle
+    if len(metrics) > 0:
+        metstr = ''
+        for i, name in enumerate(metrics):
+            if i > 0:
+                metstr += ',   '
+            metstr += str(name) + ' : ' + str(metrics[name])
+        figtitle += '\n%s'%metstr
+    ax.set_title(figtitle, fontweight='bold')
+    fig.tight_layout()
+    if figure_dir is not None:
+        fig.savefig('%s/%s.png'%(figure_dir, savetitle), bbox_inches='tight')
+    if show:
+        plt.show()
+    else:
+        plt.close()

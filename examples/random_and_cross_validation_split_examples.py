@@ -4,9 +4,14 @@ email : abdullahalmasud.buet@gmail.com\n
 LICENSE : MIT License
 """
 
-from msdlib import msd
 import pandas as pd
 from sklearn.datasets import load_iris
+
+import os
+import sys
+project_dir = os.getcwd()
+sys.path.append(project_dir)
+from msdlib import msd
 
 
 # Creating data set for splitting that into Train, Validation and Test

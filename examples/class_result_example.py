@@ -4,10 +4,16 @@ email : abdullahalmasud.buet@gmail.com\n
 LICENSE : MIT License
 """
 
-from msdlib import msd
 from sklearn.datasets import load_iris
 import numpy as np
 import pandas as pd
+
+import os
+import sys
+project_dir = os.getcwd()
+sys.path.append(project_dir)
+from msdlib import msd
+
 
 # actual labels
 true_label = load_iris()['target']

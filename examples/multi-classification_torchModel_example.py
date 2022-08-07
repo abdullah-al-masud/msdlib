@@ -6,25 +6,31 @@ LICENSE : MIT License
 
 # torchModel() multi-class classification example
 import pandas as pd
-from msdlib import msd
-from sklearn.datasets import fetch_covtype
+from sklearn.datasets import fetch_covtype, load_iris, load_digits
 import torch
+
+import os
+import sys
+project_dir = os.getcwd()
+sys.path.append(project_dir)
 from msdlib import mlutils
+from msdlib import msd
 
 
 # Loading the data and separating data and label
-source_data = fetch_covtype()
+source_data = load_digits()
 feature_names = source_data['feature_names'].copy()
 data = pd.DataFrame(source_data['data'], columns=feature_names)
-label = pd.Series(source_data['target'], name=source_data['target_names'][0])
+label2index = {name: i for i, name in enumerate(source_data['target_names'])}
+label = pd.Series(source_data['target']).replace(label2index)
+# label = pd.Series(source_data['target'], name='target_names')
+# # label is 1 based index. So, converting it to 0 based index
+# label = label - 1
 
 # print(source_data['DESCR'])
 print('data :\n', data.head())
 print('labels :\n', label)
 print('classes :', label.unique())
-
-# label is 1 based index. So, converting it to 0 based index
-label = label - 1
 
 # Standardizing numerical data
 data = msd.standardize(data)
@@ -49,7 +55,7 @@ layers = mlutils.define_layers(data.shape[1], label.unique().shape[0], [100, 100
                                actual_units=True, activation=torch.nn.ReLU(), model_type='regressor')
 
 tmodel = mlutils.torchModel(layers=layers, model_type='multi-classifier',
-                            savepath='multiclass-classification_torchModel', batch_size=512, epoch=80, learning_rate=.0001, lr_reduce=.995)
+                            savepath='examples/multiclass-classification_torchModel', batch_size=64, epoch=80, learning_rate=.0001, lr_reduce=.995)
 print(tmodel.model)
 
 # Training Pytorch model
@@ -60,7 +66,7 @@ tmodel.fit(outdata['train']['data'], outdata['train']['label'],
 result, all_results = tmodel.evaluate(data_sets=[outdata['train']['data'], outdata['test']['data']],
                                       label_sets=[
                                           outdata['train']['label'], outdata['test']['label']],
-                                      set_names=['Train', 'Test'], savepath='multiclass-classification_torchModel')
+                                      set_names=['Train', 'Test'], savepath='examples/multiclass-classification_torchModel')
 
 print('classification score :\n', result)
 

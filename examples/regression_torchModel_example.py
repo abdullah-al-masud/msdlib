@@ -6,11 +6,15 @@ LICENSE : MIT License
 
 # torchModel() regression example
 import pandas as pd
-from msdlib import msd
 from sklearn.datasets import fetch_california_housing
 import torch
-from msdlib import mlutils
 
+import os
+import sys
+project_dir = os.getcwd()
+sys.path.append(project_dir)
+from msdlib import mlutils
+from msdlib import msd
 
 # Loading the data and separating data and label
 source_data = fetch_california_housing()
@@ -41,16 +45,22 @@ layers = mlutils.define_layers(data.shape[1], 1, [100, 100, 100, 100, 100, 100],
 
 # building model
 tmodel = mlutils.torchModel(layers=layers, model_type='regressor',
-                            savepath='regression_torchModel', epoch=80, learning_rate=.0001, lr_reduce=.995)
+                            savepath='examples/regression_torchModel', epoch=80, learning_rate=.0001, lr_reduce=.995)
 
 # Training Pytorch model
-tmodel.fit(outdata['train']['data'], outdata['train']['label'],
-           val_data=outdata['validation']['data'], val_label=outdata['validation']['label'])
+train_set = mlutils.DataSet(torch.tensor(outdata['train']['data'], device='cuda', dtype=torch.float32), 
+                            torch.tensor(outdata['train']['label'], device='cuda', dtype=torch.float32).squeeze())
+val_set = mlutils.DataSet(torch.tensor(outdata['validation']['data'], device='cuda', dtype=torch.float32), 
+                            torch.tensor(outdata['validation']['label'], device='cuda', dtype=torch.float32).squeeze())
+train_loader = torch.utils.data.DataLoader(train_set, batch_size=128)
+val_loader = torch.utils.data.DataLoader(val_set, batch_size=128)
+
+tmodel.fit(train_loader=train_loader, val_loader=val_loader)
 
 # Evaluating the model's performance
 result, all_results = tmodel.evaluate(data_sets=[outdata['train']['data'], outdata['test']['data']],
                                       label_sets=[outdata['train']['label'].ravel(
                                       ), outdata['test']['label'].ravel()],
-                                      set_names=['Train', 'Test'], savepath='regression_torchModel')
+                                      set_names=['Train', 'Test'], savepath='examples/regression_torchModel')
 
 print('regression result:\n', result)

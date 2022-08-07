@@ -4,8 +4,15 @@ email : abdullahalmasud.buet@gmail.com\n
 LICENSE : MIT License
 """
 
-from msdlib import msd
+import os
+import sys
+project_dir = os.getcwd()
+sys.path.append(project_dir)
+
 import time
+import pickle
+from msdlib import msd
+import numpy as np
 
 
 def test_sample():
@@ -45,7 +52,7 @@ def test_rsquare_rmse():
     assert rmse.round(4) == rmse_val
 
 
-def get_time_estimation():
+def test_get_time_estimation():
     """
     To check get_time_estimation function's activity
     """
@@ -82,3 +89,14 @@ def test_paramOptimizer():
             break
     best = optimizer.best()[0]['score'].iloc[0]
     assert best == expected_best
+
+
+def test_get_category_edges():
+    """
+    To check get_category_edges function
+    """
+    
+    sr = pickle.load(open('tests/data/get_category_edges_sr.pickle', 'rb'))
+    categories = np.unique(sr)
+    edges = msd.get_category_edges(sr, categories=categories, names=None)
+    assert len(edges) == 4 and edges[0]['start'].iloc[0] == 20

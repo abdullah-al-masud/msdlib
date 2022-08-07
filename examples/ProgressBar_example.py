@@ -4,8 +4,13 @@ email : abdullahalmasud.buet@gmail.com\n
 LICENSE : MIT License
 """
 
-from msdlib.msd import ProgressBar
 import time
+
+import os
+import sys
+project_dir = os.getcwd()
+sys.path.append(project_dir)
+from msdlib.msd import ProgressBar
 
 
 # defining an array as an iterator for running a loop

@@ -6,11 +6,18 @@ LICENSE : MIT License
 
 # torchModel() binary classification example
 import pandas as pd
-from msdlib import msd
 from sklearn.datasets import load_breast_cancer
 import torch
+
+import os
+import sys
+project_dir = os.getcwd()
+sys.path.append(project_dir)
+from msdlib import msd
 from msdlib import mlutils
 
+
+savepath = 'examples/binary-classification_torchModel'
 
 # Loading the data and separating data and label
 source_data = load_breast_cancer()
@@ -48,17 +55,16 @@ layers = mlutils.define_layers(data.shape[1], 1, [100, 100, 100, 100, 100, 100],
 
 # building model
 tmodel = mlutils.torchModel(layers=layers, model_type='binary-classifier',
-                            savepath='binary-classification_torchModel', batch_size=32, epoch=80, learning_rate=.0001, lr_reduce=.995)
+                            savepath=savepath, batch_size=32, epoch=80, learning_rate=.0001, lr_reduce=.995)
 
 # Training Pytorch model
-tmodel.fit(outdata['train']['data'], outdata['train']['label'],
-           val_data=outdata['validation']['data'], val_label=outdata['validation']['label'])
+tmodel.fit(outdata['train']['data'], outdata['train']['label'])
 
 # Evaluating the model's performance
 result, all_results = tmodel.evaluate(data_sets=[outdata['train']['data'], outdata['test']['data']],
                                       label_sets=[
                                           outdata['train']['label'], outdata['test']['label']],
-                                      set_names=['Train', 'Test'], savepath='multiclass-classification_torchModel')
+                                      set_names=['Train', 'Test'], savepath=savepath)
 print('classification score:\n', result)
 
 # scores for classification

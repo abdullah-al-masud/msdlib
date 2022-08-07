@@ -7,13 +7,18 @@ LICENSE : MIT License
 # torchModel() multi-class classification with convolutional NN example
 import numpy as np
 import pandas as pd
-from msdlib import msd
 import os
 import cv2
 import torch
 from torch import nn
-from msdlib import mlutils
 from tqdm import tqdm
+
+import os
+import sys
+project_dir = os.getcwd()
+sys.path.append(project_dir)
+from msdlib import mlutils
+from msdlib import msd
 
 
 # Loading the data and separating data and label
@@ -30,7 +35,7 @@ def process_image(image, size=80):
 
 
 # data set is downloaded from here- https://www.kaggle.com/c/plant-seedlings-classification/data
-path = 'C:/Users/abdul/Downloads/plant-seedlings-classification/train'
+path = 'E:/Data sets/plant-seedlings-classification/train'
 fixed_size = 80
 
 # loading data
@@ -131,7 +136,8 @@ layers = [
 ]
 
 tmodel = mlutils.torchModel(layers=layers, model_type='multi-classifier',
-                            savepath='multiclass-classification_torchModel_conv', batch_size=128, epoch=100, learning_rate=.0001, lr_reduce=.995)
+                            savepath='examples/multiclass-classification_torchModel_conv', batch_size=32, epoch=100, 
+                            learning_rate=.0001, lr_reduce=.995)
 print(tmodel.model)
 
 # Training Pytorch model
@@ -140,9 +146,9 @@ tmodel.fit(outdata['train']['data'], outdata['train']['label'],
 
 # Evaluating the model's performance
 result, all_results = tmodel.evaluate(data_sets=[outdata['train']['data'], outdata['test']['data']],
-                                      label_sets=[
-                                          outdata['train']['label'], outdata['test']['label']],
-                                      set_names=['Train', 'Test'], savepath='multiclass-classification_torchModel_conv', figsize=(30, 5))
+                                      label_sets=[outdata['train']['label'], outdata['test']['label']],
+                                      set_names=['Train', 'Test'], 
+                                      savepath='examples/multiclass-classification_torchModel_conv', figsize=(30, 5))
 print('classification scores :\n', result)
 
 # scores for classification

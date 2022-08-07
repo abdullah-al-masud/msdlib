@@ -5,18 +5,24 @@ LICENSE : MIT License
 """
 
 # importing all necessary dependencies
-from msdlib import msd
 import numpy as np
 import pandas as pd
 from scipy.io import wavfile
 import matplotlib.pyplot as plt
 import sounddevice as sd
 
+import os
+import sys
+project_dir = os.getcwd()
+sys.path.append(project_dir)
+from msdlib import msd
 
-savepath = 'filters_and_spectrogram_example'
+
+savepath = 'examples/filters_and_spectrogram_example'
+os.makedirs(savepath, exist_ok=True)
 
 # loading example wav file
-fs, data = wavfile.read('data/example_tone_001.wav')
+fs, data = wavfile.read('examples/data/example_tone_001.wav')
 print('fs=', fs)
 # converting stereo audio data into pandas dataframe
 data = pd.DataFrame(data, columns=['stereo_1', 'stereo_2'])
@@ -31,7 +37,7 @@ fig, ax = plt.subplots(figsize=(30, 3))
 ax.plot(data['stereo_1'], color='darkcyan')
 ax.set_title('recorded_signal')
 fig.tight_layout()
-fig.savefig('%s/recorded_signal.jpg' % savepath, bbox_inches='tight')
+fig.savefig(os.path.join(savepath, 'recorded_signal.jpg'), bbox_inches='tight')
 plt.show()
 
 # Filters() example
