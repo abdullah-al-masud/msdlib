@@ -319,12 +319,8 @@ class torchModel():
 
             if len(val_loader) > 0:
                 # run evaluation to get validation score
-                out = self.predict(val_loader).squeeze()
-                if self.model_type.lower() == 'multi-classifier':
-                    _dtype = torch.long
-                else:
-                    _dtype = self.dtype
-                val_loss = self.loss_func(out, val_loader.dataset.label.to(device=self.device, dtype=_dtype))
+                out, _val_label = self.predict(val_loader, return_label=True)
+                val_loss = self.loss_func(out.squeeze(), _val_label.squeeze())
                 # storing losses
                 loss_curves[1].append(val_loss.item())
             else:
@@ -363,15 +359,17 @@ class torchModel():
 
         return self
 
-    def predict(self, data):
+    def predict(self, data, return_label=False):
         """
         A wrapper function that generates prediction from pytorch model
 
         Inputs:
             :data: input data to predict on, can be a torch tensor, numpy ndarray, pandas DataFrame or even torch DataLoader object
+            :return_label: bool, whether to return label data if 'data' is a pytorch DataLoader object. Default is False
 
         Outputs:
-            :preds: predicted values against the inserted data
+            :preds: torch Tensor, predicted values against the inserted data
+            :labels: torch Tensor, only found if 'data' is pytorch DataLoader and return_label is True.
         """
 
         # evaluation mode set up
@@ -380,17 +378,25 @@ class torchModel():
         if isinstance(data, torch.utils.data.dataloader.DataLoader):
             with torch.no_grad():
                 preds = []
+                labels = []
                 for i, (batch, label) in enumerate(data):
                     pred = self.model(batch)
                     preds.append(pred.detach())
+                    if return_label:
+                        labels.append(label)
                 preds = torch.cat(preds)
+                if return_label:
+                    labels = torch.cat(labels)
+                    return preds, labels
+                else:
+                    return preds
+        
         else:
             # checking data type
             if isinstance(data, pd.DataFrame) or isinstance(data, pd.Series):
                 data = data.values
             if isinstance(data, np.ndarray):
                 data = torch.from_numpy(data)
-            data = data.to(device=self.device, dtype=self.dtype)
 
             # estimating number of mini-batch
             n_batch = data.shape[0] // self.batch_size + \
@@ -402,12 +408,14 @@ class torchModel():
                 for i in range(n_batch):
                     if i != n_batch - 1:
                         pred = self.model(
-                            data[i * self.batch_size: (i + 1) * self.batch_size])
+                            data[i * self.batch_size: (i + 1) * self.batch_size].to(device=self.device, dtype=self.dtype))
                     else:
-                        pred = self.model(data[i * self.batch_size:])
+                        pred = self.model(
+                            data[i * self.batch_size:].to(device=self.device, dtype=self.dtype))
                     preds.append(pred.detach())
                 preds = torch.cat(preds)
-        return preds
+            
+            return preds
 
     def evaluate(self, data_sets, label_sets, set_names=[], figsize=(18, 4), savepath=None):
         """

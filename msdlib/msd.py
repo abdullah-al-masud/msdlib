@@ -761,11 +761,11 @@ def normalize(data, zero_range = 1, method = 'min_max_0_1'):
     Inputs:
         :data: pandas series, dataframe, list or numpy ndarray, input data to be standardized
         :zero_range: float, value used to replace range values in case range is 0 for any column. Default is 1
-        :method: {'zero_mean', 'min_max_0_1', 'min_max_-1_1'}.\n
+        :method: {"zero_mean", "min_max_0_1", "min_max_-1_1"}.\n
             'zero_mean' : normalizes the data in a way that makes the data mean as 0\n
-            'min_max_0_1' : normalizes the data in a way that the data becomes confined within 0 and 1\n
-            'min_max_-1_1' : normalizes the data in a way that the data becomes confined within -1 and 1\n
-            Default is 'min_max_0_1'\n
+            "min_max_0_1" : normalizes the data in a way that the data becomes confined within 0 and 1\n
+            "min_max_-1_1" : normalizes the data in a way that the data becomes confined within -1 and 1\n
+            Default is "min_max_0_1"\n
     
     Outputs:
         Normalized data

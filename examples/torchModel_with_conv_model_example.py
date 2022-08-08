@@ -136,7 +136,7 @@ layers = [
 ]
 
 tmodel = mlutils.torchModel(layers=layers, model_type='multi-classifier',
-                            savepath='examples/multiclass-classification_torchModel_conv', batch_size=32, epoch=100, 
+                            savepath='examples/multiclass-classification_torchModel_conv', batch_size=32, epoch=30, 
                             learning_rate=.0001, lr_reduce=.995)
 print(tmodel.model)
 

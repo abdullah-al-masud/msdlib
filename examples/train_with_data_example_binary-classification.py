@@ -57,7 +57,7 @@ layers = mlutils.define_layers(data.shape[1], 1, [100, 100, 100, 100, 100, 100],
 
 # building model
 tmodel = mlutils.torchModel(layers=layers, model_type='binary-classifier',
-                            savepath=savepath, batch_size=32, epoch=10, learning_rate=.0001, lr_reduce=.995)
+                            savepath=savepath, batch_size=32, epoch=60, learning_rate=.0001, lr_reduce=.995)
 
 models = {
     'RFC': RFC(),

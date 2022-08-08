@@ -4,9 +4,9 @@
    contain the root `toctree` directive.
 
 
-========================
+=========================
 Motivation behind msdlib
-========================
+=========================
 
 .. image:: ../msdlib_logo_fit.png
    :width: 20%
@@ -30,7 +30,7 @@ msdlib provides supports to different types of things altogether. Some of the co
 - FIR filtering and filter and data visualization functionality with minimal coding.
 
 msdlib documentation
-====================
+=====================
 
 Get started from this `page <README.html>`_
 
@@ -48,7 +48,7 @@ Get started from this `page <README.html>`_
 
 
 Indices and tables
-==================
+===================
 
 * :ref:`genindex`
 * :ref:`modindex`

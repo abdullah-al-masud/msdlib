@@ -556,18 +556,24 @@ It can also be used to select a particular GPU device. For example to use GPU de
 
 <dl class="py method">
 <dt class="sig sig-object py" id="msdlib.mlutils.torchModel.predict">
-<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msdlib.mlutils.torchModel.predict" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msdlib.mlutils.torchModel.predict" title="Permalink to this definition"></a></dt>
 <dd><p>A wrapper function that generates prediction from pytorch model</p>
 <dl class="simple">
 <dt>Inputs:</dt><dd><dl class="field-list simple">
 <dt class="field-odd">data</dt>
 <dd class="field-odd"><p>input data to predict on, can be a torch tensor, numpy ndarray, pandas DataFrame or even torch DataLoader object</p>
 </dd>
+<dt class="field-even">return_label</dt>
+<dd class="field-even"><p>bool, whether to return label data if ‘data’ is a pytorch DataLoader object. Default is False</p>
+</dd>
 </dl>
 </dd>
 <dt>Outputs:</dt><dd><dl class="field-list simple">
 <dt class="field-odd">preds</dt>
-<dd class="field-odd"><p>predicted values against the inserted data</p>
+<dd class="field-odd"><p>torch Tensor, predicted values against the inserted data</p>
+</dd>
+<dt class="field-even">labels</dt>
+<dd class="field-even"><p>torch Tensor, only found if ‘data’ is pytorch DataLoader and return_label is True.</p>
 </dd>
 </dl>
 </dd>
