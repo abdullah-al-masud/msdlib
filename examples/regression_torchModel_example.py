@@ -44,7 +44,7 @@ layers = mlutils.define_layers(data.shape[1], 1, [100, 100, 100, 100, 100, 100],
                                actual_units=True, activation=torch.nn.ReLU())
 
 # building model
-tmodel = mlutils.torchModel(layers=layers, model_type='regressor', tensorboard_path='runs',
+tmodel = mlutils.torchModel(layers=layers, model_type='regressor', tensorboard_path='runs', interval=50,
                             savepath='examples/regression_torchModel', epoch=80, learning_rate=.0001, lr_reduce=.995)
 
 # Training Pytorch model
@@ -56,6 +56,11 @@ train_loader = torch.utils.data.DataLoader(train_set, batch_size=128)
 val_loader = torch.utils.data.DataLoader(val_set, batch_size=128)
 
 tmodel.fit(train_loader=train_loader, val_loader=val_loader)
+
+model_dict = {tmodel.model_name: tmodel.model}
+model_dict = mlutils.load_models(model_dict, 'examples/regression_torchModel')
+del tmodel.model
+tmodel.model = model_dict[tmodel.model_name]
 
 # Evaluating the model's performance
 result, all_results = tmodel.evaluate(data_sets=[outdata['train']['data'], outdata['test']['data']],

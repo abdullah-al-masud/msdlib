@@ -19,7 +19,7 @@ from ..msd import (
 import numpy as np
 import os
 import time
-from ..mlutils.utils import DataSet
+from ..mlutils.utils import DataSet, store_models
 
 plt.rcParams['figure.facecolor'] = 'white'
 
@@ -171,14 +171,16 @@ class torchModel():
         :tensorboard_path: str or None, tensorboard will show the progress of training using loss values and training metrics.
                             - If model_type is 'regressor', metrics will be rmse, rsquare
                             - If model_type is 'binary-classifier' or 'multi-classifier', metrics will be 'accuracy'
-        :tb_metrics: None or list of functions. 
+        :tb_metrics: None or list of functions. Each function will take two inputs, first is true labels and second is predicted values.
         			If None, the metrics will be selected based on model type according to the description of parameter 'tensorboard_path'.
+        :interval: int or None, indicates number of epoch after which the model weights will be stored each time during training.
+                    Default is None means model will not be stored during training.
     """
 
     def __init__(self, layers=[], loss_func=None, optimizer=None, learning_rate=.0001, epoch=2, batch_size=32, lr_reduce=1,
                  loss_reduction='mean', model_type='regressor', use_gpu=True, gpu_devices=None, model_name='pytorch', dtype=torch.float32,
                  plot_loss=True, quant_perc=.98, plot_evaluation=True, loss_roll_period=1, model=None, savepath=None, shuffle=True, lr_scheduler=None,
-                 tensorboard_path=None, tb_metrics=None, **kwargs):
+                 tensorboard_path=None, tb_metrics=None, interval=None, **kwargs):
 
         # defining model architecture
         if model is None and len(layers) == 0:
@@ -209,6 +211,7 @@ class torchModel():
         if tensorboard_path is not None:
             self.tb = SummaryWriter(log_dir=tensorboard_path)
         self.tb_metrics = tb_metrics
+        self.interval = interval
 
         # setting up gpu usage
         self.gpu_string = "cuda" if self.use_gpu and torch.cuda.is_available() else "cpu"
@@ -343,6 +346,15 @@ class torchModel():
 
 			# tensorboard parameter collection
             self.add_tb_params(ep, tr_mean_loss, val_loss, _val_label.squeeze(), out, batch_data)
+
+            # storing model weights after each interval
+            if self.interval is not None:
+                if (ep + 1) % self.interval == 0:
+                    if self.parallel:
+                        model_dict = {"%s_epoch-%d"%(self.model_name, ep+1): self.model.module}
+                    else:
+                        model_dict = {"%s_epoch-%d"%(self.model_name, ep+1): self.model}
+                    store_models(model_dict, self.savepath)
 	
         print('...training complete !!')
         losses = pd.DataFrame(loss_curves, index=['train_loss', 'validation_loss'], columns=np.arange(
@@ -367,8 +379,12 @@ class torchModel():
                 plt.show()
 
         self.relieve_parallel()
-        # model training evaluation
 
+        if self.interval is not None:
+            model_dict = {self.model_name: self.model}
+            store_models(model_dict, self.savepath)
+
+        # model training evaluation
         if evaluate:
             self.evaluate([train_loader.dataset.data, val_loader.dataset.data], 
                           [train_loader.dataset.label, val_loader.dataset.label], 
