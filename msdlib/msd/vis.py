@@ -151,6 +151,17 @@ def word_length_error(msg):
 # string : str, the input string
 # maxlen : int, maximum allowable length for each line
 def name_separation(string, maxlen):
+    """
+    This function separates a string based on its length and creates multiple lines and adds them finally to form new string with multiple lines
+
+    Inputs:
+        :string: str, input string
+        :maxlen: int, maximum allowable length for each line
+    
+    Outputs:
+        :newstr: str, output string after dividing the inserted string
+    """
+    
     strlen = len(string)
     if strlen > maxlen:
         words = string.split(' ')

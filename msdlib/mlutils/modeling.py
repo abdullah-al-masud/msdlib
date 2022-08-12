@@ -628,7 +628,15 @@ class torchModel():
     
     def add_tb_params(self, ep, tr_mean_loss, val_loss, true, pred, batch_data):
         """
-        
+        This function adds tensorboard parameters for training session records.
+
+        Inputs:
+            :ep: int, current epoch number.
+            :tr_mean_loss: float, average training loss
+            :val_loss: float, average validation loss
+            :true: torch.Tensor, true labels of validation data
+            :pred: torch.Tensor, predicted labels from the model for validation data
+            :batch_data: torch.Tensor, last minibatch data.
         """
     	
         if self.tb is not None:

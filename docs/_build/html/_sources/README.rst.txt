@@ -38,7 +38,8 @@ Dependencies
 - Scipy
 - Seaborn
 - joblib
-- Pytorch (for mlutils package)
+- Pytorch
+- tensorboard
 
 All of these packages except Pytorch will be installed automatically during msdlib installation.
 
