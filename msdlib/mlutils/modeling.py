@@ -315,7 +315,7 @@ class torchModel():
                 # loss calculation
                 self.model.zero_grad()
                 label_hat = self.model(batch_data.to(device=self.device, dtype=self.dtype))
-                tr_loss = self.loss_func(label_hat.squeeze(), batch_label.squeeze())
+                tr_loss = self.loss_func(label_hat.squeeze(), batch_label.to(device=self.device).squeeze())
 
                 # back-propagation
                 tr_loss.backward()
