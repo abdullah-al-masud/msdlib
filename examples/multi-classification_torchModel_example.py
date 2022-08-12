@@ -54,7 +54,7 @@ print("test > data, labels and index shapes :",
 layers = mlutils.define_layers(data.shape[1], label.unique().shape[0], [100, 100, 100, 100, 100, 100], dropout_rate=.2,
                                actual_units=True, activation=torch.nn.ReLU(), model_type='regressor')
 
-tmodel = mlutils.torchModel(layers=layers, model_type='multi-classifier',
+tmodel = mlutils.torchModel(layers=layers, model_type='multi-classifier', tensorboard_path='runs',
                             savepath='examples/multiclass-classification_torchModel', batch_size=64, epoch=80, learning_rate=.0001, lr_reduce=.995)
 print(tmodel.model)
 

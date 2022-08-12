@@ -44,7 +44,7 @@ layers = mlutils.define_layers(data.shape[1], 1, [100, 100, 100, 100, 100, 100],
                                actual_units=True, activation=torch.nn.ReLU())
 
 # building model
-tmodel = mlutils.torchModel(layers=layers, model_type='regressor',
+tmodel = mlutils.torchModel(layers=layers, model_type='regressor', tensorboard_path='runs',
                             savepath='examples/regression_torchModel', epoch=80, learning_rate=.0001, lr_reduce=.995)
 
 # Training Pytorch model

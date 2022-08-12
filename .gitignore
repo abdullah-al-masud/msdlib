@@ -1,6 +1,10 @@
 *.ipynb
-__pycache__
+*__pycache__*
 build
 dist
 msdlib.egg*
 .ipynb*
+runs
+.pytest_cache
+htmlcov
+.coverage

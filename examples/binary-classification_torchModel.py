@@ -54,7 +54,7 @@ layers = mlutils.define_layers(data.shape[1], 1, [100, 100, 100, 100, 100, 100],
                                actual_units=True, activation=torch.nn.ReLU(), final_activation=torch.nn.Sigmoid())
 
 # building model
-tmodel = mlutils.torchModel(layers=layers, model_type='binary-classifier',
+tmodel = mlutils.torchModel(layers=layers, model_type='binary-classifier', tensorboard_path='runs',
                             savepath=savepath, batch_size=32, epoch=80, learning_rate=.0001, lr_reduce=.995)
 
 # Training Pytorch model

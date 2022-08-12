@@ -34,6 +34,7 @@ Dependencies
 * Seaborn
 * joblib
 * Pytorch
+* tensorboard
 
 All of these packages except Pytorch will be installed automatically during msdlib installation. Python >= 3.8 is necessary.
 

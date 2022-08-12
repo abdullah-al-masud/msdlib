@@ -81,5 +81,5 @@ segs = 3
 fig_title = 'Combined Time Series Plot'
 # plotting simple time series plot for multiple time series variables
 msd.plot_time_series(same_srs=same_srs, srs=srs, spans=spans, spine_dist=.05, ylabel='Price',
-                     segs=segs, lines=lines, linestyle='--', fig_title=fig_title, save=True,
+                     segs=segs, lines=lines, linestyle='--', fig_title=fig_title, save=True, show=False,
                      savepath='examples/plot_time_series_example', fname=fig_title.replace(' ', '_'))
