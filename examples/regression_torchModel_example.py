@@ -48,10 +48,8 @@ tmodel = mlutils.torchModel(layers=layers, model_type='regressor', tensorboard_p
                             savepath='examples/regression_torchModel', epoch=150, learning_rate=.0001, lr_reduce=.995)
 
 # Training Pytorch model
-train_set = mlutils.DataSet(torch.tensor(outdata['train']['data'], device='cuda', dtype=torch.float32), 
-                            torch.tensor(outdata['train']['label'], device='cuda', dtype=torch.float32).squeeze())
-val_set = mlutils.DataSet(torch.tensor(outdata['validation']['data'], device='cuda', dtype=torch.float32), 
-                            torch.tensor(outdata['validation']['label'], device='cuda', dtype=torch.float32).squeeze())
+train_set = mlutils.DataSet(torch.tensor(outdata['train']['data']), torch.tensor(outdata['train']['label']).squeeze(), dtype=torch.float32)
+val_set = mlutils.DataSet(torch.tensor(outdata['validation']['data']), torch.tensor(outdata['validation']['label']).squeeze(), dtype=torch.float32) 
 train_loader = torch.utils.data.DataLoader(train_set, batch_size=128)
 val_loader = torch.utils.data.DataLoader(val_set, batch_size=128)
 

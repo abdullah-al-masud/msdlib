@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>mlutils &mdash; msdlib 1.1.2 documentation</title>
+  <title>mlutils &mdash; msdlib 1.1.4 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -162,19 +162,26 @@ We can train the model using simple ‘fit’ method, can generate predictions u
 
 <dl class="py class">
 <dt class="sig sig-object py" id="msdlib.mlutils.DataSet">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">msdlib.mlutils.</span></span><span class="sig-name descname"><span class="pre">DataSet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cuda'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">torch.float32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'regressor'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msdlib.mlutils.DataSet" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">msdlib.mlutils.</span></span><span class="sig-name descname"><span class="pre">DataSet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">torch.float32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'regressor'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msdlib.mlutils.DataSet" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Dataset</span></code></p>
 <p>This is a customized Data set object which can build a torch.utils.data.Dataset object given the data and labels. 
 This is only usable when we have complete data and labels (data and label lengths must be equal)</p>
 <dl class="simple">
 <dt>Inputs:</dt><dd><dl class="field-list simple">
 <dt class="field-odd">data</dt>
-<dd class="field-odd"><p>ideally should be numpy ndarray, pandas DataFrame or torch tensor. Contains feature data tor model training.
+<dd class="field-odd"><p>ideally should be torch tensor. Contains feature data tor model training.
 Can be python list or python set too but not much appreciated as it will be mostly used for training pytorch model.</p>
 </dd>
 <dt class="field-even">label</dt>
 <dd class="field-even"><p>ideally should be numpy ndarray, pandas Series/DataFrame or torch tensor. Contains true labels tor model training.
 Can be python list or python set too but not much appreciated as it will be mostly used for training pytorch model.</p>
+</dd>
+<dt class="field-odd">dtype</dt>
+<dd class="field-odd"><p>data type of the data and labels. Default is torch.float32. It also depends on model_type parameter for label data.</p>
+</dd>
+<dt class="field-even">model_type</dt>
+<dd class="field-even"><p>{‘regressor’, ‘binary-classifier’ or ‘multi-classifier’}. Default is ‘multi-classifier’.
+It is used to confirm that for multi-class classification, label data type is torch.long.</p>
 </dd>
 </dl>
 </dd>
@@ -481,7 +488,7 @@ If None, the metrics will be selected based on model type according to the descr
 </dd>
 <dt class="field-odd">interval</dt>
 <dd class="field-odd"><p>int or None, indicates number of epoch after which the model weights will be stored each time during training.
-Default is None means model will not be stored during training.</p>
+Default is None means model will not be stored during training. Note: “model_name” parameter must include ‘pytorch’ phrase in it.</p>
 </dd>
 </dl>
 </dd>

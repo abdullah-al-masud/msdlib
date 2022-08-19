@@ -83,9 +83,9 @@ def test_torchModel_with_loader():
         layers, epoch=80, model_type='multi-classifier', plot_loss=False, plot_evaluation=False, use_gpu=use_gpu)
     
     train_set = mlutils.DataSet(torch.tensor(outdata['train']['data']), 
-                                torch.tensor(outdata['train']['label']).squeeze(), device=device, dtype=torch.float32, model_type='multi-classifier')
+                                torch.tensor(outdata['train']['label']).squeeze(), dtype=torch.float32, model_type='multi-classifier')
     val_set = mlutils.DataSet(torch.tensor(outdata['validation']['data']), 
-                                torch.tensor(outdata['validation']['label']).squeeze(), device=device, dtype=torch.float32, model_type='multi-classifier')
+                                torch.tensor(outdata['validation']['label']).squeeze(), dtype=torch.float32, model_type='multi-classifier')
     train_loader = torch.utils.data.DataLoader(train_set, batch_size=32)
     val_loader = torch.utils.data.DataLoader(val_set, batch_size=32)
 
