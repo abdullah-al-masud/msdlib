@@ -174,7 +174,7 @@ class torchModel():
         :tb_metrics: None or list of functions. Each function will take two inputs, first is true labels and second is predicted values.
         			If None, the metrics will be selected based on model type according to the description of parameter 'tensorboard_path'.
         :interval: int or None, indicates number of epoch after which the model weights will be stored each time during training.
-                    Default is None means model will not be stored during training.
+                    Default is None means model will not be stored during training. Note: "model_name" parameter must include 'pytorch' phrase in it.
     """
 
     def __init__(self, layers=[], loss_func=None, optimizer=None, learning_rate=.0001, epoch=2, batch_size=32, lr_reduce=1,
@@ -217,10 +217,7 @@ class torchModel():
         self.gpu_string = "cuda" if self.use_gpu and torch.cuda.is_available() else "cpu"
         if self.gpu_string == 'cuda':
             if isinstance(self.gpu_devices, list):
-                if len(self.gpu_devices) == 1:
-                    self.device = torch.device('cuda:%d' % self.gpu_devices[0])
-                else:
-                    self.device = torch.device(self.gpu_string)
+                self.device = torch.device('cuda:%d' % self.gpu_devices[0])
             else:
                 self.device = torch.device(self.gpu_string)
         else:
@@ -628,7 +625,7 @@ class torchModel():
             if not isinstance(train_label, torch.Tensor):
                 train_label = torch.from_numpy(train_label)
 
-            train_loader = torch.utils.data.DataLoader(DataSet(train_data, train_label, self.device, self.dtype, self.model_type),
+            train_loader = torch.utils.data.DataLoader(DataSet(train_data, train_label, self.dtype, self.model_type),
                                                        batch_size=self.batch_size, shuffle=self.shuffle)
 
         if val_loader is None:
@@ -637,7 +634,7 @@ class torchModel():
             if not isinstance(val_label, torch.Tensor):
                 val_label = torch.from_numpy(val_label)
 
-            val_loader = torch.utils.data.DataLoader(DataSet(val_data, val_label, self.device, self.dtype, self.model_type),
+            val_loader = torch.utils.data.DataLoader(DataSet(val_data, val_label, self.dtype, self.model_type),
                                                      batch_size=self.batch_size, shuffle=self.shuffle)
 
         return train_loader, val_loader

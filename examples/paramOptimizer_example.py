@@ -38,3 +38,5 @@ while True:
         break
 
 print(optimizer.best())
+
+assert optimizer.best()[0]['score'].iloc[0] <= -18, 'best-score is greater than -18'

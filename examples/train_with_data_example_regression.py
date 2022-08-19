@@ -43,7 +43,7 @@ layers = mlutils.define_layers(data.shape[1], 1, [100, 100, 100, 100, 100, 100],
 
 # building model
 tmodel = mlutils.torchModel(layers=layers, model_type='regressor',
-                            savepath=savepath, epoch=20, learning_rate=.0001, lr_reduce=.995)
+                            savepath=savepath, epoch=30, learning_rate=.0001, lr_reduce=.995)
 
 models = {
     'RFR': RFR(),
@@ -53,3 +53,6 @@ models = {
 
 models, predictions = mlutils.train_with_data(outdata, feature_names, models, featimp_models=['RFR', 'DTR'],
                                               figure_dir=savepath, model_type='regressor', evaluate=True)
+
+assert predictions['RFR']['test']['rsquare'] >= .8, 'RFR model test set R-square is less than 0.8'
+assert predictions['pytorch-DNN']['test']['rsquare'] >= .7, 'pytorch-DNN model test set R-square is less than .7'

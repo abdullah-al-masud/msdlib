@@ -44,8 +44,8 @@ layers = mlutils.define_layers(data.shape[1], 1, [100, 100, 100, 100, 100, 100],
                                actual_units=True, activation=torch.nn.ReLU())
 
 # building model
-tmodel = mlutils.torchModel(layers=layers, model_type='regressor', tensorboard_path='runs', interval=50,
-                            savepath='examples/regression_torchModel', epoch=80, learning_rate=.0001, lr_reduce=.995)
+tmodel = mlutils.torchModel(layers=layers, model_type='regressor', tensorboard_path='runs', interval=120,
+                            savepath='examples/regression_torchModel', epoch=150, learning_rate=.0001, lr_reduce=.995)
 
 # Training Pytorch model
 train_set = mlutils.DataSet(torch.tensor(outdata['train']['data'], device='cuda', dtype=torch.float32), 
@@ -69,3 +69,5 @@ result, all_results = tmodel.evaluate(data_sets=[outdata['train']['data'], outda
                                       set_names=['Train', 'Test'], savepath='examples/regression_torchModel')
 
 print('regression result:\n', result)
+
+assert result['r_square'].loc['pytorch_Test'] >= .73, 'test set R-square is less than .73'

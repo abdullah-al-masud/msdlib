@@ -28,19 +28,21 @@ class DataSet(torch.utils.data.Dataset):
     This is only usable when we have complete data and labels (data and label lengths must be equal)
 
     Inputs:
-        :data: ideally should be numpy ndarray, pandas DataFrame or torch tensor. Contains feature data tor model training.
+        :data: ideally should be torch tensor. Contains feature data tor model training.
                Can be python list or python set too but not much appreciated as it will be mostly used for training pytorch model.
         :label: ideally should be numpy ndarray, pandas Series/DataFrame or torch tensor. Contains true labels tor model training.
                 Can be python list or python set too but not much appreciated as it will be mostly used for training pytorch model.
+        :dtype: data type of the data and labels. Default is torch.float32. It also depends on model_type parameter for label data.
+        :model_type: {'regressor', 'binary-classifier' or 'multi-classifier'}. Default is 'multi-classifier'.
+                    It is used to confirm that for multi-class classification, label data type is torch.long.
     """
 
-    def __init__(self, data, label=None, device='cuda', dtype=torch.float32, model_type='regressor'):
+    def __init__(self, data, label=None, dtype=torch.float32, model_type='regressor'):
         self.data = data
         self.label = label
         if self.label is not None:
             self._check_samples()
         self.datalen = data.shape[0]
-        self.device = device
         self.dtype = dtype
         self.model_type = model_type
 
@@ -49,13 +51,13 @@ class DataSet(torch.utils.data.Dataset):
 
     def __getitem__(self, index):
         # data type conversion
-        batch_data = self.data[index].to(device=self.device, dtype=self.dtype)
-        
+        batch_data = self.data[index].to(dtype=self.dtype)
+
         if self.label is not None:
             if self.model_type.lower() == 'multi-classifier':
-                batch_label = self.label[index].to(device=self.device, dtype=torch.long) 
+                batch_label = self.label[index].to(dtype=torch.long) 
             else:
-                batch_label = self.label[index].to(device=self.device, dtype=self.dtype)
+                batch_label = self.label[index].to(dtype=self.dtype)
         else:
             batch_label = None
         return batch_data, batch_label

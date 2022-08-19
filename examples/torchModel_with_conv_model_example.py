@@ -156,3 +156,5 @@ print("test data scores :\n", all_results['Test'][0])
 
 # confusion matrix for classification
 print("test data confusion matrix :\n", all_results['Test'][1])
+
+assert all_results['Test'][0]['average'].loc['f1_score'] >= .90, 'test set f1-score is less than .90'

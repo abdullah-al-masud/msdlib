@@ -55,7 +55,7 @@ layers = mlutils.define_layers(data.shape[1], label.unique().shape[0], [100, 100
                                actual_units=True, activation=torch.nn.ReLU(), model_type='regressor')
 
 tmodel = mlutils.torchModel(layers=layers, model_type='multi-classifier', tensorboard_path='runs',
-                            savepath='examples/multiclass-classification_torchModel', batch_size=64, epoch=80, learning_rate=.0001, lr_reduce=.995)
+                            savepath='examples/multiclass-classification_torchModel', batch_size=64, epoch=150, learning_rate=.0001, lr_reduce=.995)
 print(tmodel.model)
 
 # Training Pytorch model
@@ -75,3 +75,5 @@ print('test data score :\n', all_results['Test'][0])
 
 # confusion matrix for classification
 print('test data confusion matrix :\n', all_results['Test'][1])
+
+assert all_results['Test'][0]['average'].loc['f1_score'] >= .92, 'test set f1-score is less than .92'
