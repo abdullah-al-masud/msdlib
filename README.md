@@ -9,6 +9,7 @@
 ![](https://badge.fury.io/py/msdlib.svg)
 ![](https://travis-ci.org/abdullah-al-masud/msdlib.svg?branch=master)
 ![](https://readthedocs.org/projects/pip/badge/?version=latest)
+![](https://img.shields.io/badge/coverage-53%25-yellow)
 
 ![](examples/plot_time_series_example/Combined_Time_Series_Plot.jpg)
 

@@ -1,3 +1,9 @@
+"""
+Author : Abdullah Al Masud\n
+email : abdullahalmasud.buet@gmail.com\n
+LICENSE : MIT License
+"""
+
 import warnings
 import matplotlib.pyplot as plt
 import os

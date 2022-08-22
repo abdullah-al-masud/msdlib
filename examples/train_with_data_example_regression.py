@@ -1,3 +1,9 @@
+"""
+Author : Abdullah Al Masud\n
+email : abdullahalmasud.buet@gmail.com\n
+LICENSE : MIT License
+"""
+
 from sklearn.ensemble import RandomForestRegressor as RFR
 from sklearn.tree import DecisionTreeRegressor as DTR
 import pandas as pd

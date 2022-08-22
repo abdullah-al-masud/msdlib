@@ -19,5 +19,7 @@ Code testing:
 1. run pytest
     command: coverage run -m pytest tests/ --html=tests/test-report-<date>.html
 2. run coverage using command: coverage html
-3. run script run_examples.py and check for failed cases in stdout.
+3. run script utils/run_examples.py and check for failed cases in stdout.
+4. run script utils/update_readme.py to update code coverage badge in README files.
+
 

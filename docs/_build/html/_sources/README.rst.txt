@@ -11,6 +11,7 @@ msdlib
 .. image:: https://badge.fury.io/py/msdlib.svg
 .. image:: https://travis-ci.org/abdullah-al-masud/msdlib.svg?branch=master
 .. image:: https://readthedocs.org/projects/pip/badge/?version=latest
+.. image:: https://img.shields.io/badge/coverage-53%25-yellow
 =============================================================================
 
 .. image:: ../examples/plot_time_series_example/Combined_Time_Series_Plot.jpg

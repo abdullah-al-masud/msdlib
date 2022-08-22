@@ -161,7 +161,7 @@ class Filters():
         if save and savepath is not None:
             os.makedirs(savepath, exist_ok=True)
             fig.savefig('%s/%s.jpg'%(savepath, fig_title.replace(' ', '_')), bbox_inches='tight')
-            plt.close()
+        plt.close()
    
     def apply(self, sr, filt_type, f_cut, order=10, response=False, plot=False, f_lim=[], savepath=None, show=None, save=None):
         """
@@ -299,7 +299,7 @@ class Filters():
         if show is None: show = self.show
 
         title = '%s with %s filter with cut offs %s'%(y.name, filt_type, str(f_cut * (self.fs / 2)))
-        self.vis_spectrum(sr=y, f_lim=f_lim)
+        self.vis_spectrum(sr=y, f_lim=f_lim, show=show)
         fig, ax = plt.subplots(figsize=(30, 3))
         ax.set_title(title)
         ax.plot(y.index, y.values)
@@ -1145,12 +1145,14 @@ class SplitDataset():
     # ###############  CROSS_VALIDATION_SPLIT  ####################
     # this function is prepared to run cross validation using proper data and labels
 
-    def cross_validation_split(self, fold = 5):
+    def cross_validation_split(self, fold=5, only_index=False):
         """
         This method applies cross validation splitting.
 
         Inputs:
             :fold: int, number of folds being applied to the data, default is 5
+            :only_index: bool, whether to return only index or data, label, index all.
+                         Default is False meaning the function will return data, label and index for all folds.
         
         Outputs:
             :outdata: dict containing data, label and indices for train, validation and test data sets
@@ -1168,22 +1170,23 @@ class SplitDataset():
         for _set in ['train', 'validation', 'test']:
             outdata[_set] = {}
             for lb in ['data', 'label', 'index']:
-                if _set == 'test':
-                    outdata[_set][lb] = []
-                    for j in self.cls:
-                        outdata[_set][lb].append(self.dataset[lb][self.idx[j][sted[_set]['st'][j] : sted[_set]['ed'][j]]])
-                    outdata[_set][lb] = np.concatenate(outdata[_set][lb], axis = 0)
-                else:
-                    outdata[_set][lb] = {}
-                    for i in range(1, fold + 1):
-                        outdata[_set][lb]['fold_%d'%i] = []
+                if (lb == 'index') or (lb in ['data', 'label'] and not only_index):
+                    if _set == 'test':
+                        outdata[_set][lb] = []
                         for j in self.cls:
-                            if _set == 'validation':
-                                outdata[_set][lb]['fold_%d'%i].append(self.dataset[lb][self.idx[j][sted[_set]['st']['fold_%d'%i][j] : sted[_set]['ed']['fold_%d'%i][j]]])
-                            else:
-                                for k in range(2):
-                                    outdata[_set][lb]['fold_%d'%i].append(self.dataset[lb][self.idx[j][sted[_set]['st']['fold_%d'%i][j][k] : sted[_set]['ed']['fold_%d'%i][j][k]]])
-                        outdata[_set][lb]['fold_%d'%i] = np.concatenate(outdata[_set][lb]['fold_%d'%i], axis = 0)
+                            outdata[_set][lb].append(self.dataset[lb][self.idx[j][sted[_set]['st'][j] : sted[_set]['ed'][j]]])
+                        outdata[_set][lb] = np.concatenate(outdata[_set][lb], axis = 0)
+                    else:
+                        outdata[_set][lb] = {}
+                        for i in range(1, fold + 1):
+                            outdata[_set][lb]['fold_%d'%i] = []
+                            for j in self.cls:
+                                if _set == 'validation':
+                                    outdata[_set][lb]['fold_%d'%i].append(self.dataset[lb][self.idx[j][sted[_set]['st']['fold_%d'%i][j] : sted[_set]['ed']['fold_%d'%i][j]]])
+                                else:
+                                    for k in range(2):
+                                        outdata[_set][lb]['fold_%d'%i].append(self.dataset[lb][self.idx[j][sted[_set]['st']['fold_%d'%i][j][k] : sted[_set]['ed']['fold_%d'%i][j][k]]])
+                            outdata[_set][lb]['fold_%d'%i] = np.concatenate(outdata[_set][lb]['fold_%d'%i], axis = 0)
         return outdata
 
     # returns data, label and indices for train, validation and test data sets as pydict

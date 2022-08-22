@@ -69,4 +69,4 @@ models, predictions = mlutils.train_with_data(outdata, feature_names, models, fe
                                               figure_dir=savepath, model_type='binary-classifier', evaluate=True)
 
 assert predictions['RFC']['test']['score']['average'].loc['f1_score'] >= .98, 'RFC model test set f1-score is less than .98'
-assert predictions['pytorch-DNN']['test']['score']['average'].loc['f1_score'] >= .98, 'pytorch-DNN model test set f1-score is less than .98'
+assert predictions['pytorch-DNN']['test']['score']['average'].loc['f1_score'] >= .96, 'pytorch-DNN model test set f1-score is less than .96'

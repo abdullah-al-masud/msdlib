@@ -1,3 +1,8 @@
+"""
+Author : Abdullah Al Masud\n
+email : abdullahalmasud.buet@gmail.com\n
+LICENSE : MIT License
+"""
 
 import numpy as np
 import pandas as pd

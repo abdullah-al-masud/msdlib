@@ -1,7 +1,8 @@
-# Author : Abdullah Al Masud\n
-# email : abdullahalmasud.buet@gmail.com\n
-# LICENSE : MIT License
-
+"""
+Author : Abdullah Al Masud\n
+email : abdullahalmasud.buet@gmail.com\n
+LICENSE : MIT License
+"""
 
 # version definition
-__version__ = '1.1.4'
+__version__ = '1.1.5'

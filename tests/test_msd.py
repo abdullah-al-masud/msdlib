@@ -6,13 +6,11 @@ LICENSE : MIT License
 
 import os
 import sys
-project_dir = os.getcwd()
-sys.path.append(project_dir)
-
 import time
 import pickle
 from msdlib import msd
 import numpy as np
+import pandas as pd
 
 
 def test_sample():
@@ -100,3 +98,55 @@ def test_get_category_edges():
     categories = np.unique(sr)
     edges = msd.get_category_edges(sr, categories=categories, names=None)
     assert len(edges) == 4 and edges[0]['start'].iloc[0] == 20
+
+
+def test_grouped_mode():
+
+    data = pd.read_csv('tests/data/US_corn_futures_historical_data.csv')
+    data = data.set_index('Date').sort_index()
+    mode = msd.grouped_mode(data['Close'], bins=50)
+    
+    assert mode == 370.3675
+
+
+def test_feature_evaluator():
+    data = pd.read_csv('tests/data/US_corn_futures_historical_data.csv')
+    data['Date'] = pd.to_datetime(data['Date'])
+    data = data.set_index('Date').sort_index().drop(['Percentage_change', 'Volume'], axis=1)
+    data = data.astype(float)
+
+    result = msd.feature_evaluator(data, label_name=['Close'], label_type_num=[True], n_bin=40, is_all_num=True, show=False)
+
+    assert result['Numerical label']['Close_numerics'].iloc[0].idxmax() == 'Low'
+    assert result['Numerical label']['Close_numerics']['Low'].iloc[0].round(2) == round(20.852355, 2)
+
+
+def test_Filters():
+
+    data = pd.read_csv('tests/data/US_corn_futures_historical_data.csv')
+    data['Date'] = pd.to_datetime(data['Date'])
+    data = data.set_index('Date').sort_index().drop(['Percentage_change', 'Volume'], axis=1)
+    data = data.astype(float)
+
+    sr = data['Close'].copy()
+    filt_type = 'lp'
+    f_cut = .01
+    f_lim = [0, .03]
+    show = False
+
+    filt = msd.Filters(T=1)
+    filt.vis_spectrum(sr, f_lim=f_lim, show=show)
+    filt.plot_filter(sr, filt_type=filt_type, f_cut=f_cut, f_lim=f_lim, show=show)
+    filt.apply(sr, filt_type, f_cut, order=10, response=True, plot=True, f_lim=f_lim, show=show)
+    
+    assert True
+
+
+def test_moving_slope():
+
+    data = pd.read_csv('tests/data/US_corn_futures_historical_data.csv')
+    data['Date'] = pd.to_datetime(data['Date'])
+    data = data.set_index('Date').sort_index()
+    data['slope_Close'] = msd.moving_slope(data[['Close']], win=10, fs='1D')
+
+    assert data['slope_Close'].min() < -20

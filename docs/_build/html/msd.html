@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>msd &mdash; msdlib 1.1.4 documentation</title>
+  <title>msd &mdash; msdlib 1.1.5 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -406,12 +406,16 @@ Additionally it allows sequence splitting, necessary to model time series data u
 
 <dl class="py method">
 <dt class="sig sig-object py" id="msdlib.msd.SplitDataset.cross_validation_split">
-<span class="sig-name descname"><span class="pre">cross_validation_split</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msdlib.msd.SplitDataset.cross_validation_split" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">cross_validation_split</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">only_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msdlib.msd.SplitDataset.cross_validation_split" title="Permalink to this definition"></a></dt>
 <dd><p>This method applies cross validation splitting.</p>
 <dl class="simple">
 <dt>Inputs:</dt><dd><dl class="field-list simple">
 <dt class="field-odd">fold</dt>
 <dd class="field-odd"><p>int, number of folds being applied to the data, default is 5</p>
+</dd>
+<dt class="field-even">only_index</dt>
+<dd class="field-even"><p>bool, whether to return only index or data, label, index all.
+Default is False meaning the function will return data, label and index for all folds.</p>
 </dd>
 </dl>
 </dd>
