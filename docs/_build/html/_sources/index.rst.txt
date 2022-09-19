@@ -32,19 +32,37 @@ msdlib provides supports to different types of things altogether. Some of the co
 msdlib documentation
 =====================
 
-Get started from this `page <README.html>`_
+Get started from this `page <README.html>`__
 
 .. toctree::
-   :maxdepth: 3
-   :caption: Contents:
+   :maxdepth: 1
+   :caption: Intro
 
    README
-   msd
-   mlutils
-   msdbacktest
-   dataset
-   msdExceptions
-   stats
+
+
+.. toctree::
+   :glob:
+   :maxdepth: 1
+   :caption: msd
+
+   msd/*
+
+
+.. toctree::
+   :glob:
+   :maxdepth: 1
+   :caption: mlutils
+
+   mlutils/*
+
+
+.. toctree::
+   :glob:
+   :maxdepth: 1
+   :caption: others
+
+   others/*
 
 
 Indices and tables
