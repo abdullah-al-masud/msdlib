@@ -31,3 +31,9 @@ This module provides many useful functions and classes to ease works for a data 
    :members:
    :undoc-members:
    :show-inheritance:
+
+.. toctree::
+   :maxdepth: 2
+
+   msd.vis
+   msd.processing

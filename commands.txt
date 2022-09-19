@@ -1,3 +1,9 @@
+**** Update README before pushing or updating the version ***
+
+1. Be in project directory in the command line.
+2. command: python utils/update_readme.py
+
+
 pypi build and upload commands
 
 1. python setup.py sdist bdist_wheel
@@ -5,6 +11,7 @@ pypi build and upload commands
 
 
 Documentation generation instructions:
+
 1. make necessary changes
 2. go to docs
 3. type: make html
@@ -16,10 +23,17 @@ done!!
 
 
 Code testing:
+
 1. run pytest
     command: coverage run -m pytest tests/ --html=tests/test-report-<date>.html
 2. run coverage using command: coverage html
 3. run script utils/run_examples.py and check for failed cases in stdout.
 4. run script utils/update_readme.py to update code coverage badge in README files.
+
+
+Running example files through one command:
+
+1. Be in project directory in the command line.
+2. command: python utils/run_examples.py
 
 

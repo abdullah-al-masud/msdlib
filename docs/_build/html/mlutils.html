@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>mlutils &mdash; msdlib 1.1.5 documentation</title>
+  <title>mlutils &mdash; msdlib 1.1.6 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -19,8 +19,8 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="msdbacktest" href="msdbacktest.html" />
-    <link rel="prev" title="msd" href="msd.html" /> 
+    <link rel="next" title="mlutils.modeling" href="mlutils.modeling.html" />
+    <link rel="prev" title="msd.processing" href="msd.processing.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -42,7 +42,11 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="README.html">msdlib</a></li>
 <li class="toctree-l1"><a class="reference internal" href="msd.html">msd</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">mlutils</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">mlutils</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="mlutils.modeling.html">mlutils.modeling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mlutils.utils.html">mlutils.utils</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="msdbacktest.html">msdbacktest</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dataset.html">dataset</a></li>
 <li class="toctree-l1"><a class="reference internal" href="msdExceptions.html">msdExceptions</a></li>
@@ -400,7 +404,7 @@ For pytorch models, the key must contain ‘pytorch’ phrase (Case insensitive)
 
 <dl class="py class">
 <dt class="sig sig-object py" id="msdlib.mlutils.torchModel">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">msdlib.mlutils.</span></span><span class="sig-name descname"><span class="pre">torchModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss_func</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimizer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">learning_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epoch</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lr_reduce</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss_reduction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'regressor'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_gpu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gpu_devices</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pytorch'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">torch.float32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_loss</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quant_perc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.98</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_evaluation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss_roll_period</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">savepath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shuffle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lr_scheduler</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tensorboard_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tb_metrics</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interval</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msdlib.mlutils.torchModel" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">msdlib.mlutils.</span></span><span class="sig-name descname"><span class="pre">torchModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss_func</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimizer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">learning_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epoch</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lr_reduce</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss_reduction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'regressor'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_gpu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gpu_devices</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pytorch'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">torch.float32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_loss</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quant_perc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.98</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss_roll_period</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">savepath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shuffle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lr_scheduler</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tensorboard_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tb_metrics</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interval</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msdlib.mlutils.torchModel" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>This class controls the deep neural network model training, inference, prediction and evaluation.
 It can provide the training loss curves and evaluation results very nicely. It is capable of using multiple GPUs.</p>
@@ -426,7 +430,8 @@ For Sigmoid function, we can use torch.nn.Sigmoid() or torch.sigmoid (use the br
 <dd class="field-odd"><p>number of epoch for training, default is 2</p>
 </dd>
 <dt class="field-even">batch_size</dt>
-<dd class="field-even"><p>mini-batch size for trianing, default is 32</p>
+<dd class="field-even"><p>int or None, mini-batch size for training, default is 32.
+Batch size is neglected while utilizing torch dataloader object for training and prediction.</p>
 </dd>
 <dt class="field-odd">lr_reduce</dt>
 <dd class="field-odd"><p>learning rate reduction base for lambda reduction scheduler from pytorch (follows torch.optim.lr_scheduler.LambdaLR). 
@@ -460,34 +465,29 @@ It can also be used to select a particular GPU device. For example to use GPU de
 <dt class="field-odd">quant_perc</dt>
 <dd class="field-odd"><p>float, quantile value to limit the loss values for loss curves, default is .98</p>
 </dd>
-<dt class="field-even">plot_evaluation</dt>
-<dd class="field-even"><p>bool, whether to plot evaluation tables/figures or not, default is True
-- For model_type={binary-classifier, multi-classifier}, it will be score matrix and confusion matrix plot
-- For model_type=regressor, it will be a true vs prediction scatter plot</p>
+<dt class="field-even">loss_roll_preiod</dt>
+<dd class="field-even"><p>int, rolling/moving average period for loss curve</p>
 </dd>
-<dt class="field-odd">loss_roll_preiod</dt>
-<dd class="field-odd"><p>int, rolling/moving average period for loss curve</p>
+<dt class="field-odd">model</dt>
+<dd class="field-odd"><p>torch.nn.Module class (ML model class), so that we are able to write the model ourselves and use fit, predict etc methods from here.</p>
 </dd>
-<dt class="field-even">model</dt>
-<dd class="field-even"><p>torch.nn.Module class (ML model class), so that we are able to write the model ourselves and use fit, predict etc methods from here.</p>
+<dt class="field-even">savepath</dt>
+<dd class="field-even"><p>str, path to store the learning curve and evaluation results</p>
 </dd>
-<dt class="field-odd">savepath</dt>
-<dd class="field-odd"><p>str, path to store the learning curve and evaluation results</p>
+<dt class="field-odd">shuffle</dt>
+<dd class="field-odd"><p>bool, whether the training dataset should be shuffled during training or not. Default is True (data set will be shuffles).</p>
 </dd>
-<dt class="field-even">shuffle</dt>
-<dd class="field-even"><p>bool, whether the training dataset should be shuffled during training or not. Default is True (data set will be shuffles).</p>
-</dd>
-<dt class="field-odd">tensorboard_path</dt>
-<dd class="field-odd"><p>str or None, tensorboard will show the progress of training using loss values and training metrics.
+<dt class="field-even">tensorboard_path</dt>
+<dd class="field-even"><p>str or None, tensorboard will show the progress of training using loss values and training metrics.
 - If model_type is ‘regressor’, metrics will be rmse, rsquare
 - If model_type is ‘binary-classifier’ or ‘multi-classifier’, metrics will be ‘accuracy’</p>
 </dd>
-<dt class="field-even">tb_metrics</dt>
-<dd class="field-even"><p>None or list of functions. Each function will take two inputs, first is true labels and second is predicted values.
+<dt class="field-odd">tb_metrics</dt>
+<dd class="field-odd"><p>None or list of functions. Each function will take two inputs, first is true labels and second is predicted values.
 If None, the metrics will be selected based on model type according to the description of parameter ‘tensorboard_path’.</p>
 </dd>
-<dt class="field-odd">interval</dt>
-<dd class="field-odd"><p>int or None, indicates number of epoch after which the model weights will be stored each time during training.
+<dt class="field-even">interval</dt>
+<dd class="field-even"><p>int or None, indicates number of epoch after which the model weights will be stored each time during training.
 Default is None means model will not be stored during training. Note: “model_name” parameter must include ‘pytorch’ phrase in it.</p>
 </dd>
 </dl>
@@ -524,15 +524,17 @@ Default is None means model will not be stored during training. Note: “model_n
 
 <dl class="py method">
 <dt class="sig sig-object py" id="msdlib.mlutils.torchModel.evaluate">
-<span class="sig-name descname"><span class="pre">evaluate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_sets</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_sets</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">set_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(18,</span> <span class="pre">4)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">savepath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msdlib.mlutils.torchModel.evaluate" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">evaluate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_sets</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_sets</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">set_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(18,</span> <span class="pre">4)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">savepath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msdlib.mlutils.torchModel.evaluate" title="Permalink to this definition"></a></dt>
 <dd><p>This is a customized function to evaluate model performance in regression and classification type tasks</p>
 <dl class="simple">
 <dt>Inputs:</dt><dd><dl class="field-list simple">
 <dt class="field-odd">data_sets</dt>
-<dd class="field-odd"><p>list of data, data must be numpy ndarray, torch tensor or Pandas DataFrame/Series</p>
+<dd class="field-odd"><p>list of data, data can be pytorch dataloader object, numpy ndarray, torch tensor or Pandas DataFrame/Series.
+If its a list of dataloaders, the dataloader must return data and label as pair through __getitem__().</p>
 </dd>
 <dt class="field-even">label_sets</dt>
-<dd class="field-even"><p>list of labels corresponding to each data, label must be numpy ndarray, torch tensor or Pandas DataFrame/Series</p>
+<dd class="field-even"><p>list of labels corresponding to each data, label must be numpy ndarray, torch tensor or Pandas DataFrame/Series.
+Default is None. While using data-loader for ‘data_sets’ argument, label_sets doesnt have any effect.</p>
 </dd>
 <dt class="field-odd">set_names</dt>
 <dd class="field-odd"><p>names of the data sets, default is []</p>
@@ -541,7 +543,8 @@ Default is None means model will not be stored during training. Note: “model_n
 <dd class="field-even"><p>figure size for the evaluation plots, default is (18, 4)</p>
 </dd>
 <dt class="field-odd">savepath</dt>
-<dd class="field-odd"><p>path where the evaluation tables/figures will be stored, default is None</p>
+<dd class="field-odd"><p>path where the evaluation tables/figures will be stored.
+Default is None (by default, if this path is None, savepath will be replaced by torchModel.savepath)</p>
 </dd>
 </dl>
 </dd>
@@ -729,14 +732,20 @@ If its a torchModel object, the key must contain ‘pytorch’ in it.</p>
 </dl>
 </dd></dl>
 
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="mlutils.modeling.html">mlutils.modeling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mlutils.utils.html">mlutils.utils</a></li>
+</ul>
+</div>
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="msd.html" class="btn btn-neutral float-left" title="msd" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="msdbacktest.html" class="btn btn-neutral float-right" title="msdbacktest" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="msd.processing.html" class="btn btn-neutral float-left" title="msd.processing" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="mlutils.modeling.html" class="btn btn-neutral float-right" title="mlutils.modeling" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

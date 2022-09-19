@@ -168,6 +168,8 @@ It can show the results using bar plot and can handle classification and regress
 class_result: 
 </h4>
 
+![](examples/multiclass-classification_torchModel/Classification_result_for_Test_from_pytorch.png)<br>
+
 This function calculates classification model evaluation parameters like precision, recall, accuracy, f1 score, specificity etc. and also able to show confusion matrix as a pandas dataframe. Example can be found [here](examples/class_result_example.py).
 <br><br>
 
@@ -175,6 +177,8 @@ This function calculates classification model evaluation parameters like precisi
 <h4>
 rsquare_rmse: 
 </h4>
+
+![](examples/regression_torchModel/True-Label_VS_Prediction_Scatter_plot_for_Test_from_pytorch.png)<br>
 
 This function calculates r square value and root mean square error.
 <br><br>

@@ -11,3 +11,9 @@ It can also enable us to build Deep Neural Network models easily with some other
    :members:
    :undoc-members:
    :show-inheritance:
+
+.. toctree::
+   :maxdepth: 2
+
+   mlutils.modeling
+   mlutils.utils

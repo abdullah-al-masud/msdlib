@@ -4,10 +4,15 @@ email : abdullahalmasud.buet@gmail.com\n
 LICENSE : MIT License
 """
 
+import warnings
+try:
+    import torch
+    from torch import nn
+    from torch.utils.tensorboard import SummaryWriter
+except exception as e:
+    print(e)
+    warnings.warn('skipping pytorch importation... If you wish to use pytorch, please install it correctly. If not, please ignore this warning')
 
-import torch
-from torch import nn
-from torch.utils.tensorboard import SummaryWriter
 import pandas as pd
 import matplotlib.pyplot as plt
 from ..msd import (
@@ -146,7 +151,8 @@ class torchModel():
         :optimizer: optimizer for the ML model. default is torch.optim.Adam
         :learning_rate: learning rate of the training steps, default is .0001
         :epoch: number of epoch for training, default is 2
-        :batch_size: mini-batch size for trianing, default is 32
+        :batch_size: int or None, mini-batch size for training, default is 32.
+                    Batch size is neglected while utilizing torch dataloader object for training and prediction.
         :lr_reduce: learning rate reduction base for lambda reduction scheduler from pytorch (follows torch.optim.lr_scheduler.LambdaLR). 
                     Must be 0 ~ 1. Default is 1 (No reduction of learning rate during training)
         :loss_reduction: loss reduction parameter for loss calculation, default is 'mean'
@@ -161,9 +167,6 @@ class torchModel():
         :dtype: dtype of processing inside the model, default is torch.float32
         :plot_loss: bool, whether to plot loss curves after training or not, default is True
         :quant_perc: float, quantile value to limit the loss values for loss curves, default is .98
-        :plot_evaluation: bool, whether to plot evaluation tables/figures or not, default is True
-                        - For model_type={binary-classifier, multi-classifier}, it will be score matrix and confusion matrix plot
-                        - For model_type=regressor, it will be a true vs prediction scatter plot
         :loss_roll_preiod: int, rolling/moving average period for loss curve
         :model: torch.nn.Module class (ML model class), so that we are able to write the model ourselves and use fit, predict etc methods from here.  
         :savepath: str, path to store the learning curve and evaluation results
@@ -179,7 +182,7 @@ class torchModel():
 
     def __init__(self, layers=[], loss_func=None, optimizer=None, learning_rate=.0001, epoch=2, batch_size=32, lr_reduce=1,
                  loss_reduction='mean', model_type='regressor', use_gpu=True, gpu_devices=None, model_name='pytorch', dtype=torch.float32,
-                 plot_loss=True, quant_perc=.98, plot_evaluation=True, loss_roll_period=1, model=None, savepath=None, shuffle=True, lr_scheduler=None,
+                 plot_loss=True, quant_perc=.98, loss_roll_period=1, model=None, savepath=None, shuffle=True, lr_scheduler=None,
                  tensorboard_path=None, tb_metrics=None, interval=None, **kwargs):
 
         # defining model architecture
@@ -205,7 +208,6 @@ class torchModel():
         # evaluation parameters
         self.plot_loss = plot_loss
         self.quant_perc = quant_perc
-        self.plot_evaluation = plot_evaluation
         self.loss_roll_period = loss_roll_period
         self.tb = None
         if tensorboard_path is not None:
@@ -452,51 +454,66 @@ class torchModel():
             
             return preds
 
-    def evaluate(self, data_sets, label_sets, set_names=[], figsize=(18, 4), savepath=None):
+    def evaluate(self, data_sets, label_sets=None, set_names=[], figsize=(18, 4), savepath=None):
         """
         This is a customized function to evaluate model performance in regression and classification type tasks
 
         Inputs:
-            :data_sets: list of data, data must be numpy ndarray, torch tensor or Pandas DataFrame/Series
-            :label_sets: list of labels corresponding to each data, label must be numpy ndarray, torch tensor or Pandas DataFrame/Series
+            :data_sets: list of data, data can be pytorch dataloader object, numpy ndarray, torch tensor or Pandas DataFrame/Series.
+                        If its a list of dataloaders, the dataloader must return data and label as pair through __getitem__().
+            :label_sets: list of labels corresponding to each data, label must be numpy ndarray, torch tensor or Pandas DataFrame/Series.
+                        Default is None. While using data-loader for 'data_sets' argument, label_sets doesnt have any effect.
             :set_names: names of the data sets, default is []
             :figsize: figure size for the evaluation plots, default is (18, 4)
-            :savepath: path where the evaluation tables/figures will be stored, default is None
+            :savepath: path where the evaluation tables/figures will be stored.
+                        Default is None (by default, if this path is None, savepath will be replaced by torchModel.savepath)
 
         Outputs:
             :summary_result: pandas DataFrame, result summary accumulated in a variable
             :all_results: dict, complete results for all datasets
         """
 
+        if len(data_sets) > 0:
+            if not isinstance(data_sets[0], torch.utils.data.dataloader.DataLoader):
+                if label_sets is None:
+                    raise ValueError('label_sets argument are necessary to run evaluation unless data_sets argument contains dataloader objects.')
+
+        if savepath is None:
+            if self.savepath is not None:
+                savepath = self.savepath
+
         results, all_results = None, None
         # plotting true vs prediction curve (regression) or confusion matrix (classification)
-        if self.plot_evaluation and self.model_type.lower() in ['regressor', 'binary-classifier', 'multi-classifier'] and len(data_sets) > 0:
-            set_names = set_names if len(set_names) > 0 else [
-                'data-%d' % (i+1) for i in range(len(data_sets))]
+        if self.model_type.lower() in ['regressor', 'binary-classifier', 'multi-classifier'] and len(data_sets) > 0:
+            label_sets = label_sets if label_sets is not None else [None for _ in range(len(data_sets))]
+            set_names = set_names if len(set_names) > 0 else ['data-%d' % (i+1) for i in range(len(data_sets))]
             all_results = {}
             results = []
             for i, (preddata, predlabel) in enumerate(zip(data_sets, label_sets)):
-                test_pred = self.predict(
-                    preddata).detach().cpu().squeeze().numpy()
-                if isinstance(predlabel, torch.Tensor):
-                    label = predlabel.detach().cpu().squeeze().numpy()
-                elif isinstance(predlabel, pd.DataFrame) or isinstance(predlabel, pd.Series):
-                    label = predlabel.values.copy()
+                if isinstance(preddata, torch.utils.data.dataloader.DataLoader):
+                    test_pred, predlabel = self.predict(preddata, return_label=True)
+                    test_pred = test_pred.detach().cpu().squeeze().numpy()
+                    if isinstance(predlabel, torch.Tensor):
+                        label = predlabel.detach().cpu().squeeze().numpy()
+                    else:
+                        label = predlabel.copy()
                 else:
-                    label = predlabel.copy()
+                    test_pred = self.predict(preddata).detach().cpu().squeeze().numpy()
+                    if isinstance(predlabel, torch.Tensor):
+                        label = predlabel.detach().cpu().squeeze().numpy()
+                    elif isinstance(predlabel, pd.DataFrame) or isinstance(predlabel, pd.Series):
+                        label = predlabel.values.copy()
+                    else:
+                        label = predlabel.copy()
+
                 if self.model_type.lower() == 'regressor':
-                    true_pred = pd.DataFrame([label, test_pred], index=[
-                                             'true_label', 'prediction']).T
+                    true_pred = pd.DataFrame([label, test_pred], index=['true_label', 'prediction']).T
                     corr_val = true_pred.corr().iloc[0, 1]
-                    rsquare, rmse = rsquare_rmse(
-                        true_pred['true_label'].values, true_pred['prediction'].values)
+                    rsquare, rmse = rsquare_rmse(true_pred['true_label'].values, true_pred['prediction'].values)
                     fig, ax = plt.subplots(figsize=figsize)
-                    ax.scatter(
-                        true_pred['true_label'], true_pred['prediction'], color='darkcyan', s=8)
-                    _min = np.min([true_pred['true_label'].min(),
-                                  true_pred['prediction'].min()])
-                    _max = np.max([true_pred['true_label'].max(),
-                                  true_pred['prediction'].max()])
+                    ax.scatter(true_pred['true_label'], true_pred['prediction'], color='darkcyan', s=8)
+                    _min = np.min([true_pred['true_label'].min(), true_pred['prediction'].min()])
+                    _max = np.max([true_pred['true_label'].max(), true_pred['prediction'].max()])
                     ax.plot([_min, _max], [_min, _max], color='k', lw=2)
                     ax.set_xlabel('true-label')
                     ax.set_ylabel('prediction')
@@ -504,31 +521,31 @@ class torchModel():
                         set_names[i], self.model_name, rsquare, rmse, corr_val)
                     ax.set_title(title, fontweight='bold')
                     all_results[set_names[i]] = [rsquare, rmse]
-                    results.append(pd.Series([rsquare, rmse], index=[
-                                   'r_square', 'rmse'], name='%s_%s' % (self.model_name, set_names[i])))
+                    results.append(pd.Series([rsquare, rmse], index=['r_square', 'rmse'], 
+                                             name='%s_%s' % (self.model_name, set_names[i])))
+
                 elif self.model_type.lower() in ['multi-classifier', 'binary-classifier']:
                     if self.model_type.lower() == 'multi-classifier':
                         test_pred = np.argmax(test_pred, axis=1)
                     else:
                         test_pred = np.round(test_pred).astype(int)
-                    result, confus = class_result(
-                        label, test_pred, out_confus=True)
+                    result, confus = class_result(label, test_pred, out_confus=True)
                     fig, ax = plt.subplots(figsize=figsize, ncols=2)
                     ax[0] = plot_heatmap(result, annotate=True, fmt='.3f', xrot=0,
-                                             vmax=1, axobj=ax[0], cmap='summer', fig_title='Score Matrix')
-                    ax[1] = plot_heatmap(
-                        confus, annotate=True, fmt='d', xrot=0, axobj=ax[1], cmap='Blues', fig_title='Confusion Matrix')
-                    title = 'Classification result for %s from %s' % (
-                        set_names[i], self.model_name)
+                                         vmax=1, axobj=ax[0], cmap='summer', fig_title='Score Matrix')
+                    ax[1] = plot_heatmap(confus, annotate=True, fmt='d', xrot=0, axobj=ax[1],
+                                         cmap='Blues', fig_title='Confusion Matrix')
+                    title = 'Classification result for %s from %s' % (set_names[i], self.model_name)
                     fig.suptitle(title, fontsize=15, fontweight='bold')
                     all_results[set_names[i]] = [result, confus]
-                    results.append(pd.Series(result.mean().drop('average').to_list() + [result['average'].loc['accuracy']], index=result.drop('average', axis=1).columns.to_list() + ['average'],
+                    results.append(pd.Series(result.mean().drop('average').to_list() + [result['average'].loc['accuracy']],
+                                             index=result.drop('average', axis=1).columns.to_list() + ['average'],
                                              name='%s_%s' % (self.model_name, set_names[i])))
+
                 fig.tight_layout()
                 if savepath is not None:
                     os.makedirs(savepath, exist_ok=True)
-                    fig.savefig(
-                        '%s/%s.png' % (savepath, title.split('\n')[0].replace(' ', '_')), bbox_inches='tight')
+                    fig.savefig('%s/%s.png' % (savepath, title.split('\n')[0].replace(' ', '_')), bbox_inches='tight')
                     plt.close()
                 else:
                     plt.show()

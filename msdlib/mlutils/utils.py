@@ -5,8 +5,14 @@ LICENSE : MIT License
 """
 
 
-import torch
-from torch import nn
+import warnings
+try:
+    import torch
+    from torch import nn
+except exception as e:
+    print(e)
+    warnings.warn('skipping pytorch importation... If you wish to use pytorch, please install it correctly. If not, please ignore this warning')
+
 import pandas as pd
 import matplotlib.pyplot as plt
 from ..msd import (

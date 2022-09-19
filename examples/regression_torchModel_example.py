@@ -49,9 +49,11 @@ tmodel = mlutils.torchModel(layers=layers, model_type='regressor', tensorboard_p
 
 # Training Pytorch model
 train_set = mlutils.DataSet(torch.tensor(outdata['train']['data']), torch.tensor(outdata['train']['label']).squeeze(), dtype=torch.float32)
-val_set = mlutils.DataSet(torch.tensor(outdata['validation']['data']), torch.tensor(outdata['validation']['label']).squeeze(), dtype=torch.float32) 
+val_set = mlutils.DataSet(torch.tensor(outdata['validation']['data']), torch.tensor(outdata['validation']['label']).squeeze(), dtype=torch.float32)
+test_set = mlutils.DataSet(torch.tensor(outdata['test']['data']), torch.tensor(outdata['test']['label']).squeeze(), dtype=torch.float32)
 train_loader = torch.utils.data.DataLoader(train_set, batch_size=128)
 val_loader = torch.utils.data.DataLoader(val_set, batch_size=128)
+test_loader = torch.utils.data.DataLoader(test_set, batch_size=128)
 
 tmodel.fit(train_loader=train_loader, val_loader=val_loader)
 
@@ -65,6 +67,10 @@ result, all_results = tmodel.evaluate(data_sets=[outdata['train']['data'], outda
                                       label_sets=[outdata['train']['label'].ravel(
                                       ), outdata['test']['label'].ravel()],
                                       set_names=['Train', 'Test'], savepath='examples/regression_torchModel')
+
+result, all_results = tmodel.evaluate(data_sets=[train_loader, val_loader, test_loader],
+                                      set_names=['Train', 'Validation', 'Test'],
+                                      savepath='examples/regression_torchModel')
 
 print('regression result:\n', result)
 

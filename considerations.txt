@@ -1,4 +1,9 @@
 Things to to-
 
+- adding data loader utilization for evaluate function in torchModel (done)
+- Batch size isnt necessary when using dataloader for torchModel (done)
+- Documentation needs to be fixed (done)
+- importation of pytorch should not be mandatory where only helper functions are to be used with other models (done)
+- replace DataParallel with DistributedDataParallel for parallelization
 - adding more test cases for better code coverage
 - adding more example scripts for making sure that functions are working properly
