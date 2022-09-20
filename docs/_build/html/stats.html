@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>stats &mdash; msdlib 1.1.6 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="msdExceptions" href="msdExceptions.html" />
+    <link rel="prev" title="msdbacktest" href="msdbacktest.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> msdlib
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Intro</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="README.html">msdlib</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">msd</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="msd.html">msd</a></li>
+<li class="toctree-l1"><a class="reference internal" href="msd.processing.html">msd.processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="msd.vis.html">msd.vis</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">mlutils</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="mlutils.html">mlutils.mlutils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mlutils.modeling.html">mlutils.modeling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mlutils.utils.html">utils</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">others</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="dataset.html">dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="msdbacktest.html">msdbacktest</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">stats</a></li>
+<li class="toctree-l1"><a class="reference internal" href="msdExceptions.html">msdExceptions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">msdlib</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>stats</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/stats.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="stats">
+<h1>stats<a class="headerlink" href="#stats" title="Permalink to this heading"></a></h1>
+<p>This module is intended to use for statistical computations such as calculating likelihoods and probabilities etc. related to data science and machine learning.</p>
+<span class="target" id="module-msdlib.stats"></span><p>Author : Abdullah Al Masud</p>
+<p>email : <a class="reference external" href="mailto:abdullahalmasud&#46;buet&#37;&#52;&#48;gmail&#46;com">abdullahalmasud<span>&#46;</span>buet<span>&#64;</span>gmail<span>&#46;</span>com</a></p>
+<p>LICENSE : MIT License</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="msdlib.stats.likelihood_for_categorics">
+<span class="sig-prename descclassname"><span class="pre">msdlib.stats.</span></span><span class="sig-name descname"><span class="pre">likelihood_for_categorics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uniques</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msdlib.stats.likelihood_for_categorics" title="Permalink to this definition"></a></dt>
+<dd><p>This function calculates likelihood for variable x for each categorical value in it.</p>
+<p>Here, x is Discrete Random Variable.
+For example, we get x from Titanic Dataset for gender variable if we take gender values of Class Survived=1 (so, subset of all gender values). So, this function will provide likelihood of Class Survived=1 (people who survived) for gender variable.</p>
+<p>If x doesnt contain all possible values of this variable, then we must provide all possible values in uniques variable.</p>
+<dl class="simple">
+<dt>Inputs:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">x</dt>
+<dd class="field-odd"><p>Pandas Series or numpy 1-D array, contains discrete random variable for a particular class.</p>
+</dd>
+<dt class="field-even">uniques</dt>
+<dd class="field-even"><p>list, pandas Series or numpy array, containing all possible values of broader/parent set of x. Default if None which assumes that x contains all possible values of parent set.</p>
+</dd>
+</dl>
+</dd>
+<dt>Outputs:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">probs</dt>
+<dd class="field-odd"><p>pandas Series, it contains likelihood estimations of x for each discrete value. The indices of probs show discrete values of x.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="msdlib.stats.likelihood_for_numerics">
+<span class="sig-prename descclassname"><span class="pre">msdlib.stats.</span></span><span class="sig-name descname"><span class="pre">likelihood_for_numerics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msdlib.stats.likelihood_for_numerics" title="Permalink to this definition"></a></dt>
+<dd><p>This function converts continues distribution into discrete distribution and calculates likelihood for each distribution bin.</p>
+<p>Here, x is Continuous Random Variable.
+For example, we get x from Iris Dataset for petal length variable if we take petal lengths of Class ‘Setosa’. So, this function will provide likelihood of ‘Setosa’ for Petal length.</p>
+<p>If the minimum and maximum values of complete distrubition (all petal lengths) is out of bound of the distribution of x, then _min and _max must be provided.</p>
+<dl class="simple">
+<dt>Inputs:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">x</dt>
+<dd class="field-odd"><p>Pandas Series or numpy 1-D array, contains random variable for a particular class.</p>
+</dd>
+<dt class="field-even">_min</dt>
+<dd class="field-even"><p>float, minimum value of the whole distribution where all classes are included. Default is None which assumes the minimum value is minimum of x.</p>
+</dd>
+<dt class="field-odd">_max</dt>
+<dd class="field-odd"><p>float, maximum value of the whole distribution where all classes are included. Default is None which assumes the maximum value is maximum of x.</p>
+</dd>
+<dt class="field-even">bins</dt>
+<dd class="field-even"><p>int, number of distribution bins, used to convert continuous distribution into discrete distribution. Default is 100.</p>
+</dd>
+</dl>
+</dd>
+<dt>Outputs:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">probs</dt>
+<dd class="field-odd"><p>pandas Series, it contains likelihood estimations of x for each bin. The indices of probs show the upper range/cut of each bin.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="msdbacktest.html" class="btn btn-neutral float-left" title="msdbacktest" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="msdExceptions.html" class="btn btn-neutral float-right" title="msdExceptions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Abdullah Al Masud.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -46,7 +46,9 @@ Get started from this `page <README.html>`__
    :maxdepth: 1
    :caption: msd
 
-   msd/*
+   msd
+   msd.processing
+   msd.vis
 
 
 .. toctree::
@@ -54,7 +56,9 @@ Get started from this `page <README.html>`__
    :maxdepth: 1
    :caption: mlutils
 
-   mlutils/*
+   mlutils
+   mlutils.modeling
+   mlutils.utils
 
 
 .. toctree::
@@ -62,7 +66,10 @@ Get started from this `page <README.html>`__
    :maxdepth: 1
    :caption: others
 
-   others/*
+   dataset
+   msdbacktest
+   stats
+   msdExceptions
 
 
 Indices and tables
