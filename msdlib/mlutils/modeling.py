@@ -9,7 +9,7 @@ try:
     import torch
     from torch import nn
     from torch.utils.tensorboard import SummaryWriter
-except exception as e:
+except Exception as e:
     print(e)
     warnings.warn('skipping pytorch importation... If you wish to use pytorch, please install it correctly. If not, please ignore this warning')
 
