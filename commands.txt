@@ -1,14 +1,13 @@
-**** Update README before pushing or updating the version ***
+-------------------------------------------------
+||   Steps to follow after updating the code   ||
+-------------------------------------------------
 
-1. Be in project directory in the command line.
-2. command: python utils/update_readme.py
+Step-1:
+
+Do not forget to update the version number inside msdlib/__init__.py
 
 
-pypi build and upload commands
-
-1. python setup.py sdist bdist_wheel
-2. python -m twine upload --repository pypi dist/*
-
+Step-2:
 
 Documentation generation instructions:
 
@@ -22,18 +21,41 @@ Documentation generation instructions:
 done!!
 
 
+Step-3:
+
 Code testing:
 
 1. run pytest
     command: coverage run -m pytest tests/ --html=tests/test-report-<date>.html
 2. run coverage using command: coverage html
-3. run script utils/run_examples.py and check for failed cases in stdout.
-4. run script utils/update_readme.py to update code coverage badge in README files.
 
+
+Step-4:
+
+Update README before pushing or updating on pypi
+
+1. Be in project directory in the command line.
+2. command: python utils/update_readme.py
+
+
+Step-5:
 
 Running example files through one command:
 
 1. Be in project directory in the command line.
 2. command: python utils/run_examples.py
+
+
+Step-6:
+
+Check git diff for each updated file, Commit and Push to github
+
+
+Step-7:
+
+pypi build and upload commands
+
+1. python setup.py sdist bdist_wheel
+2. python -m twine upload --repository pypi dist/*
 
 

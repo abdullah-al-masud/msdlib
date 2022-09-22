@@ -10,7 +10,6 @@ try:
     import torch
     from torch import nn
 except Exception as e:
-    print(e)
     warnings.warn('skipping pytorch importation... If you wish to use pytorch, please install it correctly. If not, please ignore this warning')
 
 import pandas as pd
@@ -28,49 +27,52 @@ import joblib
 plt.rcParams['figure.facecolor'] = 'white'
 
 
-class DataSet(torch.utils.data.Dataset):
-    """
-    This is a customized Data set object which can build a torch.utils.data.Dataset object given the data and labels. 
-    This is only usable when we have complete data and labels (data and label lengths must be equal)
+try:
+    class DataSet(torch.utils.data.Dataset):
+        """
+        This is a customized Data set object which can build a torch.utils.data.Dataset object given the data and labels. 
+        This is only usable when we have complete data and labels (data and label lengths must be equal)
 
-    Inputs:
-        :data: ideally should be torch tensor. Contains feature data tor model training.
-               Can be python list or python set too but not much appreciated as it will be mostly used for training pytorch model.
-        :label: ideally should be numpy ndarray, pandas Series/DataFrame or torch tensor. Contains true labels tor model training.
+        Inputs:
+            :data: ideally should be torch tensor. Contains feature data tor model training.
                 Can be python list or python set too but not much appreciated as it will be mostly used for training pytorch model.
-        :dtype: data type of the data and labels. Default is torch.float32. It also depends on model_type parameter for label data.
-        :model_type: {'regressor', 'binary-classifier' or 'multi-classifier'}. Default is 'multi-classifier'.
-                    It is used to confirm that for multi-class classification, label data type is torch.long.
-    """
+            :label: ideally should be numpy ndarray, pandas Series/DataFrame or torch tensor. Contains true labels tor model training.
+                    Can be python list or python set too but not much appreciated as it will be mostly used for training pytorch model.
+            :dtype: data type of the data and labels. Default is torch.float32. It also depends on model_type parameter for label data.
+            :model_type: {'regressor', 'binary-classifier' or 'multi-classifier'}. Default is 'multi-classifier'.
+                        It is used to confirm that for multi-class classification, label data type is torch.long.
+        """
 
-    def __init__(self, data, label=None, dtype=torch.float32, model_type='regressor'):
-        self.data = data
-        self.label = label
-        if self.label is not None:
-            self._check_samples()
-        self.datalen = data.shape[0]
-        self.dtype = dtype
-        self.model_type = model_type
+        def __init__(self, data, label=None, dtype=torch.float32, model_type='regressor'):
+            self.data = data
+            self.label = label
+            if self.label is not None:
+                self._check_samples()
+            self.datalen = data.shape[0]
+            self.dtype = dtype
+            self.model_type = model_type
 
-    def __len__(self):
-        return self.datalen
+        def __len__(self):
+            return self.datalen
 
-    def __getitem__(self, index):
-        # data type conversion
-        batch_data = self.data[index].to(dtype=self.dtype)
+        def __getitem__(self, index):
+            # data type conversion
+            batch_data = self.data[index].to(dtype=self.dtype)
 
-        if self.label is not None:
-            if self.model_type.lower() == 'multi-classifier':
-                batch_label = self.label[index].to(dtype=torch.long) 
+            if self.label is not None:
+                if self.model_type.lower() == 'multi-classifier':
+                    batch_label = self.label[index].to(dtype=torch.long) 
+                else:
+                    batch_label = self.label[index].to(dtype=self.dtype)
             else:
-                batch_label = self.label[index].to(dtype=self.dtype)
-        else:
-            batch_label = None
-        return batch_data, batch_label
+                batch_label = None
+            return batch_data, batch_label
 
-    def _check_samples(self):
-        assert len(self.data) == len(
-            self.label), "Data and Label lengths are not same"
+        def _check_samples(self):
+            assert len(self.data) == len(
+                self.label), "Data and Label lengths are not same"
+except:
+    pass
 
 
 def get_factors(n_layers, base_factor=5, max_factor=10, offset_factor=2):
