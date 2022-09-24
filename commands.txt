@@ -48,7 +48,8 @@ Running example files through one command:
 
 Step-6:
 
-Check git diff for each updated file, Commit and Push to github
+1. Check git diff for each updated file
+2. After checking is done, Commit and Push to github
 
 
 Step-7:
