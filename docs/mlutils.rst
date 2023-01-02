@@ -1,4 +1,4 @@
-mlutils.mlutils
+mlutils
 ===============
 
 This module is intended to provide support for easy usage of pytorch models. 
