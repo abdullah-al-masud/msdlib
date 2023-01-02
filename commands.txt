@@ -2,6 +2,15 @@
 ||   Steps to follow after updating the code   ||
 -------------------------------------------------
 
+Step-0:
+
+1. Edit the code as you like.
+
+Make sure that-
+2. you are using an anaconda virutal environment named 'msdlib'
+3. dependencies are installed from requirements-dev.txt
+
+
 Step-1:
 
 Do not forget to update the version number inside msdlib/__init__.py
@@ -9,16 +18,9 @@ Do not forget to update the version number inside msdlib/__init__.py
 
 Step-2:
 
-Documentation generation instructions:
+Code documentation:
 
-1. make necessary changes
-2. go to docs
-3. type: make html
-4. push the code to github
-5. to to the website of readthedocs and log in
-6. go to the builds section
-7. press on build button for a new build
-done!!
+1. make necessary changes in code documentation
 
 
 Step-3:
@@ -32,27 +34,39 @@ Code testing:
 
 Step-4:
 
-Update README before pushing or updating on pypi
+Running example files through one command:
 
 1. Be in project directory in the command line.
-2. command: python utils/update_readme.py
+2. command: python utils/run_examples.py (at first, make sure there is an anaconda envirornment named msdlib where you have installed everything)
 
 
 Step-5:
 
-Running example files through one command:
+Update README before pushing or updating on pypi
 
 1. Be in project directory in the command line.
-2. command: python utils/run_examples.py
+2. command: python utils/update_readme.py (at first, make sure there is an anaconda envirornment named msdlib where you have installed everything)
 
 
 Step-6:
+
+Code documentation integration using Sphinx
+
+1. go to docs
+2. type command: make html
+3. push the code to github (not yet, do below steps after the code is pushed to github in Step-7)
+4. to to the website of readthedocs and log in
+5. go to the builds section
+6. press on build button for a new build
+done!!
+
+Step-7:
 
 1. Check git diff for each updated file
 2. After checking is done, Commit and Push to github
 
 
-Step-7:
+Step-8:
 
 pypi build and upload commands
 

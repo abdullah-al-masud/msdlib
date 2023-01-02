@@ -211,7 +211,7 @@ Filters:
 --------
 
 .. image:: ../examples/filters_and_spectrogram_example/recorded_signal.jpg
-.. image:: ../examples/filters_and_spectrogram_example/filter_spectrum.jpg
+.. image:: ../examples/filters_and_spectrogram_example/Filter_spectrum.jpg
 .. image:: ../examples/filters_and_spectrogram_example/Frequency_Spectrum_of_filtered_stereo_1.jpg
 .. image:: ../examples/filters_and_spectrogram_example/filtered_stereo_1_with_bp_filter_with_cut_offs_[1800._2500.].jpg
 .. image:: ../examples/filters_and_spectrogram_example/Spectrogram_of_stereo_1.jpg

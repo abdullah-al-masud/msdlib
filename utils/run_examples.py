@@ -25,8 +25,11 @@ def run_example_scripts(example_dir, skip_list):
         if fname.endswith('.py') and fname not in skip_list:
             print('Running %s... '%fname, end='', flush=True)
             fpath = os.path.join(example_dir, fname)
-            command = 'python %s'%(fpath)
-            out = subprocess.run(command, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
+            command = """
+                conda activate msdlib
+                python %s
+                """%(fpath)
+            out = subprocess.run(command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
             print('   complete, return code', out.returncode, '.')
             
             if out.returncode != 0:

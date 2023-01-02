@@ -215,7 +215,8 @@ def load_models(models, folder_path):
     return models
 
 
-def train_with_data(outdata, feature_columns, models, featimp_models=[], figure_dir=None, model_type='multi-classifier', evaluate=True):
+def train_with_data(outdata, feature_columns, models, featimp_models=[], figure_dir=None, model_type='multi-classifier',
+                    evaluate=True, featimp_figsize=(30, 5), figsize=(15, 5), xrot=0):
     """
     This function will be used to train models. We can use both scikit-models and torchModel objects for model training.
 
@@ -229,6 +230,12 @@ def train_with_data(outdata, feature_columns, models, featimp_models=[], figure_
         :featimp_models: list of strings, contains model names which belong to models dict keys and which can provide feature importances
         :figure_dir: string/None, path to the directory where figures will be saved for feature improtances and evaluation figures.
         :model_type: string, can be either 'regressor', 'multi-classifier' or 'binary-classifier'. It controls the evaluation process.
+        :evaluate: boolean, If True, model evaluation will be executed and results of evaluation will be stored inside figure_dir. Default is True.
+        :featimp_figsize: tuple of horiaontal and vertical size of the feature importance plot. Default is (30, 5).
+        :figsize: tuple of horiaontal and vertical size of the result figure (regression score and classification score both). Default is (15, 5). 
+                    Only effective when evaluate is True.
+        :xrot: float, rotation angle of the x axis labels in classification score matrix (where class label names are written). Default is 0 (no rotation).
+                    Only effective when evaluate is True.
 
     Outputs:
         :models: dict, contains trained models instances, same as 'models' argument
@@ -252,7 +259,7 @@ def train_with_data(outdata, feature_columns, models, featimp_models=[], figure_
         # feature importance plot
         if figure_dir is not None:
             if modelname in featimp_models:
-                fig, ax = plt.subplots(figsize=(30, 5))
+                fig, ax = plt.subplots(figsize=featimp_figsize)
                 feat_imp = pd.Series(models[modelname].feature_importances_, index=feature_columns).sort_values(ascending=False)
                 feat_imp.plot(kind='bar', ax=ax, title='Feature importances from %s model'%modelname)
                 fig.tight_layout()
@@ -260,14 +267,14 @@ def train_with_data(outdata, feature_columns, models, featimp_models=[], figure_
                 plt.close()
 
     if evaluate:
-        predictions = evaluate_with_data(outdata, models, figure_dir, model_type)
+        predictions = evaluate_with_data(outdata, models, figure_dir, model_type, figsize=figsize, xrot=xrot)
     else:
         predictions = {}
 
     return models, predictions
 
 
-def evaluate_with_data(outdata, models, figure_dir=None, model_type='multi-classifier'):
+def evaluate_with_data(outdata, models, figure_dir=None, model_type='multi-classifier', figsize=(15, 5), xrot=0):
     """
     This function will be used to train models. We can use both scikit-models and torchModel objects for model training.
 
@@ -279,6 +286,8 @@ def evaluate_with_data(outdata, models, figure_dir=None, model_type='multi-class
                     If its a torchModel object, the key must contain 'pytorch' in it.
         :figure_dir: string/None, path to the directory where figures will be saved for feature improtances and evaluation figures.
         :model_type: string, can be either 'regressor', 'multi-classifier' or 'binary-classifier'. It controls the evaluation process.
+        :figsize: tuple of horiaontal and vertical size of the result figure (regression score and classification score both). Default is (15, 5).
+        :xrot: float, rotation angle of the x axis labels in classification score matrix (where class label names are written). Default is 0 (no rotation).
 
     Outputs:
         :predictions: dict, contains detailed predictions on all sets in outdata argument, evaluation results etc.
@@ -310,7 +319,7 @@ def evaluate_with_data(outdata, models, figure_dir=None, model_type='multi-class
 
                 if figure_dir is not None:
                     fig_title = 'Classification Score on %s set for %s model'%(setname, modelname)
-                    plot_class_score(score, confmat, xrot=0, figure_dir=figure_dir, figtitle=fig_title, figsize=(15, 5))
+                    plot_class_score(score, confmat, xrot=xrot, figure_dir=figure_dir, figtitle=fig_title, figsize=figsize)
             elif model_type.lower() == 'regressor':
                 rsquare, rmse, corr = regression_result(np.squeeze(outdata[setname]['label']), preds)
                 predictions[modelname][setname]['rsquare'] = rsquare
@@ -321,7 +330,7 @@ def evaluate_with_data(outdata, models, figure_dir=None, model_type='multi-class
                     fig_title = 'Regression Score on %s set for %s model'%(setname, modelname)
                     metrics = {'R-square': rsquare.round(4), 'RMSE': rmse.round(4), 'Corr. Coefficient': corr.round(4)}
                     plot_regression_score(np.squeeze(outdata[setname]['label']), preds, figure_dir=figure_dir,
-                                              figtitle=fig_title, figsize=(10, 6), metrics=metrics)
+                                              figtitle=fig_title, figsize=figsize, metrics=metrics)
 
             print('  complete !!')
     

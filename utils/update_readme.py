@@ -14,8 +14,13 @@ readme_paths = ['README.md', 'docs/README.rst']
 
 def generate_coverage_xml():
     if '.coverage' in os.listdir('.'):
-        out = subprocess.run('coverage xml', stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT).returncode
-        print('return code for "coverage xml"', out)
+        out = subprocess.run(
+            """
+            conda activate msdlib
+            coverage xml
+            """, 
+            shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT).returncode
+        print('return code for "coverage xml" : %s (0 means successful)'%out)
     else:
         out = -1
     return out
