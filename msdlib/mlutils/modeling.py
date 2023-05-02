@@ -541,9 +541,9 @@ class torchModel():
                     result, confus = class_result(label, test_pred, out_confus=True)
                     fig, ax = plt.subplots(figsize=figsize, ncols=2)
                     ax[0] = plot_heatmap(result, annotate=True, fmt='.3f', xrot=self.class_xrot,
-                                         vmax=1, axobj=ax[0], fig_title='Score Matrix')
+                                         vmax=1, axobj=ax[0], cmap='Blues', fig_title='Score Matrix')
                     ax[1] = plot_heatmap(confus, annotate=True, fmt='d', xrot=self.class_xrot, axobj=ax[1],
-                                         fig_title='Confusion Matrix')
+                                         cmap='Blues', fig_title='Confusion Matrix')
                     title = 'Classification result for %s from %s' % (set_names[i], self.model_name)
                     fig.suptitle(title, fontsize=15, fontweight='bold')
                     all_results[set_names[i]] = [result, confus]

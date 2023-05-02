@@ -5,4 +5,4 @@ LICENSE : MIT License
 """
 
 # version definition
-__version__ = '1.1.11'
+__version__ = '1.1.12'
