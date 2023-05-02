@@ -178,12 +178,14 @@ class torchModel():
         			If None, the metrics will be selected based on model type according to the description of parameter 'tensorboard_path'.
         :interval: int or None, indicates number of epoch after which the model weights will be stored each time during training.
                     Default is None means model will not be stored during training. Note: "model_name" parameter must include 'pytorch' phrase in it.
+        :class_xrot: float, rotation angle of the x-axis label for classification score plot (both score matrix and confusion matrix). 
+                    Only applicable if evaluation is done.
     """
 
     def __init__(self, layers=[], loss_func=None, optimizer=None, learning_rate=.0001, epoch=2, batch_size=32, lr_reduce=1,
                  loss_reduction='mean', model_type='regressor', use_gpu=True, gpu_devices=None, model_name='pytorch', dtype=torch.float32,
                  plot_loss=True, quant_perc=.98, loss_roll_period=1, model=None, savepath=None, shuffle=True, lr_scheduler=None,
-                 tensorboard_path=None, tb_metrics=None, interval=None, **kwargs):
+                 tensorboard_path=None, tb_metrics=None, interval=None, class_xrot=0, **kwargs):
 
         # defining model architecture
         if model is None and len(layers) == 0:
@@ -214,6 +216,8 @@ class torchModel():
             self.tb = SummaryWriter(log_dir=tensorboard_path)
         self.tb_metrics = tb_metrics
         self.interval = interval
+        self.class_xrot = class_xrot
+
 
         # setting up gpu usage
         self.gpu_string = "cuda" if self.use_gpu and torch.cuda.is_available() else "cpu"
@@ -454,7 +458,7 @@ class torchModel():
             
             return preds
 
-    def evaluate(self, data_sets, label_sets=None, set_names=[], figsize=(18, 4), savepath=None):
+    def evaluate(self, data_sets, label_sets=None, set_names=[], figsize=(18, 4), savepath=None, index2label=None):
         """
         This is a customized function to evaluate model performance in regression and classification type tasks
 
@@ -467,6 +471,8 @@ class torchModel():
             :figsize: figure size for the evaluation plots, default is (18, 4)
             :savepath: path where the evaluation tables/figures will be stored.
                         Default is None (by default, if this path is None, savepath will be replaced by torchModel.savepath)
+            :index2label: python dict or None. It is only application for classification task to replace the class indices with their corresponding labels.
+                        So, the keys will be index values and dictionary values will be actual class labels.
 
         Outputs:
             :summary_result: pandas DataFrame, result summary accumulated in a variable
@@ -529,12 +535,15 @@ class torchModel():
                         test_pred = np.argmax(test_pred, axis=1)
                     else:
                         test_pred = np.round(test_pred).astype(int)
+                    if isinstance(index2label, dict):
+                        test_pred = pd.Series(test_pred).replace(index2label).values
+                        label = pd.Series(label).replace(index2label).values
                     result, confus = class_result(label, test_pred, out_confus=True)
                     fig, ax = plt.subplots(figsize=figsize, ncols=2)
-                    ax[0] = plot_heatmap(result, annotate=True, fmt='.3f', xrot=0,
-                                         vmax=1, axobj=ax[0], cmap='summer', fig_title='Score Matrix')
-                    ax[1] = plot_heatmap(confus, annotate=True, fmt='d', xrot=0, axobj=ax[1],
-                                         cmap='Blues', fig_title='Confusion Matrix')
+                    ax[0] = plot_heatmap(result, annotate=True, fmt='.3f', xrot=self.class_xrot,
+                                         vmax=1, axobj=ax[0], fig_title='Score Matrix')
+                    ax[1] = plot_heatmap(confus, annotate=True, fmt='d', xrot=self.class_xrot, axobj=ax[1],
+                                         fig_title='Confusion Matrix')
                     title = 'Classification result for %s from %s' % (set_names[i], self.model_name)
                     fig.suptitle(title, fontsize=15, fontweight='bold')
                     all_results[set_names[i]] = [result, confus]

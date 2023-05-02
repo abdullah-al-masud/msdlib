@@ -7,8 +7,9 @@ Step-0:
 1. Edit the code as you like.
 
 Make sure that-
-2. you are using an anaconda virutal environment named 'msdlib'
-3. dependencies are installed from requirements-dev.txt
+2. you are using an anaconda virutal environment named 'msdlib' (optional)
+3. dependencies are installed from both requirements.txt and requirements-dev.txt
+4. pytorch is installed properly
 
 
 Step-1:
@@ -55,7 +56,7 @@ Code documentation integration using Sphinx
 1. go to docs
 2. type command: make html
 3. push the code to github (not yet, do below steps after the code is pushed to github in Step-7)
-4. to to the website of readthedocs and log in
+4. go to the website of readthedocs and log in
 5. go to the builds section
 6. press on build button for a new build
 done!!
