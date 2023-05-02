@@ -859,6 +859,13 @@ def get_weighted_scores(score, y_test):
     counts = pd.Series(y_test).value_counts()
     countidx2str = {i: str(i) for i in counts.index}
     countstr2idx = {countidx2str[i]: i for i in countidx2str}
+    
+    # checking whether all are string or not (both key and values)
+    all_string = True
+    for k in countstr2idx:
+        if k != countstr2idx[k]:
+            all_string = False
+    
     counts = counts.to_frame().T
 
     for col in score_cols:
@@ -866,7 +873,9 @@ def get_weighted_scores(score, y_test):
             counts[col] = 0
         else:
             counts[col] = counts[countstr2idx[col]]
-            counts.drop([countstr2idx[col]], axis=1, inplace=True)
+            if not all_string:
+                counts.drop([countstr2idx[col]], axis=1, inplace=True)
+
     _score['weighted_average'] = (_score.drop('accuracy').drop('average', axis=1)[score_cols].values * counts[score_cols].values / counts.values.sum()).sum(axis=1).tolist()+[_score['average'].loc['accuracy']]
     return _score
 
