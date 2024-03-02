@@ -73,5 +73,6 @@ pypi build and upload commands
 
 1. python setup.py sdist bdist_wheel
 2. python -m twine upload --repository pypi dist/*
-username: abdullah_al_masud
+username: __token__
+pass: use the account token
 
