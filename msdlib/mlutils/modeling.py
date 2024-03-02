@@ -307,6 +307,7 @@ class torchModel():
 
         # running through epoch
         loss_curves = [[], []]
+        lowest_loss = 1e8
         val_loss = torch.tensor(np.nan)
         t1 = time.time()
         self.set_parallel()
@@ -347,6 +348,8 @@ class torchModel():
             else:
                 loss_curves[1].append(np.nan)
 
+            print('\repoch : %04d/%04d, batch : %03d, train_loss : %.4f, validation_loss : %.4f,  %s'
+                  % (ep + 1, self.epoch, i + 1, tr_loss.item(), val_loss.item(), time_string)+' '*20, end='', flush=True)
 			# tensorboard parameter collection
             self.add_tb_params(ep, tr_mean_loss, val_loss, _val_label.squeeze(), out, batch_data)
 
@@ -358,6 +361,16 @@ class torchModel():
                     else:
                         model_dict = {"%s_epoch-%d"%(self.model_name, ep+1): self.model}
                     store_models(model_dict, self.savepath)
+
+            # saving the best model
+            if val_loss.item() < lowest_loss:
+                lowest_loss = val_loss.item()
+                if self.parallel:
+                    model_dict = {"%s_best"%(self.model_name): self.model.module}
+                else:
+                    model_dict = {"%s_best"%(self.model_name): self.model}
+                model_dict[list(model_dict.keys())[0]].epoch = ep + 1
+                store_models(model_dict, self.savepath)
 	
         print('...training complete !!')
         losses = pd.DataFrame(loss_curves, index=['train_loss', 'validation_loss'], columns=np.arange(
