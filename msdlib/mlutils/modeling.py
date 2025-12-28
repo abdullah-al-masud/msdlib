@@ -402,7 +402,7 @@ class torchModel():
                           [train_loader.dataset.label, val_loader.dataset.label], 
                           set_names=['Train_set (from training data)', 'Validation_set (from training data)'], 
                           figsize=figsize, savepath=self.savepath)
-
+        self.store_evaluator_scores(evaluator_scores)
         return self
 
     def store_model_in_training(self, ep, name):
@@ -413,7 +413,20 @@ class torchModel():
         model_dict[list(model_dict.keys())[0]].epoch = ep + 1
         store_models(model_dict, self.savepath)
 
-    def store_model_by_evaluators(self, ep, out, _val_label, evaluator_scores):
+    def store_evaluator_scores(self, evaluator_scores):
+        if self.savepath is not None and len(self.evaluators) > 0:
+            best_scores = {}
+            for name in evaluator_scores:
+                if self.evaluators[name]['higher_is_better']:
+                    best_scores[name] = max(evaluator_scores[name])
+                else:
+                    best_scores[name] = min(evaluator_scores[name])
+            best_scores = pd.Series(best_scores, name='best_scores')
+            evaluator_scores = pd.concat([pd.DataFrame(evaluator_scores), best_scores.to_frame().T], axis=0)
+            os.makedirs(self.savepath, exist_ok=True)
+            evaluator_scores.to_csv('%s/evaluator_scores.csv' % (self.savepath))
+
+    def store_model_by_evaluators(self, ep, out, _val_label, evaluator_scores, setname='Validation set metrics'):
         for name, dct in self.evaluators.items():
             score = dct['function'](out.squeeze().detach().cpu().numpy(), _val_label.squeeze().detach().cpu().numpy())
             evaluator_scores[name].append(score)
@@ -424,7 +437,7 @@ class torchModel():
                 if score < min(evaluator_scores[name][:-1] + [1e8]):
                     self.store_model_in_training(ep, "%s_best_%s" % (self.model_name, name))
             if self.tb is not None:
-                self.tb.add_scalar(name, score, ep+1)
+                self.tb.add_scalars(setname, {name: score}, ep+1)
         return evaluator_scores
 
     def predict(self, data, return_label=False):
@@ -707,7 +720,7 @@ class torchModel():
                                                      batch_size=self.batch_size, shuffle=self.shuffle)
 
         return train_loader, val_loader
-    
+
     def add_tb_params(self, ep, tr_mean_loss, val_loss, true, pred, batch_data):
         """
         This function adds tensorboard parameters for training session records.
@@ -720,7 +733,7 @@ class torchModel():
             :pred: torch.Tensor, predicted labels from the model for validation data
             :batch_data: torch.Tensor, last minibatch data.
         """
-    	
+
         if self.tb is not None:
             self.tb.add_scalars('Loss', {'train-loss': tr_mean_loss, 'validation-loss': val_loss}, ep)
             if self.model_type.lower() == 'regressor':
@@ -730,7 +743,7 @@ class torchModel():
                 else:
                     for name in self.tb_metrics:
                         score = self.tb_metrics[name](true.detach().cpu().numpy(), pred.squeeze().detach().cpu().numpy())
-                        self.tb.add_scalar(name, score, ep)
+                        self.tb.add_scalars('Validation set metrics', {name: score}, ep)
             elif self.model_type.lower() == 'binary-classifier':
                 if self.tb_metrics is None:
                     accuracy = (pred.squeeze().round() == true).sum() / true.shape[0]
@@ -738,7 +751,7 @@ class torchModel():
                 else:
                     for name in self.tb_metrics:
                         score = self.tb_metrics[name](true.detach().cpu().numpy(), pred.squeeze().round().detach().cpu().numpy())
-                        self.tb.add_scalar(name, score, ep)
+                        self.tb.add_scalars('Validation set metrics', {name: score}, ep)
             elif self.model_type.lower() == 'multi-classifier':
                 if self.tb_metrics is None:
                     accuracy = (pred.argmax(dim=1).squeeze() == true).sum() / true.shape[0]
@@ -746,7 +759,7 @@ class torchModel():
                 else:
                     for name in self.tb_metrics:
                         score = self.tb_metrics[name](true.detach().cpu().numpy(), pred.argmax(dim=1).squeeze().detach().cpu().numpy())
-                        self.tb.add_scalar(name, score, ep)
+                        self.tb.add_scalars('Validation set metrics', {name: score}, ep)
             if ep == 0:
                 self.tb.add_graph(self.model, batch_data.to(device=self.device, dtype=self.dtype))
 
@@ -762,5 +775,5 @@ def instantiate_models():
     }
 
     featimp_models = ['RandomForest', 'Xgboost', 'Lightgbm']
-    
+
     return models, featimp_models
