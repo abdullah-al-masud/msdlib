@@ -438,10 +438,12 @@ class torchModel():
                 best_score = max(evaluator_scores[name][:-1] + [-1e8])
                 if score > best_score:
                     self.store_model_in_training(ep, "%s_best_%s" % (self.model_name, name))
+                    best_score = score
             else:
                 best_score = min(evaluator_scores[name][:-1] + [1e8])
                 if score < best_score:
                     self.store_model_in_training(ep, "%s_best_%s" % (self.model_name, name))
+                    best_score = score
             if self.tb is not None:
                 self.tb.add_scalars(setname, {name: score}, ep+1)
             eval_print += ', %s : %.4f' % (name, best_score)
