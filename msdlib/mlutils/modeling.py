@@ -311,6 +311,7 @@ class torchModel():
         # running through epoch
         loss_curves = [[], []]
         evaluator_scores = {name: [] for name in self.evaluators}
+        eval_print = ''
         lowest_loss = 1e8
         val_loss = torch.tensor(np.nan)
         t1 = time.time()
@@ -334,8 +335,8 @@ class torchModel():
                 tr_mean_loss.append(tr_loss.item())
                 time_string = get_time_estimation(
                     time_st=t1, current_ep=ep, current_batch=i, total_ep=self.epoch, total_batch=total_batch)
-                print('\repoch : %04d/%04d, batch : %03d, train_loss : %.4f, validation_loss : %.4f,  %s'
-                      % (ep + 1, self.epoch, i + 1, tr_loss.item(), val_loss.item(), time_string)+' '*20, end='', flush=True)
+                print('\repoch : %04d/%04d, batch : %03d, train_loss : %.4f, validation_loss : %.4f,  %s%s'
+                      % (ep + 1, self.epoch, i + 1, tr_loss.item(), val_loss.item(), eval_print, time_string)+' '*10, end='', flush=True)
 
             # loss scheduler step
             self.scheduler.step()
@@ -350,12 +351,12 @@ class torchModel():
                 # storing losses
                 loss_curves[1].append(val_loss.item())
                 # storing models by evaluation metrics
-                evaluator_scores = self.store_model_by_evaluators(ep, out, _val_label, evaluator_scores)
+                evaluator_scores, eval_print = self.store_model_by_evaluators(ep, out, _val_label, evaluator_scores)
             else:
                 loss_curves[1].append(np.nan)
 
-            print('\repoch : %04d/%04d, batch : %03d, train_loss : %.4f, validation_loss : %.4f,  %s'
-                  % (ep + 1, self.epoch, i + 1, tr_loss.item(), val_loss.item(), time_string)+' '*20, end='', flush=True)
+            print('\repoch : %04d/%04d, batch : %03d, train_loss : %.4f, validation_loss : %.4f,  %s%s'
+                  % (ep + 1, self.epoch, i + 1, tr_loss.item(), val_loss.item(), eval_print, time_string)+' '*10, end='', flush=True)
 			# tensorboard parameter collection
             self.add_tb_params(ep, tr_mean_loss, val_loss, _val_label.squeeze(), out, batch_data)
 
@@ -422,23 +423,30 @@ class torchModel():
                 else:
                     best_scores[name] = min(evaluator_scores[name])
             best_scores = pd.Series(best_scores, name='best_scores')
-            evaluator_scores = pd.concat([pd.DataFrame(evaluator_scores), best_scores.to_frame().T], axis=0)
+            evaluator_scores = pd.DataFrame(evaluator_scores, index=list(range(1, self.epoch + 1)))
+            evaluator_scores.index.name = 'epoch'
+            evaluator_scores = pd.concat([evaluator_scores, best_scores.to_frame().T], axis=0)
             os.makedirs(self.savepath, exist_ok=True)
-            evaluator_scores.to_csv('%s/evaluator_scores.csv' % (self.savepath))
+            evaluator_scores.reset_index(drop=False).to_csv('%s/evaluator_scores.csv' % (self.savepath), index=False)
 
     def store_model_by_evaluators(self, ep, out, _val_label, evaluator_scores, setname='Validation set metrics'):
+        eval_print = ''
         for name, dct in self.evaluators.items():
             score = dct['function'](out.squeeze().detach().cpu().numpy(), _val_label.squeeze().detach().cpu().numpy())
             evaluator_scores[name].append(score)
             if dct['higher_is_better']:
-                if score > max(evaluator_scores[name][:-1] + [-1e8]):
+                best_score = max(evaluator_scores[name][:-1] + [-1e8])
+                if score > best_score:
                     self.store_model_in_training(ep, "%s_best_%s" % (self.model_name, name))
             else:
-                if score < min(evaluator_scores[name][:-1] + [1e8]):
+                best_score = min(evaluator_scores[name][:-1] + [1e8])
+                if score < best_score:
                     self.store_model_in_training(ep, "%s_best_%s" % (self.model_name, name))
             if self.tb is not None:
                 self.tb.add_scalars(setname, {name: score}, ep+1)
-        return evaluator_scores
+            eval_print += ', %s : %.4f' % (name, best_score)
+        eval_print += '   '
+        return evaluator_scores, eval_print
 
     def predict(self, data, return_label=False):
         """

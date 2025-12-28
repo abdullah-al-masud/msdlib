@@ -7,6 +7,7 @@ LICENSE : MIT License
 # torchModel() regression example
 import pandas as pd
 from sklearn.datasets import fetch_california_housing
+from sklearn.metrics import r2_score, mean_squared_error
 import torch
 
 import os
@@ -44,7 +45,11 @@ layers = mlutils.define_layers(data.shape[1], 1, [100, 100, 100, 100, 100, 100],
                                actual_units=True, activation=torch.nn.ReLU())
 
 # building model
-tmodel = mlutils.torchModel(layers=layers, model_type='regressor', tensorboard_path='runs', interval=120,
+get_r2 = lambda x, y: r2_score(y, x)
+get_mse = lambda x, y: mean_squared_error(y, x)
+evaluators = {'r2': {'higher_is_better': True, 'function': get_r2},
+              'mse': {'higher_is_better': False, 'function': get_mse}}
+tmodel = mlutils.torchModel(layers=layers, model_type='regressor', tensorboard_path='runs', interval=120, evaluators=evaluators,
                             savepath='examples/regression_torchModel', epoch=150, learning_rate=.0001, lr_reduce=.995)
 
 # Training Pytorch model

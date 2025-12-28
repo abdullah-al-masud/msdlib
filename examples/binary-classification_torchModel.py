@@ -7,6 +7,7 @@ LICENSE : MIT License
 # torchModel() binary classification example
 import pandas as pd
 from sklearn.datasets import load_breast_cancer
+from sklearn.metrics import accuracy_score
 import torch
 
 import os
@@ -54,7 +55,9 @@ layers = mlutils.define_layers(data.shape[1], 1, [100, 100, 100, 100, 100, 100],
                                actual_units=True, activation=torch.nn.ReLU(), final_activation=torch.nn.Sigmoid())
 
 # building model
-tmodel = mlutils.torchModel(layers=layers, model_type='binary-classifier', tensorboard_path='runs',
+get_accuracy = lambda x, y: accuracy_score(y.astype(int), (x > 0.5).astype(int))
+evaluators = {'accuracy': {'higher_is_better': True, 'function': get_accuracy}}
+tmodel = mlutils.torchModel(layers=layers, model_type='binary-classifier', tensorboard_path='runs', evaluators=evaluators,
                             savepath=savepath, batch_size=32, epoch=80, learning_rate=.0001, lr_reduce=.995)
 
 # Training Pytorch model
@@ -62,8 +65,7 @@ tmodel.fit(outdata['train']['data'], outdata['train']['label'])
 
 # Evaluating the model's performance
 result, all_results = tmodel.evaluate(data_sets=[outdata['train']['data'], outdata['test']['data']],
-                                      label_sets=[
-                                          outdata['train']['label'], outdata['test']['label']],
+                                      label_sets=[outdata['train']['label'], outdata['test']['label']],
                                       set_names=['Train', 'Test'], savepath=savepath)
 print('classification score:\n', result)
 
