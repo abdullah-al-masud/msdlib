@@ -174,18 +174,20 @@ class torchModel():
         :tensorboard_path: str or None, tensorboard will show the progress of training using loss values and training metrics.
                             - If model_type is 'regressor', metrics will be rmse, rsquare
                             - If model_type is 'binary-classifier' or 'multi-classifier', metrics will be 'accuracy'
-        :tb_metrics: None or list of functions. Each function will take two inputs, first is true labels and second is predicted values.
+        :tb_metrics: None or dictionary of functions (key->name, value->function). Each function will take two inputs, first is true labels and second is predicted values.
         			If None, the metrics will be selected based on model type according to the description of parameter 'tensorboard_path'.
         :interval: int or None, indicates number of epoch after which the model weights will be stored each time during training.
                     Default is None means model will not be stored during training. Note: "model_name" parameter must include 'pytorch' phrase in it.
         :class_xrot: float, rotation angle of the x-axis label for classification score plot (both score matrix and confusion matrix). 
                     Only applicable if evaluation is done.
+        :evaluators: dict, key->name, value-> dict [key->'function', value->evaluation_function, key->'higher_is_better', value->bool].
+                    Each function will take two inputs, first is predicted values and second is true labels, both in batch.
     """
 
     def __init__(self, layers=[], loss_func=None, optimizer=None, learning_rate=.0001, epoch=2, batch_size=32, lr_reduce=1,
                  loss_reduction='mean', model_type='regressor', use_gpu=True, gpu_devices=None, model_name='pytorch', dtype=torch.float32,
                  plot_loss=True, quant_perc=.98, loss_roll_period=1, model=None, savepath=None, shuffle=True, lr_scheduler=None,
-                 tensorboard_path=None, tb_metrics=None, interval=None, class_xrot=0, **kwargs):
+                 tensorboard_path=None, tb_metrics=None, interval=None, class_xrot=0, evaluators={}, **kwargs):
 
         # defining model architecture
         if model is None and len(layers) == 0:
@@ -206,6 +208,7 @@ class torchModel():
         self.gpu_devices = gpu_devices
         self.shuffle = shuffle
         self.lr_scheduler = lr_scheduler
+        self.evaluators = evaluators
 
         # evaluation parameters
         self.plot_loss = plot_loss
@@ -307,6 +310,7 @@ class torchModel():
 
         # running through epoch
         loss_curves = [[], []]
+        evaluator_scores = {name: [] for name in self.evaluators}
         lowest_loss = 1e8
         val_loss = torch.tensor(np.nan)
         t1 = time.time()
@@ -345,6 +349,8 @@ class torchModel():
                 val_loss = self.loss_func(out.squeeze(), _val_label.squeeze())
                 # storing losses
                 loss_curves[1].append(val_loss.item())
+                # storing models by evaluation metrics
+                evaluator_scores = self.store_model_by_evaluators(ep, out, _val_label, evaluator_scores)
             else:
                 loss_curves[1].append(np.nan)
 
@@ -354,24 +360,14 @@ class torchModel():
             self.add_tb_params(ep, tr_mean_loss, val_loss, _val_label.squeeze(), out, batch_data)
 
             # storing model weights after each interval
-            if self.interval is not None:
-                if (ep + 1) % self.interval == 0:
-                    if self.parallel:
-                        model_dict = {"%s_epoch-%d"%(self.model_name, ep+1): self.model.module}
-                    else:
-                        model_dict = {"%s_epoch-%d"%(self.model_name, ep+1): self.model}
-                    store_models(model_dict, self.savepath)
+            if self.interval is not None and (ep + 1) % self.interval == 0:
+                self.store_model_in_training(ep, "%s_epoch-%d"%(self.model_name, ep+1))
 
             # saving the best model
             if val_loss.item() < lowest_loss:
                 lowest_loss = val_loss.item()
-                if self.parallel:
-                    model_dict = {"%s_best"%(self.model_name): self.model.module}
-                else:
-                    model_dict = {"%s_best"%(self.model_name): self.model}
-                model_dict[list(model_dict.keys())[0]].epoch = ep + 1
-                store_models(model_dict, self.savepath)
-	
+                self.store_model_in_training(ep, "%s_best_loss"%(self.model_name))
+
         print('...training complete !!')
         losses = pd.DataFrame(loss_curves, index=['train_loss', 'validation_loss'], columns=np.arange(
             1, self.epoch + 1)).T.rolling(self.loss_roll_period).mean()
@@ -408,6 +404,28 @@ class torchModel():
                           figsize=figsize, savepath=self.savepath)
 
         return self
+
+    def store_model_in_training(self, ep, name):
+        if self.parallel:
+            model_dict = {name: self.model.module}
+        else:
+            model_dict = {name: self.model}
+        model_dict[list(model_dict.keys())[0]].epoch = ep + 1
+        store_models(model_dict, self.savepath)
+
+    def store_model_by_evaluators(self, ep, out, _val_label, evaluator_scores):
+        for name, dct in self.evaluators.items():
+            score = dct['function'](out.squeeze().detach().cpu().numpy(), _val_label.squeeze().detach().cpu().numpy())
+            evaluator_scores[name].append(score)
+            if dct['higher_is_better']:
+                if score > max(evaluator_scores[name][:-1] + [-1e8]):
+                    self.store_model_in_training(ep, "%s_best_%s" % (self.model_name, name))
+            else:
+                if score < min(evaluator_scores[name][:-1] + [1e8]):
+                    self.store_model_in_training(ep, "%s_best_%s" % (self.model_name, name))
+            if self.tb is not None:
+                self.tb.add_scalar(name, score, ep+1)
+        return evaluator_scores
 
     def predict(self, data, return_label=False):
         """
@@ -525,6 +543,15 @@ class torchModel():
                     else:
                         label = predlabel.copy()
 
+                if len(self.evaluators) > 0:
+                    eval_results = [[], []]
+                    for name, dct in self.evaluators.items():
+                        score = dct['function'](test_pred, label)
+                        eval_results[0].append(name)
+                        eval_results[1].append(score)
+                else:
+                    eval_results = None
+
                 if self.model_type.lower() == 'regressor':
                     true_pred = pd.DataFrame([label, test_pred], index=['true_label', 'prediction']).T
                     corr_val = true_pred.corr().iloc[0, 1]
@@ -539,9 +566,10 @@ class torchModel():
                     title = 'True-Label VS Prediction Scatter plot for %s from %s\nRSquare : %.3f,  RMSE : %.3f,  Correlation : %.3f' % (
                         set_names[i], self.model_name, rsquare, rmse, corr_val)
                     ax.set_title(title, fontweight='bold')
-                    all_results[set_names[i]] = [rsquare, rmse]
-                    results.append(pd.Series([rsquare, rmse], index=['r_square', 'rmse'], 
-                                             name='%s_%s' % (self.model_name, set_names[i])))
+                    res = [rsquare, rmse] + (eval_results[1] if eval_results is not None else [])
+                    names = ['r_square', 'rmse'] + (eval_results[0] if eval_results is not None else [])
+                    all_results[set_names[i]] = res
+                    results.append(pd.Series(res, index=names, name='%s_%s' % (self.model_name, set_names[i])))
 
                 elif self.model_type.lower() in ['multi-classifier', 'binary-classifier']:
                     if self.model_type.lower() == 'multi-classifier':
@@ -559,10 +587,12 @@ class torchModel():
                                          cmap='Blues', fig_title='Confusion Matrix')
                     title = 'Classification result for %s from %s' % (set_names[i], self.model_name)
                     fig.suptitle(title, fontsize=15, fontweight='bold')
-                    all_results[set_names[i]] = [result, confus]
-                    results.append(pd.Series(result.mean().drop('average').to_list() + [result['average'].loc['accuracy']],
-                                             index=result.drop('average', axis=1).columns.to_list() + ['average'],
-                                             name='%s_%s' % (self.model_name, set_names[i])))
+                    res = [result, confus] + (eval_results if eval_results is not None else [])
+                    names = ['score_matrix', 'confusion_matrix'] + (eval_results[0] if eval_results is not None else [])
+                    all_results[set_names[i]] = res
+                    res = result.mean().drop('average').to_list() + [result['average'].loc['accuracy']] + (eval_results[1] if eval_results is not None else [])
+                    names = result.drop('average', axis=1).columns.to_list() + ['average'] + (eval_results[0] if eval_results is not None else [])
+                    results.append(pd.Series(res, index=names, name='%s_%s' % (self.model_name, set_names[i])))
 
                 fig.tight_layout()
                 if savepath is not None:

@@ -1,20 +1,22 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>msdbacktest &mdash; msdlib 1.1.13 documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="_static/theme_objects.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+  <title>msdbacktest &mdash; msdlib 1.1.14 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/theme_objects.css?v=730f62f1" />
+
   
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/sphinx_highlight.js"></script>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=d9c9500d"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -101,7 +103,7 @@
            <div itemprop="articleBody">
              
   <section id="msdbacktest">
-<h1>msdbacktest<a class="headerlink" href="#msdbacktest" title="Permalink to this heading"></a></h1>
+<h1>msdbacktest<a class="headerlink" href="#msdbacktest" title="Link to this heading"></a></h1>
 <p>msdbacktest intends to support for fintech. Its still under development. It plans to provide-</p>
 <blockquote>
 <div><ul class="simple">
@@ -111,12 +113,12 @@
 <li><p>some miscellaneous supportive functions</p></li>
 </ul>
 </div></blockquote>
-<span class="target" id="module-msdlib.msdbacktest"></span><p>Author : Abdullah Al Masud</p>
+<p id="module-msdlib.msdbacktest">Author : Abdullah Al Masud</p>
 <p>email : <a class="reference external" href="mailto:abdullahalmasud&#46;buet&#37;&#52;&#48;gmail&#46;com">abdullahalmasud<span>&#46;</span>buet<span>&#64;</span>gmail<span>&#46;</span>com</a></p>
 <p>LICENSE : MIT License</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="msdlib.msdbacktest.get_annual_return">
-<span class="sig-prename descclassname"><span class="pre">msdlib.msdbacktest.</span></span><span class="sig-name descname"><span class="pre">get_annual_return</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msdlib.msdbacktest.get_annual_return" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">msdlib.msdbacktest.</span></span><span class="sig-name descname"><span class="pre">get_annual_return</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msdlib.msdbacktest.get_annual_return" title="Link to this definition"></a></dt>
 <dd><p>This function calculates annual rate of return</p>
 <dl class="simple">
 <dt>Inputs: </dt><dd><dl class="field-list simple">
@@ -136,7 +138,7 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="msdlib.msdbacktest.get_balance">
-<span class="sig-prename descclassname"><span class="pre">msdlib.msdbacktest.</span></span><span class="sig-name descname"><span class="pre">get_balance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ts_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">closings</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">starting_cap</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_per</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'D'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msdlib.msdbacktest.get_balance" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">msdlib.msdbacktest.</span></span><span class="sig-name descname"><span class="pre">get_balance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ts_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">closings</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">starting_cap</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_per</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'D'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msdlib.msdbacktest.get_balance" title="Link to this definition"></a></dt>
 <dd><p>This function calcualtes total available balance for a portfolio.</p>
 <dl>
 <dt>Inputs:</dt><dd><dl class="field-list">
@@ -163,7 +165,7 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="msdlib.msdbacktest.get_calmar">
-<span class="sig-prename descclassname"><span class="pre">msdlib.msdbacktest.</span></span><span class="sig-name descname"><span class="pre">get_calmar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msdlib.msdbacktest.get_calmar" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">msdlib.msdbacktest.</span></span><span class="sig-name descname"><span class="pre">get_calmar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msdlib.msdbacktest.get_calmar" title="Link to this definition"></a></dt>
 <dd><p>This function calculates calmar ratio value for a balance curve</p>
 <dl class="simple">
 <dt>Inputs:</dt><dd><dl class="field-list simple">
@@ -183,7 +185,7 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="msdlib.msdbacktest.get_crossover">
-<span class="sig-prename descclassname"><span class="pre">msdlib.msdbacktest.</span></span><span class="sig-name descname"><span class="pre">get_crossover</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sr_slow</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sr_fast</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msdlib.msdbacktest.get_crossover" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">msdlib.msdbacktest.</span></span><span class="sig-name descname"><span class="pre">get_crossover</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sr_slow</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sr_fast</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msdlib.msdbacktest.get_crossover" title="Link to this definition"></a></dt>
 <dd><p>This functions calculates crossover points between a faster time series (sr_fast) and a bit slower version of the same time series data.</p>
 <dl class="simple">
 <dt>Inputs:</dt><dd><dl class="field-list simple">
@@ -206,7 +208,7 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="msdlib.msdbacktest.get_drawdown">
-<span class="sig-prename descclassname"><span class="pre">msdlib.msdbacktest.</span></span><span class="sig-name descname"><span class="pre">get_drawdown</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msdlib.msdbacktest.get_drawdown" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">msdlib.msdbacktest.</span></span><span class="sig-name descname"><span class="pre">get_drawdown</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msdlib.msdbacktest.get_drawdown" title="Link to this definition"></a></dt>
 <dd><p>This function calculates drawdown value from a balance curve</p>
 <dl class="simple">
 <dt>Inputs:</dt><dd><dl class="field-list simple">
@@ -226,7 +228,7 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="msdlib.msdbacktest.load_data">
-<span class="sig-prename descclassname"><span class="pre">msdlib.msdbacktest.</span></span><span class="sig-name descname"><span class="pre">load_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">usables</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['open',</span> <span class="pre">'high',</span> <span class="pre">'low',</span> <span class="pre">'close',</span> <span class="pre">'volume']</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msdlib.msdbacktest.load_data" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">msdlib.msdbacktest.</span></span><span class="sig-name descname"><span class="pre">load_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">usables</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['open',</span> <span class="pre">'high',</span> <span class="pre">'low',</span> <span class="pre">'close',</span> <span class="pre">'volume']</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msdlib.msdbacktest.load_data" title="Link to this definition"></a></dt>
 <dd><p>This function loads csv or txt formatted data.</p>
 <dl class="simple">
 <dt>Inputs:</dt><dd><dl class="field-list simple">
@@ -258,7 +260,7 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="msdlib.msdbacktest.next_dates">
-<span class="sig-prename descclassname"><span class="pre">msdlib.msdbacktest.</span></span><span class="sig-name descname"><span class="pre">next_dates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">datetimes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dates</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msdlib.msdbacktest.next_dates" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">msdlib.msdbacktest.</span></span><span class="sig-name descname"><span class="pre">next_dates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">datetimes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dates</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msdlib.msdbacktest.next_dates" title="Link to this definition"></a></dt>
 <dd><p>gets next date of a particular series data from pandas series index.</p>
 <dl class="simple">
 <dt>Inputs:</dt><dd><dl class="field-list simple">
@@ -281,7 +283,7 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="msdlib.msdbacktest.prev_dates">
-<span class="sig-prename descclassname"><span class="pre">msdlib.msdbacktest.</span></span><span class="sig-name descname"><span class="pre">prev_dates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">datetimes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dates</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msdlib.msdbacktest.prev_dates" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">msdlib.msdbacktest.</span></span><span class="sig-name descname"><span class="pre">prev_dates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">datetimes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dates</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msdlib.msdbacktest.prev_dates" title="Link to this definition"></a></dt>
 <dd><p>gets predious date of a particular series data from pandas series index.</p>
 <dl class="simple">
 <dt>Inputs:</dt><dd><dl class="field-list simple">

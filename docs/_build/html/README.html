@@ -1,20 +1,22 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>msdlib &mdash; msdlib 1.1.13 documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="_static/theme_objects.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+  <title>msdlib &mdash; msdlib 1.1.14 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/theme_objects.css?v=730f62f1" />
+
   
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/sphinx_highlight.js"></script>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=d9c9500d"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -128,26 +130,29 @@
            <div itemprop="articleBody">
              
   <section id="msdlib">
-<h1>msdlib<a class="headerlink" href="#msdlib" title="Permalink to this heading"></a></h1>
-<a class="reference internal image-reference" href="_images/msdlib_logo_fit.png"><img alt="_images/msdlib_logo_fit.png" src="_images/msdlib_logo_fit.png" style="width: 20%;" /></a>
+<h1>msdlib<a class="headerlink" href="#msdlib" title="Link to this heading"></a></h1>
+<a class="reference internal image-reference" href="_images/msdlib_logo_fit.png"><img alt="_images/msdlib_logo_fit.png" src="_images/msdlib_logo_fit.png" style="width: 20%;" />
+</a>
 <hr class="docutils" />
-<img alt="https://img.shields.io/pypi/l/msdlib.svg" src="https://img.shields.io/pypi/l/msdlib.svg" /><img alt="https://badge.fury.io/py/msdlib.svg" src="https://badge.fury.io/py/msdlib.svg" /><img alt="https://travis-ci.org/abdullah-al-masud/msdlib.svg?branch=master" src="https://travis-ci.org/abdullah-al-masud/msdlib.svg?branch=master" />
+<img alt="https://img.shields.io/pypi/l/msdlib.svg" src="https://img.shields.io/pypi/l/msdlib.svg" />
+<img alt="https://badge.fury.io/py/msdlib.svg" src="https://badge.fury.io/py/msdlib.svg" />
+<img alt="https://travis-ci.org/abdullah-al-masud/msdlib.svg?branch=master" src="https://travis-ci.org/abdullah-al-masud/msdlib.svg?branch=master" />
 <img alt="https://readthedocs.org/projects/pip/badge/?version=latest" src="https://readthedocs.org/projects/pip/badge/?version=latest" />
 <img alt="https://img.shields.io/badge/coverage-53%25-yellow" src="https://img.shields.io/badge/coverage-53%25-yellow" />
 <hr class="docutils" />
 <img alt="_images/Combined_Time_Series_Plot.jpg" src="_images/Combined_Time_Series_Plot.jpg" />
 <hr class="docutils" />
-<span class="target" id="module-msdlib"></span><p>Author : Abdullah Al Masud</p>
+<p id="module-msdlib">Author : Abdullah Al Masud</p>
 <p>email : <a class="reference external" href="mailto:abdullahalmasud&#46;buet&#37;&#52;&#48;gmail&#46;com">abdullahalmasud<span>&#46;</span>buet<span>&#64;</span>gmail<span>&#46;</span>com</a></p>
 <p>LICENSE : MIT License</p>
 <section id="introduction">
-<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading"></a></h2>
+<h2>Introduction<a class="headerlink" href="#introduction" title="Link to this heading"></a></h2>
 <p>The main purpose of this library is to make data science works easier and simpler with less amount of coding, providing helper functions for plotting,
 ML training, evaluation, result summarization etc.
 The purpose is to focus more on making common tasks easier so that a beginner to mid level developer is able to do his/her jobs easily and can get started career with enough pace.</p>
 </section>
 <section id="dependencies">
-<h2>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this heading"></a></h2>
+<h2>Dependencies<a class="headerlink" href="#dependencies" title="Link to this heading"></a></h2>
 <ul class="simple">
 <li><p>Numpy</p></li>
 <li><p>Pandas</p></li>
@@ -162,32 +167,32 @@ The purpose is to focus more on making common tasks easier so that a beginner to
 <p>Pytorch should be installed by following installation procedure suggested <a class="reference external" href="https://pytorch.org/">here</a>.</p>
 </section>
 <section id="installation">
-<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading"></a></h2>
+<h2>Installation<a class="headerlink" href="#installation" title="Link to this heading"></a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">msdlib</span></code></p>
 <p>or if you have –user related issues during installation, please use</p>
 <p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">--user</span> <span class="pre">msdlib</span></code></p>
 </section>
 <section id="license">
-<h2>License<a class="headerlink" href="#license" title="Permalink to this heading"></a></h2>
+<h2>License<a class="headerlink" href="#license" title="Link to this heading"></a></h2>
 <p>MIT open source License has been issued for this library.</p>
 </section>
 <section id="examples">
-<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this heading"></a></h2>
+<h2>Examples<a class="headerlink" href="#examples" title="Link to this heading"></a></h2>
 <p>You can find easy examples on how to use the functions and classes from this library <a class="reference external" href="https://github.com/abdullah-al-masud/msdlib/tree/master/examples">here</a>.
 Necessary data is also provided in this directory.</p>
 </section>
 <section id="documentation">
-<h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this heading"></a></h2>
+<h2>Documentation<a class="headerlink" href="#documentation" title="Link to this heading"></a></h2>
 <p>Complete documentation of classes and functions can be found here <a class="reference external" href="https://msdlib.readthedocs.io/">https://msdlib.readthedocs.io/</a>.</p>
 </section>
 <section id="call-for-contributions">
-<h2>Call for contributions<a class="headerlink" href="#call-for-contributions" title="Permalink to this heading"></a></h2>
+<h2>Call for contributions<a class="headerlink" href="#call-for-contributions" title="Link to this heading"></a></h2>
 <p>We seek active participation of enthusiastic developers from around the world to enrich this library more, adding more functionalities from different aspects,
 giving more flexibility, completing unfinished functionalities and maintain the library in regular manner.
 We would be grateful for your invaluable suggestions and participations.</p>
 </section>
 <section id="overview">
-<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading"></a></h2>
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
 <p>The whole library can be divided into 4 main portions.</p>
 <ol class="arabic simple">
 <li><p>Machine learning tools</p></li>
@@ -198,9 +203,9 @@ We would be grateful for your invaluable suggestions and participations.</p>
 <p>Some of the frequently used programs are shown bellow.</p>
 </section>
 <section id="machine-learning-tools">
-<h2>1. Machine Learning Tools<a class="headerlink" href="#machine-learning-tools" title="Permalink to this heading"></a></h2>
+<h2>1. Machine Learning Tools<a class="headerlink" href="#machine-learning-tools" title="Link to this heading"></a></h2>
 <section id="mlutils">
-<h3>mlutils:<a class="headerlink" href="#mlutils" title="Permalink to this heading"></a></h3>
+<h3>mlutils:<a class="headerlink" href="#mlutils" title="Link to this heading"></a></h3>
 <p>This module provides functionalities for easier implementation of Pytorch Deep Learning models. It offers several facilities such as-</p>
 <blockquote>
 <div><ul class="simple">
@@ -213,12 +218,12 @@ We would be grateful for your invaluable suggestions and participations.</p>
 <p>Examples are available for regression, binary and multi-class classification models <a class="reference external" href="https://github.com/abdullah-al-masud/msdlib/tree/master/examples">here</a>.</p>
 </section>
 <section id="paramoptimizer">
-<h3>paramOptimizer:<a class="headerlink" href="#paramoptimizer" title="Permalink to this heading"></a></h3>
+<h3>paramOptimizer:<a class="headerlink" href="#paramoptimizer" title="Link to this heading"></a></h3>
 <p>This is a class which can conduct easy Hyper-parameter optimization process.
 Currently it enables us to apply grid search and random search for any model/function/mathematical entity</p>
 </section>
 <section id="splitdataset">
-<h3>SplitDataset:<a class="headerlink" href="#splitdataset" title="Permalink to this heading"></a></h3>
+<h3>SplitDataset:<a class="headerlink" href="#splitdataset" title="Link to this heading"></a></h3>
 <p>This is one of the most useful classes in this library. It enables us to split data set into train, validation and test sets.
 We have three options here to split data set-</p>
 <blockquote>
@@ -231,49 +236,49 @@ We have three options here to split data set-</p>
 <p>Examples are available <a class="reference external" href="https://github.com/abdullah-al-masud/msdlib/tree/master/examples">here</a>.</p>
 </section>
 <section id="one-hot-encoding">
-<h3>one_hot_encoding:<a class="headerlink" href="#one-hot-encoding" title="Permalink to this heading"></a></h3>
+<h3>one_hot_encoding:<a class="headerlink" href="#one-hot-encoding" title="Link to this heading"></a></h3>
 <p>This function converts classification labels in one hot encoded format</p>
 </section>
 <section id="feature-evaluator">
-<h3>feature_evaluator:<a class="headerlink" href="#feature-evaluator" title="Permalink to this heading"></a></h3>
+<h3>feature_evaluator:<a class="headerlink" href="#feature-evaluator" title="Link to this heading"></a></h3>
 <p>This function is one of the most useful tools. It can calculate feature importance from statistical point of view.
 It can show the results using bar plot and can handle classification and regression both kind of labels.</p>
 </section>
 <section id="class-result">
-<h3>class_result:<a class="headerlink" href="#class-result" title="Permalink to this heading"></a></h3>
+<h3>class_result:<a class="headerlink" href="#class-result" title="Link to this heading"></a></h3>
 <img alt="_images/Classification_result_for_Test_from_pytorch.png" src="_images/Classification_result_for_Test_from_pytorch.png" />
 <p>This function calculates classification model evaluation parameters like precision, recall, accuracy, f1 score, specificity etc. and also able to show confusion matrix as a pandas dataframe.
 Example is available <a class="reference external" href="https://github.com/abdullah-al-masud/msdlib/tree/master/examples/class_result_example.py">here</a>.</p>
 </section>
 <section id="rsquare-rmse">
-<h3>rsquare_rmse:<a class="headerlink" href="#rsquare-rmse" title="Permalink to this heading"></a></h3>
+<h3>rsquare_rmse:<a class="headerlink" href="#rsquare-rmse" title="Link to this heading"></a></h3>
 <img alt="_images/True-Label_VS_Prediction_Scatter_plot_for_Test_from_pytorch.png" src="_images/True-Label_VS_Prediction_Scatter_plot_for_Test_from_pytorch.png" />
 <p>This function calculates r square value and root mean square error.</p>
 </section>
 </section>
 <section id="visualization-tools">
-<h2>2. Visualization Tools<a class="headerlink" href="#visualization-tools" title="Permalink to this heading"></a></h2>
+<h2>2. Visualization Tools<a class="headerlink" href="#visualization-tools" title="Link to this heading"></a></h2>
 <section id="data-gridplot">
-<h3>data_gridplot:<a class="headerlink" href="#data-gridplot" title="Permalink to this heading"></a></h3>
+<h3>data_gridplot:<a class="headerlink" href="#data-gridplot" title="Link to this heading"></a></h3>
 <img alt="_images/Grid_plot_for_Iris_dataset.jpg" src="_images/Grid_plot_for_Iris_dataset.jpg" />
 <p>Its a function for scatter plots between every pair of features along with distributions (similar to matrix_plot in pandas). But it enables you to save the image, change figure_size, titles etc and also has one special feature for clusters in the data if any.
 Example is available <a class="reference external" href="https://github.com/abdullah-al-masud/msdlib/tree/master/examples/data_grid_plot_example.py">here</a>.</p>
 </section>
 <section id="plot-time-series">
-<h3>plot_time_series:<a class="headerlink" href="#plot-time-series" title="Permalink to this heading"></a></h3>
+<h3>plot_time_series:<a class="headerlink" href="#plot-time-series" title="Link to this heading"></a></h3>
 <img alt="_images/Combined_Time_Series_Plot.jpg" src="_images/Combined_Time_Series_Plot.jpg" />
 <p>This is one of the the most useful functions in this library. It helps to plot time series data with a lot of flexibility. It helps to plot time series data with a lot of flexibility. Please check out the example scripts for illustrations and guidance to use it.
 Example is available <a class="reference external" href="https://github.com/abdullah-al-masud/msdlib/tree/master/examples/plot_time_series_example.py">here</a>.</p>
 </section>
 <section id="plot-heatmap">
-<h3>plot_heatmap:<a class="headerlink" href="#plot-heatmap" title="Permalink to this heading"></a></h3>
+<h3>plot_heatmap:<a class="headerlink" href="#plot-heatmap" title="Link to this heading"></a></h3>
 <p>Flexible heatmap plotter function with options to remove symmetrical triangular side and several other options.</p>
 </section>
 </section>
 <section id="data-processing-tools">
-<h2>3. Data Processing Tools<a class="headerlink" href="#data-processing-tools" title="Permalink to this heading"></a></h2>
+<h2>3. Data Processing Tools<a class="headerlink" href="#data-processing-tools" title="Link to this heading"></a></h2>
 <section id="filters">
-<h3>Filters:<a class="headerlink" href="#filters" title="Permalink to this heading"></a></h3>
+<h3>Filters:<a class="headerlink" href="#filters" title="Link to this heading"></a></h3>
 <img alt="_images/recorded_signal.jpg" src="_images/recorded_signal.jpg" />
 <img alt="_images/Filter_spectrum.jpg" src="_images/Filter_spectrum.jpg" />
 <img alt="_images/Frequency_Spectrum_of_filtered_stereo_1.jpg" src="_images/Frequency_Spectrum_of_filtered_stereo_1.jpg" />
@@ -284,28 +289,28 @@ Example is available <a class="reference external" href="https://github.com/abdu
 Example is available <a class="reference external" href="https://github.com/abdullah-al-masud/msdlib/tree/master/examples/filters_and_spectrogram_example.py">here</a>.</p>
 </section>
 <section id="get-spectrogram">
-<h3>get_spectrogram:<a class="headerlink" href="#get-spectrogram" title="Permalink to this heading"></a></h3>
+<h3>get_spectrogram:<a class="headerlink" href="#get-spectrogram" title="Link to this heading"></a></h3>
 <img alt="_images/Spectrogram_of_stereo_1.jpg" src="_images/Spectrogram_of_stereo_1.jpg" />
 <p>This is a function that allows us to calculate spectrogram of any time series signal and also plots heatmap for that spectrogram with proper frequency bins and time axis.
 Example is available <a class="reference external" href="https://github.com/abdullah-al-masud/msdlib/tree/master/examples/filters_and_spectrogram_example.py">here</a>.</p>
 </section>
 </section>
 <section id="fintech-miscellaneous">
-<h2>4. Fintech &amp; Miscellaneous<a class="headerlink" href="#fintech-miscellaneous" title="Permalink to this heading"></a></h2>
+<h2>4. Fintech &amp; Miscellaneous<a class="headerlink" href="#fintech-miscellaneous" title="Link to this heading"></a></h2>
 <section id="msdbacktest-under-development">
-<h3>msdbacktest (under development):<a class="headerlink" href="#msdbacktest-under-development" title="Permalink to this heading"></a></h3>
+<h3>msdbacktest (under development):<a class="headerlink" href="#msdbacktest-under-development" title="Link to this heading"></a></h3>
 <p>This module intends to provide helper functionalities for trading automation, strategy implementation, back-testing,
 evaluating strategy by different popular ratios like maximum drawdown, calmar ratio, sharpe ratio etc.
 Currently only a few functionalities are available and is still under development.</p>
 </section>
 <section id="progressbar">
-<h3>ProgressBar:<a class="headerlink" href="#progressbar" title="Permalink to this heading"></a></h3>
+<h3>ProgressBar:<a class="headerlink" href="#progressbar" title="Link to this heading"></a></h3>
 <p>This is a custom progress bar which shows loop progress with a visual bar along with other information like elapsed and remaining time, loop count, total count, percentage of completion etc. (You should only use it if you dont print anything inside your loop)
 Example can be found <a class="reference external" href="https://github.com/abdullah-al-masud/msdlib/tree/master/examples/ProgressBar_example.py">here</a>.</p>
 </section>
 </section>
 <section id="reference-citation">
-<h2>Reference/citation<a class="headerlink" href="#reference-citation" title="Permalink to this heading"></a></h2>
+<h2>Reference/citation<a class="headerlink" href="#reference-citation" title="Link to this heading"></a></h2>
 <div class="highlight-bibtex notranslate"><div class="highlight"><pre><span></span><span class="nc">@manual</span><span class="p">{</span><span class="nl">msdlib</span><span class="p">,</span>
 <span class="na">title</span><span class="p">=</span><span class="s">&quot;{msdlib}: A package for easier data science practices&quot;</span><span class="p">,</span>
 <span class="na">author</span><span class="p">=</span><span class="s">&quot;{Abdullah Al Masud and {msdlib Developers}}&quot;</span><span class="p">,</span>

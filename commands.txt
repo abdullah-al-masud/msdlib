@@ -55,7 +55,7 @@ Code documentation integration using Sphinx
 
 1. go to docs
 2. type command: make html
-3. push the code to github (not yet, do below steps after the code is pushed to github in Step-7)
+3. push the code to github by following Step-7, then continue the below checks in Step-6
 4. go to the website of readthedocs and log in
 5. go to the builds section
 6. press on build button for a new build
