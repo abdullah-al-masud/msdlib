@@ -1,8 +1,9 @@
 mlutils.utils
 =============
 
-This is a sub-module containing utility functions for multiple model training including scikit-learn models.
-It also contains several other utility for model storing and loading, Neural Network model building, custom DataSet for pytorch etc.
+Utility functions for training, evaluating, storing, and loading multiple model types, including scikit-learn models.
+
+``DataSet`` and ``define_layers`` require PyTorch. Other helpers in this sub-module work without PyTorch installed.
 
 .. automodule:: msdlib.mlutils.utils
    :members:

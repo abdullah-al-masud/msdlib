@@ -507,8 +507,10 @@ def get_edges_from_ts(sr, th_method='median', th_factor=.5, th=None,  del_side='
         edges[1].append(sr.index[-1])
     edges = pd.DataFrame(edges, index = ['start', 'stop']).T.reset_index(drop = True)
     edges['duration'] = edges['stop'] - edges['start']
-    edges['interval'] = np.nan
-    edges['interval'].iloc[1:] = [j - i for i,j in zip(edges['stop'].iloc[:-1], edges['start'].iloc[1:])]
+    intervals = [pd.NaT] * len(edges)
+    if len(edges) > 1:
+        intervals[1:] = [j - i for i, j in zip(edges['stop'].iloc[:-1], edges['start'].iloc[1:])]
+    edges['interval'] = pd.to_timedelta(intervals)
     if name is None:
         if sr.name is not None:
             edges.columns.name = '%s_edges'%sr.name
@@ -780,7 +782,7 @@ def feature_evaluator(data, label_name, label_type_num, n_bin=40, is_all_num=Fal
             print('Evaluation for label : %s (%s) ....'%(label, labels_tag[l]), end = '')
             # dividing the data set into classes depending on the label/target values
             divs = pd.cut(labels[label], bins = nbin[i])
-            divs = divs.replace(to_replace = divs.unique().categories, value = np.arange(divs.unique().categories.shape[0]))
+            divs = divs.cat.codes
             
             if not is_all_cat:
                 # ------------- calculation for numerical data ----------------------
@@ -914,7 +916,7 @@ def class_result(y, pred, out_confus=False):
         vy = set(np.where(y == lab_true)[0])
         for lab_pred in labels:
             vpred = set(np.where(pred == lab_pred)[0])
-            con_mat[lab_pred].loc[lab_true] = len(vy & vpred)
+            con_mat.loc[lab_true, lab_pred] = len(vy & vpred)
     prec = []
     recall = []
     f_msr = []
@@ -1017,6 +1019,13 @@ def regression_result(y, pred):
 
 def one_hot_encoding(arr, class_label=None, ret_label=False, out_type='ndarray'):
     """
+    .. deprecated::
+        This function is deprecated and may be removed in a future release.
+        It can drop rows when values are missing or not present in ``class_label``,
+        which breaks alignment with labels and other features. Prefer
+        ``sklearn.preprocessing.OneHotEncoder`` (e.g. with ``handle_unknown="ignore"``)
+        for production use.
+
     This function converts categorical values into one hot encoded format.
 
     Inputs:
@@ -1035,7 +1044,7 @@ def one_hot_encoding(arr, class_label=None, ret_label=False, out_type='ndarray')
     elif isinstance(class_label, list): class_label = np.array(class_label)
     label = pd.DataFrame(np.zeros((arr.shape[0], class_label.shape[0])), index = arr.index, columns = class_label)
     for lb in class_label:
-        label[lb].loc[arr[arr == lb].index] = 1
+        label.loc[arr == lb, lb] = 1
     label = label.loc[~np.all(label.values == 0, axis = 1)]
     if out_type == 'ndarray': label = label.values
     elif out_type == 'list': label = [label.loc[i].to_list() for i in label.index]
@@ -1346,12 +1355,14 @@ class paramOptimizer():
         """
         
         warnings.filterwarnings('ignore')
-        self.queue['score'].iloc[self.queue_cnt] = score
+        self.queue.loc[self.queue_cnt, 'score'] = score
         if self.queue_cnt < self.top + 1:
-            self.tops.iloc[self.queue_cnt] = [self.queue_cnt, score]
+            self.tops.loc[self.queue_cnt, 'queue_idx'] = self.queue_cnt
+            self.tops.loc[self.queue_cnt, 'score'] = score
             self.storage.append(element)
         else:
-            self.tops.iloc[self.top] = [self.queue_cnt, score]
+            self.tops.loc[self.top, 'queue_idx'] = self.queue_cnt
+            self.tops.loc[self.top, 'score'] = score
             self.storage[-1] = element
             self.tops.sort_values('score', ascending = self.ascending, inplace = True)
             self.storage = [self.storage[i] for i in self.tops.index]

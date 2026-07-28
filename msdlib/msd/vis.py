@@ -11,7 +11,16 @@ import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 from matplotlib import animation
 import matplotlib.lines as mlines
-from matplotlib.cm import get_cmap
+try:
+    from matplotlib.cm import get_cmap
+except ImportError:
+    from matplotlib import colormaps
+
+    def get_cmap(name=None, lut=None):
+        if name is None:
+            return colormaps["viridis"]
+        return colormaps[name]
+
 import seaborn as sns
 import time
 from scipy.stats import gaussian_kde

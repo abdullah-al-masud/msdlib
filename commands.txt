@@ -7,9 +7,8 @@ Step-0:
 1. Edit the code as you like.
 
 Make sure that-
-2. you are using an anaconda virutal environment named 'msdlib' (optional)
-3. dependencies are installed from both requirements.txt and requirements-dev.txt
-4. pytorch is installed properly
+2. your virtual environment is active and dependencies are installed from requirements.txt (and requirements-dev.txt for development)
+3. pytorch is installed if you run torch examples or mlutils torch tests (optional otherwise)
 
 
 Step-1:
@@ -38,7 +37,7 @@ Step-4:
 Running example files through one command:
 
 1. Be in project directory in the command line.
-2. command: python utils/run_examples.py (at first, make sure there is an anaconda envirornment named msdlib where you have installed everything)
+2. command: python utils/run_examples.py
 
 
 Step-5:
@@ -46,7 +45,8 @@ Step-5:
 Update README before pushing or updating on pypi
 
 1. Be in project directory in the command line.
-2. command: python utils/update_readme.py (at first, make sure there is an anaconda envirornment named msdlib where you have installed everything)
+2. Run pytest with coverage first (Step-3), then update the badge:
+   command: python utils/update_readme.py
 
 
 Step-6:
@@ -58,7 +58,7 @@ Code documentation integration using Sphinx
 3. push the code to github by following Step-7, then continue the below checks in Step-6
 4. go to the website of readthedocs and log in
 5. go to the builds section
-6. press on build button for a new build
+6. press on build button for a new build (if necessary)
 done!!
 
 Step-7:

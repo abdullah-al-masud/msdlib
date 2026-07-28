@@ -6,22 +6,22 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>mlutils.utils &mdash; msdlib 1.1.15 documentation</title>
+  <title>mlutils.utils &mdash; msdlib 1.1.17 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/theme_objects.css?v=730f62f1" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=7db1d414"></script>
-      <script src="_static/doctools.js?v=9bcbadda"></script>
-      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/documentation_options.js?v=ee31da67"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="dataset" href="dataset.html" />
-    <link rel="prev" title="mlutils.modeling" href="mlutils.modeling.html" /> 
+    <link rel="prev" title="mlutils.modeling_torch" href="mlutils.modeling_torch.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -58,8 +58,10 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="mlutils.html">mlutils</a></li>
 <li class="toctree-l1"><a class="reference internal" href="mlutils.modeling.html">mlutils.modeling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mlutils.modeling_torch.html">mlutils.modeling_torch</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">mlutils.utils</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#msdlib.mlutils.utils.DataSet"><code class="docutils literal notranslate"><span class="pre">DataSet</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#msdlib.mlutils.utils.TORCH_AVAILABLE"><code class="docutils literal notranslate"><span class="pre">TORCH_AVAILABLE</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#msdlib.mlutils.utils.define_layers"><code class="docutils literal notranslate"><span class="pre">define_layers()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#msdlib.mlutils.utils.evaluate_with_data"><code class="docutils literal notranslate"><span class="pre">evaluate_with_data()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#msdlib.mlutils.utils.get_factors"><code class="docutils literal notranslate"><span class="pre">get_factors()</span></code></a></li>
@@ -103,14 +105,14 @@
              
   <section id="mlutils-utils">
 <h1>mlutils.utils<a class="headerlink" href="#mlutils-utils" title="Link to this heading"></a></h1>
-<p>This is a sub-module containing utility functions for multiple model training including scikit-learn models.
-It also contains several other utility for model storing and loading, Neural Network model building, custom DataSet for pytorch etc.</p>
+<p>Utility functions for training, evaluating, storing, and loading multiple model types, including scikit-learn models.</p>
+<p><code class="docutils literal notranslate"><span class="pre">DataSet</span></code> and <code class="docutils literal notranslate"><span class="pre">define_layers</span></code> require PyTorch. Other helpers in this sub-module work without PyTorch installed.</p>
 <p id="module-msdlib.mlutils.utils">Author : Abdullah Al Masud</p>
 <p>email : <a class="reference external" href="mailto:abdullahalmasud&#46;buet&#37;&#52;&#48;gmail&#46;com">abdullahalmasud<span>&#46;</span>buet<span>&#64;</span>gmail<span>&#46;</span>com</a></p>
 <p>LICENSE : MIT License</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="msdlib.mlutils.utils.DataSet">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">msdlib.mlutils.utils.</span></span><span class="sig-name descname"><span class="pre">DataSet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">torch.float32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'regressor'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msdlib.mlutils.utils.DataSet" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">msdlib.mlutils.utils.</span></span><span class="sig-name descname"><span class="pre">DataSet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">torch.float32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'regressor'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msdlib.mlutils.utils.DataSet" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Dataset</span></code></p>
 <p>This is a customized Data set object which can build a torch.utils.data.Dataset object given the data and labels. 
 This is only usable when we have complete data and labels (data and label lengths must be equal)</p>
@@ -134,6 +136,12 @@ It is used to confirm that for multi-class classification, label data type is to
 </dl>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="msdlib.mlutils.utils.TORCH_AVAILABLE">
+<span class="sig-prename descclassname"><span class="pre">msdlib.mlutils.utils.</span></span><span class="sig-name descname"><span class="pre">TORCH_AVAILABLE</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></span><a class="headerlink" href="#msdlib.mlutils.utils.TORCH_AVAILABLE" title="Link to this definition"></a></dt>
+<dd><p>bool: True when PyTorch is installed and importable.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -191,6 +199,8 @@ Output activation function is provided</p>
 </dd>
 </dl>
 </dd>
+<dt>Raises:</dt><dd><p>ImportError: If PyTorch is not installed.</p>
+</dd>
 </dl>
 </dd></dl>
 
@@ -207,7 +217,8 @@ Output activation function is provided</p>
 </dd>
 <dt class="field-even">models<span class="colon">:</span></dt>
 <dd class="field-even"><p>dict, contains scikit-models, xgboost, lightgbm etc. scikit-like models and torchModel objects. 
-If its a torchModel object, the key must contain ‘pytorch’ in it.</p>
+If its a torchModel object, the key must contain ‘pytorch’ in it.
+Model keys containing <code class="docutils literal notranslate"><span class="pre">pytorch</span></code> require PyTorch to be installed.</p>
 </dd>
 <dt class="field-odd">figure_dir<span class="colon">:</span></dt>
 <dd class="field-odd"><p>string/None, path to the directory where figures will be saved for feature improtances and evaluation figures.</p>
@@ -228,6 +239,8 @@ If its a torchModel object, the key must contain ‘pytorch’ in it.</p>
 <dd class="field-odd"><p>dict, contains detailed predictions on all sets in outdata argument, evaluation results etc.</p>
 </dd>
 </dl>
+</dd>
+<dt>Raises:</dt><dd><p>ImportError: If a model key contains <code class="docutils literal notranslate"><span class="pre">pytorch</span></code> and PyTorch is not installed.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -291,6 +304,8 @@ key name must be like this :</p>
 </dd>
 </dl>
 </dd>
+<dt>Raises:</dt><dd><p>ImportError: If a model key contains <code class="docutils literal notranslate"><span class="pre">pytorch</span></code> and PyTorch is not installed.</p>
+</dd>
 </dl>
 </dd></dl>
 
@@ -311,6 +326,8 @@ For pytorch models, the key must contain ‘pytorch’ phrase (Case insensitive)
 </dd>
 </dl>
 </dd>
+<dt>Raises:</dt><dd><p>ImportError: If a model key contains <code class="docutils literal notranslate"><span class="pre">pytorch</span></code> and PyTorch is not installed.</p>
+</dd>
 </dl>
 </dd></dl>
 
@@ -330,7 +347,8 @@ For pytorch models, the key must contain ‘pytorch’ phrase (Case insensitive)
 </dd>
 <dt class="field-odd">models<span class="colon">:</span></dt>
 <dd class="field-odd"><p>dict, contains scikit-models, xgboost, lightgbm etc. scikit-like models and torchModel objects. 
-If its a torchModel object, the key must contain ‘pytorch’ in it.</p>
+If its a torchModel object, the key must contain ‘pytorch’ in it.
+Model keys containing <code class="docutils literal notranslate"><span class="pre">pytorch</span></code> require PyTorch to be installed.</p>
 </dd>
 <dt class="field-even">featimp_models<span class="colon">:</span></dt>
 <dd class="field-even"><p>list of strings, contains model names which belong to models dict keys and which can provide feature importances</p>
@@ -375,7 +393,7 @@ Only effective when evaluate is True.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="mlutils.modeling.html" class="btn btn-neutral float-left" title="mlutils.modeling" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="mlutils.modeling_torch.html" class="btn btn-neutral float-left" title="mlutils.modeling_torch" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="dataset.html" class="btn btn-neutral float-right" title="dataset" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

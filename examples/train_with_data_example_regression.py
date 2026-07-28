@@ -7,13 +7,13 @@ LICENSE : MIT License
 from sklearn.ensemble import RandomForestRegressor as RFR
 from sklearn.tree import DecisionTreeRegressor as DTR
 import pandas as pd
-from sklearn.datasets import fetch_california_housing
 import torch
 
 import os
 import sys
 project_dir = os.getcwd()
 sys.path.append(project_dir)
+from tests.bundled_datasets import load_california_housing_frames
 from msdlib import mlutils
 from msdlib import msd
 
@@ -21,10 +21,8 @@ from msdlib import msd
 savepath = 'examples/train_with_data_regression'
 
 # Loading the data and separating data and label
-source_data = fetch_california_housing()
-feature_names = source_data['feature_names'].copy()
-data = pd.DataFrame(source_data['data'], columns=feature_names)
-label = pd.Series(source_data['target'], name=source_data['target_names'][0])
+data, label = load_california_housing_frames()
+feature_names = list(data.columns)
 
 # print(source_data['DESCR'])
 print('data:\n', data.head())

@@ -58,6 +58,7 @@ Get started from this `page <README.html>`__
 
    mlutils
    mlutils.modeling
+   mlutils.modeling_torch
    mlutils.utils
 
 

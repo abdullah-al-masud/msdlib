@@ -1,9 +1,10 @@
 mlutils.modeling
 ================
 
-This is a sub-module containing torchModel class and related items for easy pytorch implementation and testing. 
-torchModel class contains several functions whih can be safely used for pytorch model training (using .fit() method), 
-prediction (using .predict() method) and evaluation (using .evaluate() method).
+Public entry point for PyTorch modeling symbols in mlutils.
+
+When PyTorch is available, this module re-exports ``NNmodel``, ``AutoEncoderModel``, ``torchModel``, and ``instantiate_models`` from ``mlutils.modeling_torch``.
+Otherwise those names are ``None`` and ``instantiate_models`` raises ``ImportError``.
 
 .. automodule:: msdlib.mlutils.modeling
    :members:

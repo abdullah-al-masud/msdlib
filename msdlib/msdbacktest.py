@@ -149,7 +149,7 @@ def get_balance(ts_index, closings, starting_cap, sample_per='D'):
                 pd.Timedelta(days=1)] = starting_cap
     balance.loc[closings['trigger_point']] = (
         closings['rated_return'].cumsum() + starting_cap).values
-    balance.fillna(method='ffill', inplace=True)
+    balance.ffill(inplace=True)
     return balance
 
 # calculate drawdown dataframe

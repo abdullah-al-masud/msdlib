@@ -6,7 +6,6 @@ LICENSE : MIT License
 
 # torchModel() regression example
 import pandas as pd
-from sklearn.datasets import fetch_california_housing
 from sklearn.metrics import r2_score, mean_squared_error
 import torch
 
@@ -14,14 +13,13 @@ import os
 import sys
 project_dir = os.getcwd()
 sys.path.append(project_dir)
+from tests.bundled_datasets import load_california_housing_frames
 from msdlib import mlutils
 from msdlib import msd
 
 # Loading the data and separating data and label
-source_data = fetch_california_housing()
-feature_names = source_data['feature_names'].copy()
-data = pd.DataFrame(source_data['data'], columns=feature_names)
-label = pd.Series(source_data['target'], name=source_data['target_names'][0])
+data, label = load_california_housing_frames()
+feature_names = list(data.columns)
 
 # print(source_data['DESCR'])
 print('data:\n', data.head())

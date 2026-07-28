@@ -6,11 +6,21 @@ LICENSE : MIT License
 
 
 import warnings
+
+TORCH_AVAILABLE = False
+"""bool: True when PyTorch is installed and importable."""
+torch = None
+nn = None
+
 try:
     import torch
     from torch import nn
-except Exception as e:
-    warnings.warn('skipping pytorch importation... If you wish to use pytorch, please install it correctly. If not, please ignore this warning')
+    TORCH_AVAILABLE = True
+except ImportError:
+    warnings.warn(
+        'skipping pytorch importation... If you wish to use pytorch, please install '
+        'it correctly. If not, please ignore this warning'
+    )
 
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -27,7 +37,8 @@ import joblib
 plt.rcParams['figure.facecolor'] = 'white'
 
 
-try:
+DataSet = None
+if TORCH_AVAILABLE:
     class DataSet(torch.utils.data.Dataset):
         """
         This is a customized Data set object which can build a torch.utils.data.Dataset object given the data and labels. 
@@ -71,8 +82,13 @@ try:
         def _check_samples(self):
             assert len(self.data) == len(
                 self.label), "Data and Label lengths are not same"
-except:
-    pass
+
+
+def _require_torch(function_name):
+    if not TORCH_AVAILABLE:
+        raise ImportError(
+            f"{function_name} requires PyTorch. Install torch to use this function."
+        )
 
 
 def get_factors(n_layers, base_factor=5, max_factor=10, offset_factor=2):
@@ -126,7 +142,11 @@ def define_layers(input_units, output_units, unit_factors, dropout_rate=None, mo
 
     Outputs:
         :layers: list of Deep Learning model layers which can be fed as NNModel layer_funcs input or torchModel layers input to build DNN model
+
+    Raises:
+        ImportError: If PyTorch is not installed.
     """
+    _require_torch("define_layers")
 
     if actual_units:
         hidden_units = unit_factors.copy()
@@ -167,6 +187,9 @@ def store_models(models, folder_path):
                 Note: Pytorch model must not be a DataParallel model.\n
                 If its a DataParallel model, then take module attribute of your model like this- {'pytorch': <your_model>.module}
         :folder_path: str, the folder path where the models will be stores, if doesnt exist, it will be created
+
+    Raises:
+        ImportError: If a model key contains ``pytorch`` and PyTorch is not installed.
     """
 
     if not os.path.exists(folder_path):
@@ -174,6 +197,7 @@ def store_models(models, folder_path):
     for modelname in models:
         print('storing models... %s_model...' % modelname, end='')
         if 'pytorch' in modelname.lower():
+            _require_torch("store_models for pytorch models")
             torch.save(models[modelname].state_dict(),
                        os.path.join(folder_path, '%s_model.pt' % modelname))
         else:
@@ -201,11 +225,15 @@ def load_models(models, folder_path):
 
     Outputs:
         :models: dict, containing model classes like {<model_name> : <model_class>}
+
+    Raises:
+        ImportError: If a model key contains ``pytorch`` and PyTorch is not installed.
     """
 
     for modelname in models:
         print('\rloading models... %s_model...' % modelname, end='')
         if 'pytorch' in modelname.lower():
+            _require_torch("load_models for pytorch models")
             models[modelname].load_state_dict(
                 torch.load(os.path.join(folder_path, '%s_model.pt' % modelname)))
         else:
@@ -227,6 +255,7 @@ def train_with_data(outdata, feature_columns, models, featimp_models=[], figure_
         :feature_columns: list/numpy array, contains feature names of 'data' inside outdata. seature_columns length must be equal to number of columns in 'data'
         :models: dict, contains scikit-models, xgboost, lightgbm etc. scikit-like models and torchModel objects. 
                     If its a torchModel object, the key must contain 'pytorch' in it.
+                    Model keys containing ``pytorch`` require PyTorch to be installed.
         :featimp_models: list of strings, contains model names which belong to models dict keys and which can provide feature importances
         :figure_dir: string/None, path to the directory where figures will be saved for feature improtances and evaluation figures.
         :model_type: string, can be either 'regressor', 'multi-classifier' or 'binary-classifier'. It controls the evaluation process.
@@ -247,6 +276,7 @@ def train_with_data(outdata, feature_columns, models, featimp_models=[], figure_
     for modelname in models:
         print('training %s model...    '%modelname, end='', flush=True)
         if 'pytorch' in modelname:
+            _require_torch("train_with_data for pytorch models")
             if figure_dir is not None:
                 models[modelname].savepath = figure_dir
             models[modelname] = models[modelname].fit(outdata['train']['data'], np.squeeze(outdata['train']['label']), 
@@ -284,6 +314,7 @@ def evaluate_with_data(outdata, models, figure_dir=None, model_type='multi-class
                     'data', 'label' and 'index' must be of same length.
         :models: dict, contains scikit-models, xgboost, lightgbm etc. scikit-like models and torchModel objects. 
                     If its a torchModel object, the key must contain 'pytorch' in it.
+                    Model keys containing ``pytorch`` require PyTorch to be installed.
         :figure_dir: string/None, path to the directory where figures will be saved for feature improtances and evaluation figures.
         :model_type: string, can be either 'regressor', 'multi-classifier' or 'binary-classifier'. It controls the evaluation process.
         :figsize: tuple of horiaontal and vertical size of the result figure (regression score and classification score both). Default is (15, 5).
@@ -291,6 +322,9 @@ def evaluate_with_data(outdata, models, figure_dir=None, model_type='multi-class
 
     Outputs:
         :predictions: dict, contains detailed predictions on all sets in outdata argument, evaluation results etc.
+
+    Raises:
+        ImportError: If a model key contains ``pytorch`` and PyTorch is not installed.
     """
     
     predictions = {}
@@ -303,6 +337,7 @@ def evaluate_with_data(outdata, models, figure_dir=None, model_type='multi-class
             print('predicting and evaluating for %s set from %s model'%(setname, modelname), end='', flush=True)
             predictions[modelname][setname] = {}
             if 'pytorch' in modelname:
+                _require_torch("evaluate_with_data for pytorch models")
                 preds = models[modelname].predict(outdata[setname]['data']).detach().cpu().numpy()
                 if model_type.lower() == 'binary-classifier':
                     preds = np.squeeze(preds.round())

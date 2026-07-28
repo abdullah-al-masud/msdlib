@@ -6,17 +6,17 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>msd.vis &mdash; msdlib 1.1.15 documentation</title>
+  <title>msd.vis &mdash; msdlib 1.1.17 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/theme_objects.css?v=730f62f1" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=7db1d414"></script>
-      <script src="_static/doctools.js?v=9bcbadda"></script>
-      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/documentation_options.js?v=ee31da67"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -63,6 +63,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#msdlib.msd.vis.data_gridplot"><code class="docutils literal notranslate"><span class="pre">data_gridplot()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#msdlib.msd.vis.get_cmap"><code class="docutils literal notranslate"><span class="pre">get_cmap()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#msdlib.msd.vis.get_color_from_cmap"><code class="docutils literal notranslate"><span class="pre">get_color_from_cmap()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#msdlib.msd.vis.get_named_colors"><code class="docutils literal notranslate"><span class="pre">get_named_colors()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#msdlib.msd.vis.input_variable_error"><code class="docutils literal notranslate"><span class="pre">input_variable_error()</span></code></a></li>
@@ -81,6 +82,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="mlutils.html">mlutils</a></li>
 <li class="toctree-l1"><a class="reference internal" href="mlutils.modeling.html">mlutils.modeling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mlutils.modeling_torch.html">mlutils.modeling_torch</a></li>
 <li class="toctree-l1"><a class="reference internal" href="mlutils.utils.html">mlutils.utils</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">others</span></p>
@@ -124,7 +126,7 @@ It contains time series plotting function, heatmap table, grid plot, custom tabl
 <p>LICENSE : MIT License</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="msdlib.msd.vis.ProgressBar">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">msdlib.msd.vis.</span></span><span class="sig-name descname"><span class="pre">ProgressBar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">desc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'progress'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">barlen</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">40</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">front_space</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tblink_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tblink_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.18</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msdlib.msd.vis.ProgressBar" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">msdlib.msd.vis.</span></span><span class="sig-name descname"><span class="pre">ProgressBar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">desc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'progress'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">barlen</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">40</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">front_space</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tblink_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tblink_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.18</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msdlib.msd.vis.ProgressBar" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="simple">
 <dt>Inputs:</dt><dd><dl class="field-list simple">
@@ -257,6 +259,11 @@ It also shows the correlation values (non-diagonal subplots) and general statist
 </dd>
 </dl>
 </dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="msdlib.msd.vis.get_cmap">
+<span class="sig-prename descclassname"><span class="pre">msdlib.msd.vis.</span></span><span class="sig-name descname"><span class="pre">get_cmap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lut</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#msdlib.msd.vis.get_cmap" title="Link to this definition"></a></dt>
+<dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="msdlib.msd.vis.get_color_from_cmap">
